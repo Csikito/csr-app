@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:     #f8fafc;
+    --bg2:    #f1f5f9;
+    --card:   #ffffff;
+    --border: #e2e8f0;
+    --border2:#f1f5f9;
+    --text:   #1e293b;
+    --muted:  #64748b;
+    --subtle: #94a3b8;
+    --shadow:    0 1px 3px rgba(0,0,0,.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+    --radius:    10px;
+    --radius-sm: 7px;
+    --transition: .15s ease;
+
+    --g-bg: #e8faf3; --g-text: #065f46; --g-border: #6ee7b7; --g-dot: #1D9E75;
+    --b-bg: #dbeafe; --b-text: #1e40af; --b-border: #93c5fd; --b-dot: #378ADD;
+    --o-bg: #fef3c7; --o-text: #92400e; --o-border: #fcd34d; --o-dot: #BA7517;
+    --p-bg: #ede9fe; --p-text: #4c1d95; --p-border: #c4b5fd; --p-dot: #533AB7;
+    --s-bg: #f3f0ff; --s-text: #3c3489; --s-border: #d8b4fe; --s-dot: #7F77DD;
+
+    --block-move-bg: #e8faf3; --block-move-border: #1D9E75;
+    --block-work-bg: #f8fafc; --block-work-border: #94a3b8;
+    --block-learn-bg: #dbeafe; --block-learn-border: #378ADD;
+    --block-free-bg: var(--card); --block-free-border: #e2e8f0;
+    --block-sleep-bg: #ede9fe; --block-sleep-border: #7F77DD;
+  }
+
+  [data-theme="dark"] {
+    --bg:     #0f172a;
+    --bg2:    #1e293b;
+    --card:   #1e293b;
+    --border: #334155;
+    --border2:#1e293b;
+    --text:   #f1f5f9;
+    --muted:  #94a3b8;
+    --subtle: #475569;
+    --shadow:    0 1px 4px rgba(0,0,0,.4);
+    --shadow-md: 0 4px 16px rgba(0,0,0,.4);
+
+    --g-bg: rgba(29,158,117,.15); --g-text: #6ee7b7; --g-border: rgba(29,158,117,.4); --g-dot: #34d399;
+    --b-bg: rgba(55,138,221,.15); --b-text: #93c5fd; --b-border: rgba(55,138,221,.4); --b-dot: #60a5fa;
+    --o-bg: rgba(186,117,23,.15); --o-text: #fcd34d; --o-border: rgba(186,117,23,.4); --o-dot: #fbbf24;
+    --p-bg: rgba(83,58,183,.15);  --p-text: #c4b5fd; --p-border: rgba(83,58,183,.4);  --p-dot: #a78bfa;
+    --s-bg: rgba(127,119,221,.15); --s-text: #c4b5fd; --s-border: rgba(127,119,221,.4); --s-dot: #a78bfa;
+
+    --block-move-bg: rgba(29,158,117,.12); --block-move-border: #34d399;
+    --block-work-bg: rgba(255,255,255,.04); --block-work-border: #475569;
+    --block-learn-bg: rgba(55,138,221,.12); --block-learn-border: #60a5fa;
+    --block-free-bg: rgba(255,255,255,.02); --block-free-border: #334155;
+    --block-sleep-bg: rgba(127,119,221,.12); --block-sleep-border: #a78bfa;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
+    font-size: 14px;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .tab {
+    padding: 8px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    box-shadow: var(--shadow);
+  }
+  .tab:hover { border-color: var(--subtle); color: var(--text); }
+  .tab.active { background: #4f46e5; color: #fff; border-color: #4f46e5; box-shadow: 0 2px 8px rgba(79,70,229,.3); }
+
+  .panel { display: none; }
+  .panel.show { display: block; }
+
+  /* NAP */
+  .legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .leg-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .day-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+
+  .day-col-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 10px;
+  }
+
+  .block {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 9px 11px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 5px;
+    border-left: 3px solid transparent;
+    transition: background var(--transition);
+  }
+  .block-time {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    min-width: 42px;
+    padding-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .block-body { flex: 1; }
+  .block-title { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; }
+  .block-note  { font-size: 11.5px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+  .b-move  { background: var(--block-move-bg);  border-left-color: var(--block-move-border); }
+  .b-work  { background: var(--block-work-bg);  border-left-color: var(--block-work-border); }
+  .b-learn { background: var(--block-learn-bg); border-left-color: var(--block-learn-border); }
+  .b-free  { background: var(--block-free-bg);  border-left-color: var(--block-free-border); }
+  .b-sleep { background: var(--block-sleep-bg); border-left-color: var(--block-sleep-border); }
+
+  /* HÉT */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .day-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 6px;
+    box-shadow: var(--shadow);
+    transition: background var(--transition);
+  }
+  .day-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  .day-pill {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 5px;
+    border-radius: 6px;
+    margin-bottom: 3px;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .dp-move  { background: var(--g-bg); color: var(--g-text); }
+  .dp-learn { background: var(--b-bg); color: var(--b-text); }
+  .dp-work  { background: var(--bg2); color: var(--muted); }
+  .dp-rest  { background: var(--s-bg); color: var(--s-text); }
+  .dp-free  { background: var(--bg2); color: var(--muted); border: 1px solid var(--border); }
+
+  .week-rules {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .rule-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 10px;
+  }
+  .rule {
+    font-size: 13px;
+    color: var(--text);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    line-height: 1.5;
+  }
+  .rule:last-child { border-bottom: none; }
+  .rule-icon { color: var(--g-dot); font-size: 13px; flex-shrink: 0; font-weight: 700; }
+
+  /* HÓNAP */
+  .month-phases {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .mcard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    box-shadow: var(--shadow);
+    transition: background var(--transition);
+  }
+  .mcard-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 3px;
+  }
+  .mcard-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .mcard-item {
+    font-size: 12.5px;
+    color: var(--muted);
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+    border-bottom: 1px solid var(--border2);
+  }
+  .mcard-item:last-child { border-bottom: none; }
+  .mcard-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+
+  .review-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .review-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 10px;
+  }
+  .review-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .review-q {
+    font-size: 12.5px;
+    color: var(--text);
+    padding: 8px 10px;
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    line-height: 1.5;
+    box-shadow: var(--shadow);
+  }
+
+  mark {
+    background: rgba(250,204,21,.4);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+  [data-theme="dark"] mark { background: rgba(250,204,21,.22); }
+
+  .block.no-match { opacity: .2; }
+  .block.has-match { box-shadow: 0 0 0 2px rgba(250,204,21,.55); }
+
+  .day-card.no-match { opacity: .25; }
+  .day-card.has-match { box-shadow: 0 0 0 2px rgba(250,204,21,.55); }
+
+  .mcard.no-match { opacity: .25; }
+  .mcard.has-match { box-shadow: 0 0 0 2px rgba(250,204,21,.55); }
+
+  .review-q.no-match { opacity: .2; }
+  .review-q.has-match { box-shadow: 0 0 0 2px rgba(250,204,21,.55); }
+
+  .rule.no-match { opacity: .2; }
+  .rule.has-match { background: rgba(250,204,21,.08); border-radius: 4px; }
+
+  .tab .hit-badge {
+    display: inline-block;
+    font-size: 10px;
+    background: #4f46e5;
+    color: #fff;
+    border-radius: 999px;
+    padding: 0 5px;
+    margin-left: 4px;
+    line-height: 16px;
+    vertical-align: middle;
+  }
+
+  .search-banner {
+    display: none;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 12px;
+    margin-bottom: 14px;
+  }
+  .search-banner.visible { display: block; }
+</style>
+</head>
+<body>
+
+<div class="search-banner" id="searchBanner"></div>
+<div class="tabs">
+  <button class="tab active" onclick="show('nap',this)">Nap</button>
+  <button class="tab" onclick="show('het',this)">Hét</button>
+  <button class="tab" onclick="show('honap',this)">Hónap</button>
+</div>
+
+<!-- NAP -->
+<div class="panel show" id="nap">
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#1D9E75"></div>Mozgás</div>
+    <div class="leg"><div class="leg-dot" style="background:#94a3b8"></div>Munka</div>
+    <div class="leg"><div class="leg-dot" style="background:#378ADD"></div>Tanulás</div>
+    <div class="leg"><div class="leg-dot" style="background:#7F77DD"></div>Alvás</div>
+    <div class="leg"><div class="leg-dot" style="background:#cbd5e1"></div>Szabad</div>
+  </div>
+  <div class="day-cols">
+    <div>
+      <div class="day-col-title">Reggeli típus</div>
+      <div class="block b-sleep"><div class="block-time">06:30</div><div class="block-body"><div class="block-title">Felkelés</div><div class="block-note">Telefon ne az ágyban</div></div></div>
+      <div class="block b-move"><div class="block-time">06:45</div><div class="block-body"><div class="block-title">Séta / futás 25 perc</div><div class="block-note">Angol podcast közben</div></div></div>
+      <div class="block b-work"><div class="block-time">07:30</div><div class="block-body"><div class="block-title">Reggeli, felkészülés</div><div class="block-note">Ne scrollozz híreket</div></div></div>
+      <div class="block b-work"><div class="block-time">08:00</div><div class="block-body"><div class="block-title">Munka</div><div class="block-note">Dokumentálj angolul amit csinálsz</div></div></div>
+      <div class="block b-work"><div class="block-time">12:00</div><div class="block-body"><div class="block-title">Ebédszünet</div><div class="block-note">Séta 10 perc ha lehet</div></div></div>
+      <div class="block b-work"><div class="block-time">13:00</div><div class="block-body"><div class="block-title">Munka folytatás</div></div></div>
+      <div class="block b-move"><div class="block-time">16:30</div><div class="block-body"><div class="block-title">Edzőterem / kerékpár</div><div class="block-note">40 perc – heti 3x</div></div></div>
+      <div class="block b-learn"><div class="block-time">18:30</div><div class="block-body"><div class="block-title">Angol / LinkedIn / tanulás</div><div class="block-note">35-40 perc, friss fejjel</div></div></div>
+      <div class="block b-free"><div class="block-time">19:15</div><div class="block-body"><div class="block-title">Vacsora + szabad idő</div><div class="block-note">Sorozat, barátok, pihenés</div></div></div>
+      <div class="block b-sleep"><div class="block-time">22:30</div><div class="block-body"><div class="block-title">Lefekvés</div><div class="block-note">7.5-8 óra alvás a cél</div></div></div>
+    </div>
+    <div>
+      <div class="day-col-title">Esti típus</div>
+      <div class="block b-sleep"><div class="block-time">07:00</div><div class="block-body"><div class="block-title">Felkelés</div></div></div>
+      <div class="block b-work"><div class="block-time">07:30</div><div class="block-body"><div class="block-title">Reggeli, felkészülés</div><div class="block-note">Angol podcast közben</div></div></div>
+      <div class="block b-work"><div class="block-time">08:00</div><div class="block-body"><div class="block-title">Munka</div><div class="block-note">Angolul kommentelj kódot</div></div></div>
+      <div class="block b-work"><div class="block-time">12:00</div><div class="block-body"><div class="block-title">Ebédszünet</div><div class="block-note">LinkedIn olvasás 10 perc</div></div></div>
+      <div class="block b-work"><div class="block-time">13:00</div><div class="block-body"><div class="block-title">Munka folytatás</div></div></div>
+      <div class="block b-free"><div class="block-time">16:30</div><div class="block-body"><div class="block-title">Levezetés, vacsora</div><div class="block-note">Mentális reset</div></div></div>
+      <div class="block b-learn"><div class="block-time">18:00</div><div class="block-body"><div class="block-title">Angol / tanulás</div><div class="block-note">35-40 perc – itt vagy a legjobb formában</div></div></div>
+      <div class="block b-move"><div class="block-time">19:00</div><div class="block-body"><div class="block-title">Esti futás / edzőterem</div><div class="block-note">Angol zene / podcast</div></div></div>
+      <div class="block b-free"><div class="block-time">20:30</div><div class="block-body"><div class="block-title">Szabad idő</div></div></div>
+      <div class="block b-sleep"><div class="block-time">23:00</div><div class="block-body"><div class="block-title">Lefekvés</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HÉT -->
+<div class="panel" id="het">
+  <div class="week-grid">
+    <div class="day-card">
+      <div class="day-name">H</div>
+      <div class="day-pill dp-move">Edzés</div>
+      <div class="day-pill dp-learn">Angol</div>
+      <div class="day-pill dp-work">Munka</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">K</div>
+      <div class="day-pill dp-learn">Angol</div>
+      <div class="day-pill dp-learn">LinkedIn</div>
+      <div class="day-pill dp-work">Munka</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">Sze</div>
+      <div class="day-pill dp-move">Edzés</div>
+      <div class="day-pill dp-learn">Tech tanulás</div>
+      <div class="day-pill dp-work">Munka</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">Cs</div>
+      <div class="day-pill dp-learn">Angol</div>
+      <div class="day-pill dp-learn">Írás / CV</div>
+      <div class="day-pill dp-work">Munka</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">P</div>
+      <div class="day-pill dp-move">Edzés</div>
+      <div class="day-pill dp-learn">Heti review</div>
+      <div class="day-pill dp-work">Munka</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">Szo</div>
+      <div class="day-pill dp-move">Aktív pihenő</div>
+      <div class="day-pill dp-learn">Mélyebb tanulás</div>
+      <div class="day-pill dp-free">Szabad</div>
+    </div>
+    <div class="day-card">
+      <div class="day-name">V</div>
+      <div class="day-pill dp-rest">Teljes pihenő</div>
+      <div class="day-pill dp-free">Szabad</div>
+      <div class="day-pill dp-free">Tervezés</div>
+    </div>
+  </div>
+  <div class="week-rules">
+    <div class="rule-title">Heti fix szabályok</div>
+    <div class="rule"><span class="rule-icon">→</span>Edzés heti 3x minimum – H, Sze, P a legjobb ritmus</div>
+    <div class="rule"><span class="rule-icon">→</span>Angol minden hétköznap – ha semmi más, legalább podcast</div>
+    <div class="rule"><span class="rule-icon">→</span>Péntek este: heti visszatekintés – mi ment, mi nem</div>
+    <div class="rule"><span class="rule-icon">→</span>Szombat: 1 mélyebb tanulási blokk (60-90 perc, lazán)</div>
+    <div class="rule"><span class="rule-icon">→</span>Vasárnap: tervezés a következő hétre, pihenő – nem tanulás</div>
+    <div class="rule"><span class="rule-icon">→</span>Heti 1 LinkedIn poszt vagy komment angolul (4. hónaptól)</div>
+  </div>
+</div>
+
+<!-- HÓNAP -->
+<div class="panel" id="honap">
+  <div class="month-phases">
+    <div class="mcard">
+      <div class="mcard-label" style="color:var(--g-dot)">1. hét</div>
+      <div class="mcard-title">Bevezetés</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--g-dot)"></div>Új rutin elindítása (mozgás + angol)</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--g-dot)"></div>Célok leírása – konkrétan, papíron</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--g-dot)"></div>Naptárba betervezni az edzésnapokat</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-label" style="color:var(--b-dot)">2. hét</div>
+      <div class="mcard-title">Stabilizálás</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--b-dot)"></div>Rutin folytatása – nem módosítani még</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--b-dot)"></div>Havi fő feladat első lépése</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--b-dot)"></div>Mi volt nehéz? Mikor csúsztál el?</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-label" style="color:var(--o-dot)">3. hét</div>
+      <div class="mcard-title">Fókusz</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--o-dot)"></div>Havi feladat fő blokkja</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--o-dot)"></div>Energiaszint figyelése – nem túlterhelni</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--o-dot)"></div>Angol tartalom aktívabb használata</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-label" style="color:var(--p-dot)">4. hét</div>
+      <div class="mcard-title">Lezárás</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--p-dot)"></div>Havi feladat befejezése</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--p-dot)"></div>Havi visszatekintés (lásd lent)</div>
+      <div class="mcard-item"><div class="mcard-dot" style="background:var(--p-dot)"></div>Következő hónap fő céljának kitűzése</div>
+    </div>
+  </div>
+  <div class="review-box">
+    <div class="review-title">Havi visszatekintés – kérdések (minden hónap utolsó vasárnapja)</div>
+    <div class="review-grid">
+      <div class="review-q">Hány napot csináltam angolt?</div>
+      <div class="review-q">Hány edzés volt ténylegesen?</div>
+      <div class="review-q">Mi volt a hónap legnagyobb tanulása?</div>
+      <div class="review-q">Min kell változtatni jövő hónapban?</div>
+      <div class="review-q">Hol csúsztam el és miért?</div>
+      <div class="review-q">Mi az 1 dolog amit következő hónapban jobban csinálok?</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('show'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('show');
+  btn.classList.add('active');
+}
+
+function hl(text, q) {
+  if (!q) return text;
+  const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${esc})`, 'gi'), '<mark>$1</mark>');
+}
+
+function textOf(el) {
+  return el ? el.textContent.toLowerCase() : '';
+}
+
+function applySearch(q) {
+  const banner = document.getElementById('searchBanner');
+
+  if (!q) {
+    banner.classList.remove('visible');
+    document.querySelectorAll('.block, .day-card, .mcard, .review-q, .rule').forEach(el => {
+      el.classList.remove('no-match','has-match');
+    });
+    document.querySelectorAll('.tab .hit-badge').forEach(b => b.remove());
+    document.querySelectorAll('.block-title, .block-note, .rule, .review-q, .mcard-title, .mcard-item').forEach(el => {
+      el.innerHTML = el.textContent;
+    });
+    window.parent && window.parent.postMessage({ type: 'searchResult', count: 0, total: 0 }, '*');
+    return;
+  }
+
+  const low = q.toLowerCase();
+  let hits = { nap: 0, het: 0, honap: 0 };
+
+  // NAP – schedule blocks
+  document.querySelectorAll('#nap .block').forEach(block => {
+    const titleEl = block.querySelector('.block-title');
+    const noteEl  = block.querySelector('.block-note');
+    const text    = textOf(titleEl) + ' ' + textOf(noteEl);
+    const match   = text.includes(low);
+    block.classList.toggle('no-match', !match);
+    block.classList.toggle('has-match', match);
+    if (match) {
+      if (titleEl) titleEl.innerHTML = hl(titleEl.textContent, q);
+      if (noteEl)  noteEl.innerHTML  = hl(noteEl.textContent, q);
+      hits.nap++;
+    } else {
+      if (titleEl) titleEl.innerHTML = titleEl.textContent;
+      if (noteEl)  noteEl.innerHTML  = noteEl.textContent;
+    }
+  });
+
+  // HÉT – day cards + rules
+  document.querySelectorAll('#het .day-card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    const match = text.includes(low);
+    card.classList.toggle('no-match', !match);
+    card.classList.toggle('has-match', match);
+    if (match) hits.het++;
+  });
+  document.querySelectorAll('#het .rule').forEach(rule => {
+    const text = rule.textContent.toLowerCase();
+    const match = text.includes(low);
+    rule.classList.toggle('no-match', !match);
+    rule.classList.toggle('has-match', match);
+    if (match) {
+      rule.innerHTML = hl(rule.textContent, q);
+      hits.het++;
+    } else {
+      rule.innerHTML = rule.textContent;
+    }
+  });
+
+  // HÓNAP – mcards + review-q
+  document.querySelectorAll('#honap .mcard').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    const match = text.includes(low);
+    card.classList.toggle('no-match', !match);
+    card.classList.toggle('has-match', match);
+    if (match) hits.honap++;
+  });
+  document.querySelectorAll('#honap .review-q').forEach(q_el => {
+    const text = q_el.textContent.toLowerCase();
+    const match = text.includes(low);
+    q_el.classList.toggle('no-match', !match);
+    q_el.classList.toggle('has-match', match);
+    if (match) { q_el.innerHTML = hl(q_el.textContent, q); hits.honap++; }
+    else q_el.innerHTML = q_el.textContent;
+  });
+
+  const total = hits.nap + hits.het + hits.honap;
+  banner.textContent = total
+    ? `🔍 "${q}" — ${total} egyező elem`
+    : `🔍 "${q}" — nincs találat`;
+  banner.classList.add('visible');
+
+  const tabs  = document.querySelectorAll('.tab');
+  const tabIds = ['nap','het','honap'];
+  tabs.forEach((btn, i) => {
+    btn.querySelector('.hit-badge')?.remove();
+    const h = hits[tabIds[i]];
+    if (h > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'hit-badge';
+      badge.textContent = h;
+      btn.appendChild(badge);
+    }
+  });
+
+  // Auto-switch to tab with most hits if current tab has none
+  const activePanel = document.querySelector('.panel.show');
+  const activePanelId = activePanel ? activePanel.id : 'nap';
+  if (hits[activePanelId] === 0 && total > 0) {
+    const best = tabIds.reduce((a,b) => hits[a] >= hits[b] ? a : b);
+    const bestIdx = tabIds.indexOf(best);
+    show(best, tabs[bestIdx]);
+  }
+
+  window.parent && window.parent.postMessage({ type: 'searchResult', count: total, total: 0 }, '*');
+}
+
+window.addEventListener('message', e => {
+  if (!e.data) return;
+  if (e.data.type === 'theme') {
+    document.documentElement.setAttribute('data-theme', e.data.value);
+  }
+  if (e.data.type === 'search') {
+    applySearch(e.data.query);
+  }
+});
+try {
+  const t = localStorage.getItem('csr_theme');
+  if (t) document.documentElement.setAttribute('data-theme', t);
+} catch(e) {}
+</script>
+</body>
+</html>

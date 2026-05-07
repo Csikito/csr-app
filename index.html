@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSR Learning App</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-width: 260px;
+      --accent:        #4f46e5;
+      --accent-hover:  #4338ca;
+      --accent-light:  #eef2ff;
+      --bg:            #f8fafc;
+      --card:          #ffffff;
+      --border:        #e2e8f0;
+      --text:          #1e293b;
+      --muted:         #64748b;
+      --shadow:        0 1px 3px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.06);
+
+      --sidebar-bg:     #1e1b4b;
+      --sidebar-text:   #c7d2fe;
+      --sidebar-active: #ffffff;
+
+      --welcome-title:  #475569;
+      --welcome-card:   #ffffff;
+      --header-bg:      #ffffff;
+    }
+
+    [data-theme="dark"] {
+      --bg:    #0f172a;
+      --card:  #1e293b;
+      --border: #334155;
+      --text:  #f1f5f9;
+      --muted: #94a3b8;
+      --shadow: 0 1px 4px rgba(0,0,0,.4);
+      --accent-light: rgba(79,70,229,.2);
+
+      --welcome-title: #94a3b8;
+      --welcome-card:  #1e293b;
+      --header-bg:     #1e293b;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      transition: background .2s, color .2s;
+    }
+
+    /* ── SIDEBAR ── */
+    aside {
+      width: var(--sidebar-width);
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      box-shadow: 2px 0 8px rgba(0,0,0,.25);
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      padding: 26px 20px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .sidebar-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: .5px;
+    }
+    .sidebar-logo span { color: #818cf8; }
+
+    .sidebar-subtitle {
+      font-size: .72rem;
+      color: var(--sidebar-text);
+      margin-top: 3px;
+      opacity: .65;
+      letter-spacing: .3px;
+    }
+
+    nav {
+      flex: 1;
+      padding: 14px 12px;
+      overflow-y: auto;
+    }
+
+    nav ul { list-style: none; }
+    nav ul li { margin-bottom: 4px; }
+
+    nav ul li a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 8px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 500;
+      transition: background .15s, color .15s;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      width: 22px;
+      text-align: center;
+    }
+    nav ul li a:hover {
+      background: rgba(255,255,255,.08);
+      color: #fff;
+    }
+    nav ul li a.active {
+      background: var(--accent);
+      color: var(--sidebar-active);
+      box-shadow: 0 2px 8px rgba(79,70,229,.4);
+    }
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle {
+      margin: 0 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .theme-label {
+      font-size: .8rem;
+      color: var(--sidebar-text);
+      opacity: .8;
+    }
+    .toggle-btn {
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.15);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .toggle-btn.on { background: #818cf8; }
+    .toggle-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      line-height: 1;
+    }
+    .toggle-btn.on .toggle-knob { transform: translateX(20px); }
+
+    .sidebar-footer {
+      padding: 14px 20px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      font-size: .72rem;
+      color: rgba(199,210,254,.35);
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      box-shadow: var(--shadow);
+      transition: background .2s, border-color .2s;
+    }
+
+    #page-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    #page-badge {
+      font-size: .72rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      padding: 3px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+
+    /* ── WELCOME ── */
+    #welcome {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 40px;
+      color: var(--muted);
+      transition: background .2s;
+    }
+
+    .welcome-icon { font-size: 3.5rem; }
+
+    #welcome h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--welcome-title);
+    }
+
+    #welcome p {
+      font-size: .9rem;
+      text-align: center;
+      max-width: 340px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    .welcome-cards {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .welcome-card {
+      background: var(--welcome-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: .82rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color .15s, box-shadow .15s, background .2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+    }
+    .welcome-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,70,229,.12);
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap {
+      padding: 0 12px 12px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 8px;
+      padding: 8px 34px 8px 34px;
+      color: #fff;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s, background .15s;
+    }
+    .search-input::placeholder { color: rgba(199,210,254,.38); }
+    .search-input:focus {
+      border-color: rgba(129,140,248,.6);
+      background: rgba(255,255,255,.11);
+    }
+    .search-icon {
+      position: absolute;
+      left: 23px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 13px;
+      opacity: .45;
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 21px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(199,210,254,.5);
+      cursor: pointer;
+      font-size: 17px;
+      line-height: 1;
+      display: none;
+      transition: color .15s;
+    }
+    .search-clear:hover { color: #fff; }
+    .search-hits {
+      font-size: .7rem;
+      color: rgba(199,210,254,.45);
+      text-align: right;
+      padding: 0 14px 10px;
+      min-height: 18px;
+      transition: opacity .15s;
+    }
+
+    /* ── IFRAME ── */
+    #content-frame {
+      flex: 1;
+      border: none;
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<aside>
+  <div class="sidebar-header">
+    <div class="sidebar-logo">CSR <span>Learning</span></div>
+    <div class="sidebar-subtitle">Tanulási tervező rendszer</div>
+  </div>
+
+  <nav>
+    <ul>
+      <li>
+        <a href="#" class="nav-link" data-file="html/12_honap_roadmap.html" data-title="12 hónapos roadmap">
+          <span class="nav-icon">🗺️</span>
+          12 hónapos roadmap
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-file="html/napi_heti_honapi_planner.html" data-title="Napi / Heti / Hónapi planner">
+          <span class="nav-icon">📅</span>
+          Napi / Heti / Hónapi planner
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-file="html/master_12honap_planner.html" data-title="Master 12 hónapos planner">
+          <span class="nav-icon">🧭</span>
+          Master 12 hónapos planner
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link" data-file="html/master_checklist_12honap.html" data-title="Master 12 hónapos checklist">
+          <span class="nav-icon">📋</span>
+          Master 12 hónapos checklist
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" placeholder="Keresés a tartalomban…" oninput="onSearch(this.value)" />
+    <span class="search-clear" id="searchClear" onclick="clearSearch()">×</span>
+  </div>
+  <div class="search-hits" id="searchHits"></div>
+
+  <div class="theme-toggle">
+    <span class="theme-label" id="theme-label">Világos mód</span>
+    <button class="toggle-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Témaváltás">
+      <span class="toggle-knob">☀️</span>
+    </button>
+  </div>
+
+  <div class="sidebar-footer">CSR App &copy; 2026</div>
+</aside>
+
+<main>
+  <header>
+    <span id="page-title">Válassz egy menüpontot</span>
+    <span id="page-badge">CSR Learning</span>
+  </header>
+
+  <div id="welcome">
+    <div class="welcome-icon">📚</div>
+    <h2>Üdvözlünk a CSR Learning App-ban!</h2>
+    <p>Válassz egy menüpontot a bal oldali sávból a tartalom megnyitásához.</p>
+    <div class="welcome-cards">
+      <div class="welcome-card" onclick="loadPage('html/12_honap_roadmap.html','12 hónapos roadmap')">
+        🗺️ 12 hónapos roadmap
+      </div>
+      <div class="welcome-card" onclick="loadPage('html/napi_heti_honapi_planner.html','Napi / Heti / Hónapi planner')">
+        📅 Napi / Heti / Hónapi planner
+      </div>
+      <div class="welcome-card" onclick="loadPage('html/master_12honap_planner.html','Master 12 hónapos planner')">
+        🧭 Master 12 hónapos planner
+      </div>
+      <div class="welcome-card" onclick="loadPage('html/master_checklist_12honap.html','Master 12 hónapos checklist')">
+        📋 Master 12 hónapos checklist
+      </div>
+    </div>
+  </div>
+
+  <iframe id="content-frame" title="Tartalom"></iframe>
+</main>
+
+<script>
+  const frame      = document.getElementById('content-frame');
+  const welcome    = document.getElementById('welcome');
+  const titleEl    = document.getElementById('page-title');
+  const links      = document.querySelectorAll('.nav-link');
+  const toggleBtn  = document.getElementById('themeToggle');
+  const themeLabel = document.getElementById('theme-label');
+  const knob       = toggleBtn.querySelector('.toggle-knob');
+  const searchInp  = document.getElementById('searchInput');
+  const searchClear= document.getElementById('searchClear');
+  const searchHits = document.getElementById('searchHits');
+
+  let currentTheme = 'light';
+  let currentQuery = '';
+
+  try {
+    const saved = localStorage.getItem('csr_theme');
+    if (saved) { currentTheme = saved; applyTheme(currentTheme, false); }
+  } catch(e) {}
+
+  function applyTheme(theme, save = true) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    const dark = theme === 'dark';
+    toggleBtn.classList.toggle('on', dark);
+    knob.textContent = dark ? '🌙' : '☀️';
+    themeLabel.textContent = dark ? 'Sötét mód' : 'Világos mód';
+    if (save) {
+      try { localStorage.setItem('csr_theme', theme); } catch(e) {}
+    }
+    postToFrame({ type: 'theme', value: theme });
+  }
+
+  function toggleTheme() {
+    applyTheme(currentTheme === 'light' ? 'dark' : 'light');
+  }
+
+  function postToFrame(msg) {
+    if (frame.contentWindow && frame.style.display !== 'none') {
+      frame.contentWindow.postMessage(msg, '*');
+    }
+  }
+
+  function onSearch(q) {
+    currentQuery = q.trim();
+    searchClear.style.display = currentQuery ? 'block' : 'none';
+    searchHits.textContent = '';
+    postToFrame({ type: 'search', query: currentQuery });
+  }
+
+  function clearSearch() {
+    searchInp.value = '';
+    onSearch('');
+    searchInp.focus();
+  }
+
+  window.addEventListener('message', e => {
+    if (e.data && e.data.type === 'searchResult') {
+      const { count, total } = e.data;
+      searchHits.textContent = currentQuery
+        ? (count > 0 ? `${count} találat` : 'Nincs találat')
+        : '';
+    }
+  });
+
+  function loadPage(file, label) {
+    frame.src = file;
+    frame.style.display = 'block';
+    welcome.style.display = 'none';
+    titleEl.textContent = label;
+    links.forEach(l => l.classList.toggle('active', l.dataset.file === file));
+    frame.onload = () => {
+      postToFrame({ type: 'theme', value: currentTheme });
+      if (currentQuery) postToFrame({ type: 'search', query: currentQuery });
+    };
+  }
+
+  links.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      loadPage(link.dataset.file, link.dataset.title);
+    });
+  });
+
+  searchInp.addEventListener('keydown', e => {
+    if (e.key === 'Escape') clearSearch();
+  });
+</script>
+
+</body>
+</html>

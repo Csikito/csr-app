@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #f8fafc;
+    --bg2:         #f1f5f9;
+    --card:        #ffffff;
+    --border:      #e2e8f0;
+    --border2:     #f1f5f9;
+    --text:        #1e293b;
+    --muted:       #64748b;
+    --subtle:      #94a3b8;
+    --shadow:      0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+    --shadow-md:   0 4px 12px rgba(0,0,0,.08);
+    --radius:      10px;
+    --radius-sm:   7px;
+    --transition:  .15s ease;
+
+    --g-bg:   #e8faf3; --g-text: #065f46; --g-border: #6ee7b7; --g-dot: #1D9E75;
+    --b-bg:   #dbeafe; --b-text: #1e40af; --b-border: #93c5fd; --b-dot: #378ADD;
+    --o-bg:   #fef3c7; --o-text: #92400e; --o-border: #fcd34d; --o-dot: #BA7517;
+  }
+
+  [data-theme="dark"] {
+    --bg:    #0f172a;
+    --bg2:   #1e293b;
+    --card:  #1e293b;
+    --border: #334155;
+    --border2: #1e293b;
+    --text:  #f1f5f9;
+    --muted: #94a3b8;
+    --subtle: #475569;
+    --shadow:    0 1px 4px rgba(0,0,0,.4);
+    --shadow-md: 0 4px 16px rgba(0,0,0,.4);
+
+    --g-bg:   rgba(29,158,117,.18); --g-text: #6ee7b7; --g-border: rgba(29,158,117,.4); --g-dot: #34d399;
+    --b-bg:   rgba(55,138,221,.18); --b-text: #93c5fd; --b-border: rgba(55,138,221,.4); --b-dot: #60a5fa;
+    --o-bg:   rgba(186,117,23,.18); --o-text: #fcd34d; --o-border: rgba(186,117,23,.4); --o-dot: #fbbf24;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 20px;
+    min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
+    font-size: 14px;
+  }
+
+  /* Phase nav */
+  .phase-nav {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .phase-btn {
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+    box-shadow: var(--shadow);
+  }
+  .phase-btn:hover { border-color: var(--subtle); color: var(--text); }
+  .phase-btn.active { background: #4f46e5; color: #fff; border-color: #4f46e5; box-shadow: 0 2px 8px rgba(79,70,229,.3); }
+
+  /* Month grid */
+  .month-grid {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .month-chip {
+    padding: 8px 4px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all var(--transition);
+    box-shadow: var(--shadow);
+  }
+  .month-chip:hover { border-color: var(--subtle); color: var(--text); }
+
+  .month-chip.p1 { border-left: 3px solid var(--g-dot); }
+  .month-chip.p2 { border-left: 3px solid var(--b-dot); }
+  .month-chip.p3 { border-left: 3px solid var(--o-dot); }
+
+  .month-chip.active.p1 { background: var(--g-bg); color: var(--g-text); border-color: var(--g-border); }
+  .month-chip.active.p2 { background: var(--b-bg); color: var(--b-text); border-color: var(--b-border); }
+  .month-chip.active.p3 { background: var(--o-bg); color: var(--o-text); border-color: var(--o-border); }
+
+  /* Detail card */
+  .detail-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow-md);
+    transition: background var(--transition), border-color var(--transition);
+  }
+
+  .month-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .phase-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+    letter-spacing: .3px;
+  }
+  .p1-badge { background: var(--g-bg); color: var(--g-text); border: 1px solid var(--g-border); }
+  .p2-badge { background: var(--b-bg); color: var(--b-text); border: 1px solid var(--b-border); }
+  .p3-badge { background: var(--o-bg); color: var(--o-text); border: 1px solid var(--o-border); }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin: 18px 0 8px;
+  }
+
+  .task-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.55;
+    padding: 8px 10px;
+    background: var(--bg2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border2);
+  }
+
+  .task-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .p1-dot { background: var(--g-dot); }
+  .p2-dot { background: var(--b-dot); }
+  .p3-dot { background: var(--o-dot); }
+
+  /* Daily box */
+  .daily-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-top: 14px;
+  }
+  .daily-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 8px;
+  }
+  .daily-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .daily-row:last-child { border-bottom: none; }
+  .daily-time {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    background: var(--card);
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
+
+  /* Focus bars */
+  .focus-bar { margin-top: 14px; }
+  .focus-row { margin-bottom: 8px; }
+  .focus-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .bar-bg {
+    height: 7px;
+    background: var(--bg2);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width .4s ease;
+  }
+
+  mark {
+    background: rgba(250,204,21,.4);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+  [data-theme="dark"] mark {
+    background: rgba(250,204,21,.22);
+  }
+
+  .month-chip.no-match {
+    opacity: .28;
+    pointer-events: none;
+  }
+  .month-chip.has-match {
+    outline: 2px solid rgba(250,204,21,.6);
+    outline-offset: 1px;
+  }
+
+  .search-banner {
+    display: none;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 7px 12px;
+    margin-bottom: 12px;
+  }
+  .search-banner.visible { display: block; }
+</style>
+</head>
+<body>
+
+<div class="search-banner" id="searchBanner"></div>
+<div class="phase-nav">
+  <button class="phase-btn active" onclick="setPhase(0)">Mind</button>
+  <button class="phase-btn" onclick="setPhase(1)">1–3 hó: Alapok</button>
+  <button class="phase-btn" onclick="setPhase(2)">4–7 hó: Építés</button>
+  <button class="phase-btn" onclick="setPhase(3)">8–12 hó: Piac</button>
+</div>
+
+<div class="month-grid" id="monthGrid"></div>
+<div class="detail-card" id="detailCard"></div>
+
+<script>
+const months = [
+  { label:"1. hó", phase:1, title:"1. hónap – Angol alap + önismeret", badge:"Alapok", badgeClass:"p1-badge",
+    weekly:["Napi 20 perc angol hallgatás bevezetése (Fireship, podcast)","Jelenlegi CV átírása angolul – nyers verzió","GitHub profil rendbe tétele – bio, pinned repók","Írj le 5 projektet amit csináltál (magyarul, majd angolul)"],
+    daily:[{task:"Angol hallgatás",time:"20 perc"},{task:"1 tech fogalom angolul",time:"5 perc"},{task:"LinkedIn feed olvasás angolul",time:"10 perc"}],
+    focus:[{label:"Angol",val:60,color:"#1D9E75"},{label:"Portfólió",val:30,color:"#1D9E75"},{label:"Munka / tanulás",val:10,color:"#1D9E75"}]},
+  { label:"2. hó", phase:1, title:"2. hónap – LinkedIn + niche pozicionálás", badge:"Alapok", badgeClass:"p1-badge",
+    weekly:["LinkedIn profil teljes átírása angolul (bio, tapasztalat, skills)","Niche kulcsszavak beépítése: BACnet, BMS, Python, IoT","1 db anonimizált projekt leírás angolul (pl. PFR rendszer)","Shadowing technika bevezetése az angol rutinba"],
+    daily:[{task:"Shadowing (utánmondás)",time:"15 perc"},{task:"LinkedIn poszt olvasás / lájkolás",time:"10 perc"},{task:"1 mondat angolul a napi munkáról",time:"5 perc"}],
+    focus:[{label:"Angol",val:50,color:"#1D9E75"},{label:"LinkedIn / brand",val:40,color:"#1D9E75"},{label:"Portfólió írás",val:10,color:"#1D9E75"}]},
+  { label:"3. hó", phase:1, title:"3. hónap – CV + mock interjú kísérlet", badge:"Alapok", badgeClass:"p1-badge",
+    weekly:["CV véglegesítése – 1 oldal, konkrét számok, angol","Első mock interjú ChatGPT-vel angolul (self-intro)","Lakásvásárlás döntés meghozatala, hitel ügyintézés indítása","5-10 remote cég azonosítása (Facilio, Mapped, 75F, stb.)"],
+    daily:[{task:"Angol írás (chat, napló)",time:"15 perc"},{task:"1 céges LinkedIn oldal megnézése",time:"5 perc"},{task:"Shadowing / podcast",time:"20 perc"}],
+    focus:[{label:"Angol",val:40,color:"#1D9E75"},{label:"CV / interjú prep",val:35,color:"#1D9E75"},{label:"Piackutatás",val:25,color:"#1D9E75"}]},
+  { label:"4. hó", phase:2, title:"4. hónap – ML mélyítés + GitHub tartalom", badge:"Építés", badgeClass:"p2-badge",
+    weekly:["XGBoost elmélet átnézése (Kaggle micro-course, ingyenes)","1 publikus GitHub projekt elindítása – anonimizált BMS demo","Első LinkedIn poszt angolul – valami amit tanultál","Interjú kérdések gyűjtése BMS/Python témában"],
+    daily:[{task:"Angol + tech tanulás",time:"30 perc"},{task:"GitHub / kód",time:"20 perc"},{task:"LinkedIn aktivitás",time:"10 perc"}],
+    focus:[{label:"ML mélyítés",val:40,color:"#378ADD"},{label:"GitHub portfólió",val:35,color:"#378ADD"},{label:"Angol",val:25,color:"#378ADD"}]},
+  { label:"5. hó", phase:2, title:"5. hónap – Rendszerarchitektúra tudás", badge:"Építés", badgeClass:"p2-badge",
+    weekly:["System design alapok: hogyan magyarázol el egy komplex rendszert","Írd le angolul a SiPass integrációt mint esettanulmányt","Próba interjú baráttal vagy Pramp.com-on angolul","WeWorkRemotely / Remote.co – első jobhirdetések olvasása"],
+    daily:[{task:"Angol írás / olvasás",time:"25 perc"},{task:"System design videó",time:"20 perc"},{task:"Job board böngészés",time:"10 perc"}],
+    focus:[{label:"System design",val:40,color:"#378ADD"},{label:"Angol",val:35,color:"#378ADD"},{label:"Piackutatás",val:25,color:"#378ADD"}]},
+  { label:"6. hó", phase:2, title:"6. hónap – Solutions Engineer / PM fókusz", badge:"Építés", badgeClass:"p2-badge",
+    weekly:["Solutions Engineer és Technical PM szerepkörök megismerése","2-3 konkrét cég részletes kutatása (mi a termékük, mi a stack-jük)","Cover letter sablon megírása angolul a niche-re szabva","LinkedIn kapcsolatépítés: 5 BMS/IoT területen dolgozó ember"],
+    daily:[{task:"Angol (írás fókusz)",time:"25 perc"},{task:"Iparági olvasás (BMS trend)",time:"15 perc"},{task:"Networking / LinkedIn",time:"10 perc"}],
+    focus:[{label:"Szerepkör research",val:35,color:"#378ADD"},{label:"Angol",val:35,color:"#378ADD"},{label:"Networking",val:30,color:"#378ADD"}]},
+  { label:"7. hó", phase:2, title:"7. hónap – Interjú felkészülés", badge:"Építés", badgeClass:"p2-badge",
+    weekly:["STAR módszer megtanulása (Situation, Task, Action, Result)","10 STAR story elkészítése a saját tapasztalataidból angolul","Tech interjú szimulálása: BACnet, ML pipeline, rendszerintegráció","Behavioral interjú kérdések angolul (miért vált, erős/gyenge pont)"],
+    daily:[{task:"STAR story írás / finomítás",time:"20 perc"},{task:"Angol beszéd (hangos)",time:"15 perc"},{task:"Mock kérdés 1 db megválaszolása",time:"15 perc"}],
+    focus:[{label:"Interjú prep",val:50,color:"#378ADD"},{label:"Angol (beszéd)",val:35,color:"#378ADD"},{label:"Portfólió polish",val:15,color:"#378ADD"}]},
+  { label:"8. hó", phase:3, title:"8. hónap – Első jelentkezések", badge:"Piac", badgeClass:"p3-badge",
+    weekly:["Heti 3-5 pozícióra jelentkezés (minőség > mennyiség)","Minden jelentkezés testreszabott cover letter-rel","LinkedIn Easy Apply + direkt emailek hiring manager-eknek","Visszajelzések nyomon követése – tracking sheet"],
+    daily:[{task:"Job board ellenőrzés",time:"15 perc"},{task:"1 jelentkezés megírása / küldése",time:"30 perc"},{task:"Angol fenntartás",time:"20 perc"}],
+    focus:[{label:"Aktív jelentkezés",val:55,color:"#BA7517"},{label:"Angol",val:25,color:"#BA7517"},{label:"Networking",val:20,color:"#BA7517"}]},
+  { label:"9. hó", phase:3, title:"9. hónap – Interjú sorozat", badge:"Piac", badgeClass:"p3-badge",
+    weekly:["Minden interjú után írj visszajelzést magadnak mi ment jól/rosszul","Folytatni a jelentkezéseket (pipeline > 1 lehetőség egyszerre)","Ha nincs visszahívás: CV / LinkedIn finomhangolás","Slack közösségek: BuildingOS, smart building tech csoportok"],
+    daily:[{task:"Interjú prep / review",time:"20 perc"},{task:"Angol (hallgatás + írás)",time:"20 perc"},{task:"Jelentkezés / networking",time:"20 perc"}],
+    focus:[{label:"Interjú / follow-up",val:50,color:"#BA7517"},{label:"Új jelentkezések",val:30,color:"#BA7517"},{label:"Angol",val:20,color:"#BA7517"}]},
+  { label:"10. hó", phase:3, title:"10. hónap – Pipeline + tárgyalás", badge:"Piac", badgeClass:"p3-badge",
+    weekly:["Ha ajánlat érkezett: salary negotiation technikák megtanulása","Több ajánlatot generálni egyszerre – soha ne az első ajánlatnál állj meg","Fizetési sávok kutatása: Glassdoor, Levels.fyi, LinkedIn Salary","Ha nincs ajánlat: niche szűkítése vagy iparváltás értékelése"],
+    daily:[{task:"Aktív pipeline kezelés",time:"30 perc"},{task:"Angol + negotiation prep",time:"20 perc"},{task:"Iparági olvasás",time:"10 perc"}],
+    focus:[{label:"Tárgyalás / döntés",val:45,color:"#BA7517"},{label:"Pipeline",val:35,color:"#BA7517"},{label:"Angol",val:20,color:"#BA7517"}]},
+  { label:"11. hó", phase:3, title:"11. hónap – Döntés és átmenet tervezés", badge:"Piac", badgeClass:"p3-badge",
+    weekly:["Ajánlat értékelése: fizetés, remote policy, növekedési lehetőség","Felmondás tervezése: felmondási idő, átadás a jelenlegi munkahelyen","Onboarding felkészülés: mit kell még tanulni az új szerephez","Megtakarítási terv frissítése az új jövedelemhez"],
+    daily:[{task:"Új szerep tech prep",time:"30 perc"},{task:"Angol fenntartás",time:"20 perc"},{task:"Pénzügyi tervezés review",time:"10 perc"}],
+    focus:[{label:"Döntés / átmenet",val:50,color:"#BA7517"},{label:"Tech felkészülés",val:30,color:"#BA7517"},{label:"Pénzügyi terv",val:20,color:"#BA7517"}]},
+  { label:"12. hó", phase:3, title:"12. hónap – Új fejezet", badge:"Piac", badgeClass:"p3-badge",
+    weekly:["Ha megvan az állás: első 90 nap tervének elkészítése","Ha még folyamatban: kitartás, a legjobb ajánlatig nem állsz meg","Visszatekintés: mi változott 12 hónap alatt (angol, portfólió, tudás)","Következő 12 hónap céljainak felállítása (ETF, sportautó alap)"],
+    daily:[{task:"Onboarding / új szerep",time:"önálló"},{task:"Angol – szint fenntartás",time:"15 perc"},{task:"Megtakarítás indítása",time:"havi rendszeres"}],
+    focus:[{label:"Új pozíció",val:60,color:"#BA7517"},{label:"Pénzügyek",val:25,color:"#BA7517"},{label:"Fejlődés",val:15,color:"#BA7517"}]}
+];
+
+let activePhase = 0, activeMonth = 0;
+
+function phaseClass(p) { return p===1?"p1":p===2?"p2":"p3"; }
+function dotClass(p)   { return p===1?"p1-dot":p===2?"p2-dot":"p3-dot"; }
+
+function setPhase(p) {
+  activePhase = p;
+  document.querySelectorAll(".phase-btn").forEach((b,i) => b.classList.toggle("active", i===p));
+  activeMonth = 0;
+  renderGrid();
+  const visible = activePhase===0 ? months : months.filter(m=>m.phase===activePhase);
+  renderDetail(visible[0]);
+}
+
+function renderGrid() {
+  const grid = document.getElementById("monthGrid");
+  const visible = activePhase===0 ? months : months.filter(m=>m.phase===activePhase);
+  grid.style.gridTemplateColumns = `repeat(${visible.length},1fr)`;
+  grid.innerHTML = visible.map((m,i) =>
+    `<div class="month-chip ${phaseClass(m.phase)} ${i===activeMonth?"active":""}" onclick="selectMonth(${i})">${m.label}</div>`
+  ).join("");
+}
+
+function selectMonth(i) {
+  activeMonth = i;
+  const visible = activePhase===0 ? months : months.filter(m=>m.phase===activePhase);
+  renderGrid();
+  renderDetail(visible[i]);
+}
+
+function renderDetail(m) {
+  const dc = dotClass(m.phase);
+  document.getElementById("detailCard").innerHTML = `
+    <div class="month-title">${m.title}</div>
+    <span class="phase-badge ${m.badgeClass}">${m.badge} fázis</span>
+    <div class="section-title">Heti feladatok</div>
+    <ul class="task-list">
+      ${m.weekly.map(t=>`<li class="task-item"><span class="task-dot ${dc}"></span>${t}</li>`).join("")}
+    </ul>
+    <div class="daily-box">
+      <div class="daily-title">Napi rutin</div>
+      ${m.daily.map(d=>`<div class="daily-row"><span>${d.task}</span><span class="daily-time">${d.time}</span></div>`).join("")}
+    </div>
+    <div class="focus-bar">
+      <div class="section-title">Fókusz megoszlás</div>
+      ${m.focus.map(f=>`
+        <div class="focus-row">
+          <div class="focus-label"><span>${f.label}</span><span>${f.val}%</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${f.val}%;background:${f.color}"></div></div>
+        </div>
+      `).join("")}
+    </div>`;
+}
+
+renderGrid();
+renderDetail(months[0]);
+
+let currentQuery = '';
+
+function hl(text, q) {
+  if (!q) return text;
+  const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${esc})`, 'gi'), '<mark>$1</mark>');
+}
+
+function matchesQuery(m, q) {
+  if (!q) return true;
+  const low = q.toLowerCase();
+  return m.title.toLowerCase().includes(low)
+    || m.weekly.some(t => t.toLowerCase().includes(low))
+    || m.daily.some(d => d.task.toLowerCase().includes(low))
+    || m.focus.some(f => f.label.toLowerCase().includes(low));
+}
+
+function applySearch(q) {
+  currentQuery = q;
+  const banner = document.getElementById('searchBanner');
+  const visible = activePhase === 0 ? months : months.filter(m => m.phase === activePhase);
+
+  if (!q) {
+    banner.classList.remove('visible');
+    visible.forEach((_, i) => {
+      const chip = document.querySelector(`#monthGrid .month-chip:nth-child(${i+1})`);
+      if (chip) { chip.classList.remove('no-match','has-match'); }
+    });
+    renderDetail(visible[activeMonth] || visible[0]);
+    window.parent && window.parent.postMessage({ type: 'searchResult', count: 0, total: 0 }, '*');
+    return;
+  }
+
+  const matches = visible.filter(m => matchesQuery(m, q));
+  banner.textContent = matches.length
+    ? `🔍 "${q}" — ${matches.length} hónap tartalmaz egyezést`
+    : `🔍 "${q}" — nincs találat`;
+  banner.classList.add('visible');
+
+  visible.forEach((m, i) => {
+    const chip = document.querySelector(`#monthGrid .month-chip:nth-child(${i+1})`);
+    if (!chip) return;
+    const hit = matchesQuery(m, q);
+    chip.classList.toggle('no-match', !hit);
+    chip.classList.toggle('has-match', hit);
+  });
+
+  if (matches.length > 0) {
+    const firstIdx = visible.indexOf(matches[0]);
+    if (firstIdx !== -1) { activeMonth = firstIdx; renderGrid(); }
+    renderDetail(matches[0]);
+  }
+
+  window.parent && window.parent.postMessage({ type: 'searchResult', count: matches.length, total: visible.length }, '*');
+}
+
+function renderDetailWithSearch(m) {
+  const dc = dotClass(m.phase);
+  const q = currentQuery;
+  document.getElementById("detailCard").innerHTML = `
+    <div class="month-title">${hl(m.title, q)}</div>
+    <span class="phase-badge ${m.badgeClass}">${m.badge} fázis</span>
+    <div class="section-title">Heti feladatok</div>
+    <ul class="task-list">
+      ${m.weekly.map(t=>`<li class="task-item"><span class="task-dot ${dc}"></span>${hl(t, q)}</li>`).join("")}
+    </ul>
+    <div class="daily-box">
+      <div class="daily-title">Napi rutin</div>
+      ${m.daily.map(d=>`<div class="daily-row"><span>${hl(d.task, q)}</span><span class="daily-time">${d.time}</span></div>`).join("")}
+    </div>
+    <div class="focus-bar">
+      <div class="section-title">Fókusz megoszlás</div>
+      ${m.focus.map(f=>`
+        <div class="focus-row">
+          <div class="focus-label"><span>${hl(f.label, q)}</span><span>${f.val}%</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${f.val}%;background:${f.color}"></div></div>
+        </div>
+      `).join("")}
+    </div>`;
+}
+
+const _origRenderDetail = renderDetail;
+renderDetail = renderDetailWithSearch;
+
+window.addEventListener('message', e => {
+  if (!e.data) return;
+  if (e.data.type === 'theme') {
+    document.documentElement.setAttribute('data-theme', e.data.value);
+  }
+  if (e.data.type === 'search') {
+    applySearch(e.data.query);
+  }
+});
+
+try {
+  const t = localStorage.getItem('csr_theme');
+  if (t) document.documentElement.setAttribute('data-theme', t);
+} catch(e) {}
+</script>
+</body>
+</html>
