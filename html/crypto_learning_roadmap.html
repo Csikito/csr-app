@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kriptó Tanulási Roadmap</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root {
+  --bg:#f8fafc; --bg2:#f1f5f9; --card:#fff; --border:#e2e8f0;
+  --text:#1e293b; --muted:#64748b; --subtle:#94a3b8;
+  --shadow:0 1px 3px rgba(0,0,0,.08);
+  --radius:10px; --radius-sm:8px;
+  --transition:.15s ease;
+
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #64748b;
+  --color-text-tertiary: #94a3b8;
+  --color-text-success: #16a34a;
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f1f5f9;
+  --color-background-success: #f0fdf4;
+  --color-border-primary: #cbd5e1;
+  --color-border-secondary: #e2e8f0;
+  --color-border-tertiary: #f1f5f9;
+  --color-border-success: #86efac;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+}
+[data-theme="dark"] {
+  --bg:#0f172a; --bg2:#1e293b; --card:#1e293b; --border:#334155;
+  --text:#f1f5f9; --muted:#94a3b8; --subtle:#475569;
+  --shadow:0 1px 4px rgba(0,0,0,.4);
+
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-tertiary: #475569;
+  --color-text-success: #4ade80;
+  --color-background-primary: #1e293b;
+  --color-background-secondary: #0f172a;
+  --color-background-success: rgba(22,163,74,.15);
+  --color-border-primary: #475569;
+  --color-border-secondary: #334155;
+  --color-border-tertiary: #1e293b;
+  --color-border-success: rgba(134,239,172,.4);
+}
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  transition: background var(--transition), color var(--transition);
+}
+.page-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.page-sub {
+  font-size: .82rem;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+
+/* search banner */
+.search-banner {
+  display: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.search-banner.visible { display: block; }
+
+.section-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 10px; }
+.phase-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s, opacity 0.15s; }
+.phase-card:hover { border-color: var(--color-border-secondary); }
+.phase-card.open { border-color: var(--color-border-primary); }
+.phase-card.no-match { display: none; }
+.phase-header { display: flex; align-items: center; gap: 10px; }
+.phase-badge { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
+.phase-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.phase-sub { font-size: 12px; color: var(--color-text-tertiary); margin-top: 2px; }
+.phase-body { margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--color-border-tertiary); display: none; }
+.phase-card.open .phase-body { display: block; }
+.item-row { display: flex; gap: 8px; margin-bottom: 7px; font-size: 13px; color: var(--color-text-secondary); align-items: flex-start; line-height: 1.5; }
+.item-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.check-row { display: flex; gap: 8px; margin-bottom: 6px; font-size: 13px; align-items: flex-start; }
+.check-box { width: 16px; height: 16px; border: 0.5px solid var(--color-border-secondary); border-radius: 4px; flex-shrink: 0; margin-top: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: background .15s, border-color .15s; }
+.check-box.done { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+.tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); margin: 2px 2px 0 0; }
+.today-item { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; margin-bottom: 6px; font-size: 13px; }
+.today-label { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 2px; }
+.progress-bar { height: 4px; background: var(--color-background-secondary); border-radius: 2px; margin: 6px 0 12px; }
+.progress-fill { height: 100%; border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div class="page-title">₿ Kriptó tanulási roadmap</div>
+<div class="page-sub">Kattints bármelyik fázisra a részletekért</div>
+
+<div class="search-banner" id="searchBanner"></div>
+
+<div style="padding: 0;">
+
+<div class="section-title">Mai nap – amit megtanultál</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 20px;">
+  <div class="today-item"><div class="today-label">Trade elemzés</div>A TURBO trade-ed nem volt szerencse – oversold bounce + support + stabilizáció volt mögötte</div>
+  <div class="today-item"><div class="today-label">RSI</div>Hogyan számolódik, mit jelent a 30 alatti és 70 feletti zóna, és hogyan nézd élőben</div>
+  <div class="today-item"><div class="today-label">Support szint</div>Miért pattan vissza az ár ugyanazon a szinten, és hogyan azonosítsd</div>
+  <div class="today-item"><div class="today-label">Stabilizáció</div>Csökkenő kilengés + csökkenő volume + vízszintes ár = eladók elfogytak</div>
+  <div class="today-item"><div class="today-label">A 3 szűrő együtt</div>RSI + support + stabilizáció kombinálva 9 jelzésből 3 erős maradt 2024-ben</div>
+  <div class="today-item"><div class="today-label">Intraday vs. swing</div>15 perces chart belépési pont, napi/heti chart döntési alap – más célra való</div>
+</div>
+
+<div class="section-title">Tanulási útvonal – alapoktól haladóig</div>
+
+<div class="phase-card open" onclick="toggle(this)">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:#EAF3DE;color:#27500A">1</div>
+    <div><div class="phase-title">Alapok – piac és eszközök megértése</div><div class="phase-sub">~2-3 hét | Ezt most kezded el</div></div>
+    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+  </div>
+  <div class="phase-body">
+    <div class="progress-bar"><div class="progress-fill" style="width:30%;background:#4CAF50"></div></div>
+    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">~30% kész a mai nap alapján</p>
+    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Mi a market cap és miért fontosabb mint az ár</span></div>
+    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">BTC/ETH vs altcoin kockázati különbség</span></div>
+    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">DCA stratégia alapelve</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Bitcoin whitepaper összefoglaló elolvasása</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Mi az a halving és hogyan befolyásolja a piacot</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>CEX vs DEX különbség (Binance vs Uniswap)</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Saját allokáció megtervezése (BTC/ETH/alt arány)</span></div>
+    <div style="margin-top:10px">
+      <span class="tag" style="background:#EAF3DE;color:#27500A">CoinGecko</span>
+      <span class="tag" style="background:#EAF3DE;color:#27500A">Investopedia crypto</span>
+      <span class="tag" style="background:#EAF3DE;color:#27500A">Fear & Greed Index</span>
+    </div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="toggle(this)">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:#E6F1FB;color:#0C447C">2</div>
+    <div><div class="phase-title">Technikai elemzés alapjai</div><div class="phase-sub">~3-4 hét | TradingView gyakorlás</div></div>
+    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+  </div>
+  <div class="phase-body">
+    <div class="progress-bar"><div class="progress-fill" style="width:40%;background:#378ADD"></div></div>
+    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">~40% kész a mai nap alapján</p>
+    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">RSI – számítás, túladott/túlvett zónák</span></div>
+    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Support szint – felismerés és értelmezés</span></div>
+    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Stabilizáció – 3 jel azonosítása</span></div>
+    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Volume megerősítés alapelve</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Resistance szint – mi az és hogyan különbözik a supporttól</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Moving Average (MA20, MA50, MA200) – trendszűrő</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Candlestick minták – doji, hammer, engulfing</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>MACD – mi az és mikor erősíti az RSI jelzést</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>TradingView-on saját TURBO chart annotálása visszamenőleg</span></div>
+    <div style="margin-top:10px">
+      <span class="tag" style="background:#E6F1FB;color:#0C447C">TradingView (ingyenes)</span>
+      <span class="tag" style="background:#E6F1FB;color:#0C447C">Babypips TA szekció</span>
+    </div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="toggle(this)">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:#FAEEDA;color:#633806">3</div>
+    <div><div class="phase-title">Trade menedzsment és kockázat</div><div class="phase-sub">~4-6 hét | Talán a legfontosabb szint</div></div>
+    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+  </div>
+  <div class="phase-body">
+    <div class="progress-bar"><div class="progress-fill" style="width:15%;background:#FF9800"></div></div>
+    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">~15% kész</p>
+    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Take profit előre meghatározása (te ezt már ösztönösen csináltad)</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Stop loss – hol van a "tévedtem" pont és hogyan számold ki</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Pozícióméretezés – maximum tőke % meghatározása trade-enként</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Részleges kiszállás – fele pozíció +30%-nál, maradék fut tovább</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Risk/Reward arány – csak 1:2+ trade-eket vegyél fel</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Trade napló vezetése – minden trade dokumentálva</span></div>
+    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>FOMO és pánik felismerése saját magadban</span></div>
+    <div style="margin-top:10px">
+      <span class="tag" style="background:#FAEEDA;color:#633806">Notion trade napló</span>
+      <span class="tag" style="background:#FAEEDA;color:#633806">Trading in the Zone (könyv)</span>
+    </div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="toggle(this)">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:#EEEDFE;color:#3C3489">4</div>
+    <div><div class="phase-title">On-chain elemzés és makro</div><div class="phase-sub">~6-8 hét | Itt különülnek el a jó trader-ek</div></div>
+    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+  </div>
+  <div class="phase-body">
+    <div class="progress-bar"><div class="progress-fill" style="width:5%;background:#9C27B0"></div></div>
+    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">~5% kész – ez a haladó terep</p>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Glassnode – láncon belüli adatok: exchange beáramlás/kiáramlás, whale mozgások</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>BTC dominancia – altcoin szezon azonosítása</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Funding rate (futures piac) – a piac irányára utal</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Fed kamatdöntések és crypto korreláció</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Liquidity heatmap – hol vannak a stop loss-ok felhalmozva</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Token unlock ütemezések – mikor jön sok új supply a piacra</span></div>
+    <div style="margin-top:10px">
+      <span class="tag" style="background:#EEEDFE;color:#3C3489">Glassnode</span>
+      <span class="tag" style="background:#EEEDFE;color:#3C3489">CryptoQuant</span>
+      <span class="tag" style="background:#EEEDFE;color:#3C3489">The Block</span>
+    </div>
+  </div>
+</div>
+
+<div class="phase-card" onclick="toggle(this)">
+  <div class="phase-header">
+    <div class="phase-badge" style="background:#E1F5EE;color:#085041">5</div>
+    <div><div class="phase-title">Haladó szint – rendszer és pszichológia</div><div class="phase-sub">~3-6 hónap folyamatos gyakorlás után</div></div>
+    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+  </div>
+  <div class="phase-body">
+    <div class="progress-bar"><div class="progress-fill" style="width:3%;background:#1D9E75"></div></div>
+    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">Ide vezet az út – de időbe telik</p>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Saját, ismételhető trade rendszer – leírva, tesztelt szabályokkal</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Backtesting – múltbeli adatokon ellenőrizted-e a stratégiád</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Érzelemmentes végrehajtás – a rendszered szerint cselekszel, nem az érzés szerint</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Több timeframe elemzés egyszerre (heti → napi → 4h → 1h)</span></div>
+    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Altcoin szelekció fundamentálisan is alátámasztva (nem csak chart)</span></div>
+    <div style="margin-top:10px;padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:12px;color:var(--color-text-secondary);">
+      A legtöbb trader sosem jut el ide – nem tudás hiánya miatt, hanem mert nem tartják be a saját szabályaikat.
+    </div>
+  </div>
+</div>
+
+<div style="margin-top:16px;padding:12px 16px;border-left:3px solid var(--color-border-tertiary);background:var(--color-background-secondary);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:13px;color:var(--color-text-secondary);">
+  <strong style="color:var(--color-text-primary)">Legközelebbi konkrét lépés:</strong> Nyisd meg a TradingView-t, keresd meg a BTC/USDT chartot, nézd vissza 2020 egész évét napi gyertyákon, és jelöld meg kézzel a support szinteket + az RSI 30 alatti pontokat. Már tudod mit keress.
+</div>
+
+</div>
+
+<script>
+function toggle(card) {
+  const wasOpen = card.classList.contains('open');
+  document.querySelectorAll('.phase-card').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) card.classList.add('open');
+}
+function chk(box) {
+  box.classList.toggle('done');
+  box.textContent = box.classList.contains('done') ? '✓' : '';
+}
+
+function doSearch(q) {
+  const low = q.trim().toLowerCase();
+  const banner = document.getElementById('searchBanner');
+  const cards = document.querySelectorAll('.phase-card');
+  let hits = 0;
+
+  if (!low) {
+    cards.forEach(c => c.classList.remove('no-match'));
+    banner.classList.remove('visible');
+    window.parent.postMessage({ type: 'searchResult', count: 0, total: 0 }, '*');
+    return;
+  }
+
+  cards.forEach(card => {
+    const match = card.textContent.toLowerCase().includes(low);
+    card.classList.toggle('no-match', !match);
+    if (match) hits++;
+  });
+
+  banner.textContent = hits > 0 ? `${hits} fázis tartalmazza: "${q}"` : `Nincs találat: "${q}"`;
+  banner.classList.add('visible');
+  window.parent.postMessage({ type: 'searchResult', count: hits, total: cards.length }, '*');
+}
+
+window.addEventListener('message', e => {
+  if (!e.data) return;
+  if (e.data.type === 'theme') {
+    document.documentElement.setAttribute('data-theme', e.data.value);
+  }
+  if (e.data.type === 'search') {
+    doSearch(e.data.query || '');
+  }
+});
+</script>
+</body>
+</html>
