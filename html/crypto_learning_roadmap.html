@@ -3,291 +3,441 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kriptó Tanulási Roadmap</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<title>Kriptó Befektetői Roadmap</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root {
   --bg:#f8fafc; --bg2:#f1f5f9; --card:#fff; --border:#e2e8f0;
   --text:#1e293b; --muted:#64748b; --subtle:#94a3b8;
-  --shadow:0 1px 3px rgba(0,0,0,.08);
-  --radius:10px; --radius-sm:8px;
-  --transition:.15s ease;
-
-  --color-text-primary: #1e293b;
-  --color-text-secondary: #64748b;
-  --color-text-tertiary: #94a3b8;
-  --color-text-success: #16a34a;
-  --color-background-primary: #ffffff;
-  --color-background-secondary: #f1f5f9;
-  --color-background-success: #f0fdf4;
-  --color-border-primary: #cbd5e1;
-  --color-border-secondary: #e2e8f0;
-  --color-border-tertiary: #f1f5f9;
-  --color-border-success: #86efac;
-  --border-radius-md: 8px;
-  --border-radius-lg: 12px;
+  --shadow:0 1px 3px rgba(0,0,0,.08); --radius:10px; --radius-sm:8px; --transition:.15s ease;
 }
 [data-theme="dark"] {
   --bg:#0f172a; --bg2:#1e293b; --card:#1e293b; --border:#334155;
-  --text:#f1f5f9; --muted:#94a3b8; --subtle:#475569;
-  --shadow:0 1px 4px rgba(0,0,0,.4);
-
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-tertiary: #475569;
-  --color-text-success: #4ade80;
-  --color-background-primary: #1e293b;
-  --color-background-secondary: #0f172a;
-  --color-background-success: rgba(22,163,74,.15);
-  --color-border-primary: #475569;
-  --color-border-secondary: #334155;
-  --color-border-tertiary: #1e293b;
-  --color-border-success: rgba(134,239,172,.4);
+  --text:#f1f5f9; --muted:#94a3b8; --subtle:#475569; --shadow:0 1px 4px rgba(0,0,0,.4);
 }
 body {
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  padding: 20px;
-  transition: background var(--transition), color var(--transition);
+  font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text);
+  padding:20px; transition:background var(--transition),color var(--transition);
 }
-.page-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.page-sub {
-  font-size: .82rem;
-  color: var(--muted);
-  margin-bottom: 20px;
-}
+.page-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; }
+.page-title  { font-size:1.15rem; font-weight:700; margin-bottom:4px; }
+.page-sub    { font-size:.82rem; color:var(--muted); }
+.save-ind    { font-size:11px; color:#34d399; opacity:0; transition:opacity .3s; white-space:nowrap; margin-top:4px; }
+.save-ind.show { opacity:1; }
 
-/* search banner */
 .search-banner {
-  display: none;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 8px 14px;
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
+  display:none; background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:8px 14px; font-size:13px;
+  color:var(--muted); margin-bottom:12px; box-shadow:var(--shadow);
 }
-.search-banner.visible { display: block; }
+.search-banner.visible { display:block; }
 
-.section-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 10px; }
-.phase-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s, opacity 0.15s; }
-.phase-card:hover { border-color: var(--color-border-secondary); }
-.phase-card.open { border-color: var(--color-border-primary); }
-.phase-card.no-match { display: none; }
-.phase-header { display: flex; align-items: center; gap: 10px; }
-.phase-badge { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; flex-shrink: 0; }
-.phase-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
-.phase-sub { font-size: 12px; color: var(--color-text-tertiary); margin-top: 2px; }
-.phase-body { margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--color-border-tertiary); display: none; }
-.phase-card.open .phase-body { display: block; }
-.item-row { display: flex; gap: 8px; margin-bottom: 7px; font-size: 13px; color: var(--color-text-secondary); align-items: flex-start; line-height: 1.5; }
-.item-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
-.check-row { display: flex; gap: 8px; margin-bottom: 6px; font-size: 13px; align-items: flex-start; }
-.check-box { width: 16px; height: 16px; border: 0.5px solid var(--color-border-secondary); border-radius: 4px; flex-shrink: 0; margin-top: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: background .15s, border-color .15s; }
-.check-box.done { background: var(--color-background-success); border-color: var(--color-border-success); color: var(--color-text-success); }
-.tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); margin: 2px 2px 0 0; }
-.today-item { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; margin-bottom: 6px; font-size: 13px; }
-.today-label { font-size: 11px; color: var(--color-text-tertiary); margin-bottom: 2px; }
-.progress-bar { height: 4px; background: var(--color-background-secondary); border-radius: 2px; margin: 6px 0 12px; }
-.progress-fill { height: 100%; border-radius: 2px; }
+.sec-row   { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.sec-title { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+.btn-add {
+  font-size:12px; font-weight:600; color:#4f46e5;
+  background:rgba(79,70,229,.08); border:1px solid rgba(79,70,229,.18);
+  border-radius:999px; padding:4px 14px; cursor:pointer; transition:all var(--transition);
+}
+.btn-add:hover { background:rgba(79,70,229,.16); }
+
+.edit-hint { font-size:11.5px; color:var(--subtle); margin-bottom:10px; }
+.today-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(165px,1fr));
+  gap:8px; margin-bottom:24px;
+}
+.today-card {
+  background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:10px 28px 10px 12px; position:relative;
+  transition:background var(--transition),border-color var(--transition);
+}
+.today-card:focus-within { border-color:#818cf8; box-shadow:0 0 0 2px rgba(129,140,248,.12); }
+.today-card-title {
+  font-size:10.5px; font-weight:700; color:var(--muted); text-transform:uppercase;
+  letter-spacing:.04em; margin-bottom:5px; outline:none; min-height:14px; cursor:text;
+}
+.today-card-body { font-size:13px; color:var(--text); line-height:1.5; outline:none; min-height:36px; cursor:text; }
+[contenteditable]:focus { background:rgba(79,70,229,.05); border-radius:3px; padding:1px 2px; }
+.today-del {
+  position:absolute; top:7px; right:8px; font-size:15px; line-height:1;
+  color:var(--subtle); background:none; border:none; cursor:pointer;
+  padding:2px 4px; border-radius:4px; opacity:.3; transition:opacity var(--transition),color var(--transition);
+}
+.today-card:hover .today-del { opacity:1; }
+.today-del:hover { color:var(--text); }
+
+.phase-card {
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm);
+  margin-bottom:10px; box-shadow:var(--shadow);
+  transition:border-color var(--transition),background var(--transition);
+}
+.phase-card.no-match { display:none; }
+.phase-header { display:flex; align-items:center; gap:10px; padding:14px 16px; cursor:pointer; user-select:none; }
+.phase-badge {
+  width:28px; height:28px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-size:13px; font-weight:700; flex-shrink:0;
+}
+.phase-info { flex:1; }
+.phase-title { font-size:14px; font-weight:600; color:var(--text); }
+.phase-sub   { font-size:11.5px; color:var(--muted); margin-top:2px; }
+.phase-chevron { font-size:14px; color:var(--subtle); transition:transform .2s; flex-shrink:0; }
+.phase-card.open .phase-chevron { transform:rotate(180deg); }
+.phase-body { padding:12px 16px 14px; display:none; border-top:1px solid var(--border); }
+.phase-card.open .phase-body { display:block; }
+
+.prog-bar   { height:4px; background:var(--bg2); border-radius:2px; margin-bottom:6px; }
+.prog-fill  { height:100%; border-radius:2px; transition:width .35s; }
+.prog-label { font-size:11px; color:var(--muted); margin-bottom:10px; }
+
+.check-row {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:7px 0; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:opacity var(--transition);
+}
+.check-row:last-child { border-bottom:none; }
+.check-row:hover { opacity:.8; }
+.check-row.done .check-txt { color:var(--muted); text-decoration:line-through; }
+.chk-box {
+  width:17px; height:17px; border-radius:4px; border:1.5px solid var(--border);
+  flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:#fff; transition:all var(--transition); margin-top:1px; background:var(--card);
+}
+.check-row.done .chk-box { background:#4f46e5; border-color:#4f46e5; }
+.check-txt { font-size:13px; color:var(--text); line-height:1.5; }
+
+.next-box {
+  margin-top:16px; padding:12px 16px;
+  border-left:3px solid #93c5fd; background:var(--bg2);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  font-size:13px; color:var(--muted); line-height:1.6;
+}
+.next-box strong { color:var(--text); }
+
+mark { background:rgba(250,204,21,.4); color:inherit; border-radius:2px; padding:0 1px; }
+[data-theme="dark"] mark { background:rgba(250,204,21,.22); }
 </style>
 </head>
 <body>
 
-<div class="page-title">₿ Kriptó tanulási roadmap</div>
-<div class="page-sub">Kattints bármelyik fázisra a részletekért</div>
+<div class="page-header">
+  <div>
+    <div class="page-title">&#x20BF; Kriptó befektetői roadmap</div>
+    <div class="page-sub">Hosszú távú, tudatos befektető stratégia – lépésről lépésre</div>
+  </div>
+  <span class="save-ind" id="saveInd">✓ Mentve</span>
+</div>
 
 <div class="search-banner" id="searchBanner"></div>
 
-<div style="padding: 0;">
+<div class="sec-row">
+  <div class="sec-title">📝 Amit megtanultam</div>
+  <button class="btn-add" onclick="addCard()">+ Új kártya</button>
+</div>
+<div class="edit-hint">✏️ Kattints bármelyik kártyára a szerkesztéshez – automatikusan mentődik</div>
+<div class="today-grid" id="todayCards"></div>
 
-<div class="section-title">Mai nap – amit megtanultál</div>
+<div class="sec-title" style="margin-bottom:10px;">Tanulási útvonal – alapoktól haladóig</div>
+<div id="phasesContainer"></div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 20px;">
-  <div class="today-item"><div class="today-label">Trade elemzés</div>A TURBO trade-ed nem volt szerencse – oversold bounce + support + stabilizáció volt mögötte</div>
-  <div class="today-item"><div class="today-label">RSI</div>Hogyan számolódik, mit jelent a 30 alatti és 70 feletti zóna, és hogyan nézd élőben</div>
-  <div class="today-item"><div class="today-label">Support szint</div>Miért pattan vissza az ár ugyanazon a szinten, és hogyan azonosítsd</div>
-  <div class="today-item"><div class="today-label">Stabilizáció</div>Csökkenő kilengés + csökkenő volume + vízszintes ár = eladók elfogytak</div>
-  <div class="today-item"><div class="today-label">A 3 szűrő együtt</div>RSI + support + stabilizáció kombinálva 9 jelzésből 3 erős maradt 2024-ben</div>
-  <div class="today-item"><div class="today-label">Intraday vs. swing</div>15 perces chart belépési pont, napi/heti chart döntési alap – más célra való</div>
+<div class="next-box">
+  <strong>Legközelebbi konkrét lépés:</strong> Határozd meg írásban: mennyit teszel be havonta, melyik exchange-en, és milyen arányban BTC vs ETH. Ez az egyetlen döntés, amit ma meg kell hoznod.
 </div>
 
-<div class="section-title">Tanulási útvonal – alapoktól haladóig</div>
-
-<div class="phase-card open" onclick="toggle(this)">
-  <div class="phase-header">
-    <div class="phase-badge" style="background:#EAF3DE;color:#27500A">1</div>
-    <div><div class="phase-title">Alapok – piac és eszközök megértése</div><div class="phase-sub">~2-3 hét | Ezt most kezded el</div></div>
-    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
-  </div>
-  <div class="phase-body">
-    <div class="progress-bar"><div class="progress-fill" style="width:30%;background:#4CAF50"></div></div>
-    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">~30% kész a mai nap alapján</p>
-    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Mi a market cap és miért fontosabb mint az ár</span></div>
-    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">BTC/ETH vs altcoin kockázati különbség</span></div>
-    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">DCA stratégia alapelve</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Bitcoin whitepaper összefoglaló elolvasása</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Mi az a halving és hogyan befolyásolja a piacot</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>CEX vs DEX különbség (Binance vs Uniswap)</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Saját allokáció megtervezése (BTC/ETH/alt arány)</span></div>
-    <div style="margin-top:10px">
-      <span class="tag" style="background:#EAF3DE;color:#27500A">CoinGecko</span>
-      <span class="tag" style="background:#EAF3DE;color:#27500A">Investopedia crypto</span>
-      <span class="tag" style="background:#EAF3DE;color:#27500A">Fear & Greed Index</span>
-    </div>
-  </div>
-</div>
-
-<div class="phase-card" onclick="toggle(this)">
-  <div class="phase-header">
-    <div class="phase-badge" style="background:#E6F1FB;color:#0C447C">2</div>
-    <div><div class="phase-title">Technikai elemzés alapjai</div><div class="phase-sub">~3-4 hét | TradingView gyakorlás</div></div>
-    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
-  </div>
-  <div class="phase-body">
-    <div class="progress-bar"><div class="progress-fill" style="width:40%;background:#378ADD"></div></div>
-    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">~40% kész a mai nap alapján</p>
-    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">RSI – számítás, túladott/túlvett zónák</span></div>
-    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Support szint – felismerés és értelmezés</span></div>
-    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Stabilizáció – 3 jel azonosítása</span></div>
-    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Volume megerősítés alapelve</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Resistance szint – mi az és hogyan különbözik a supporttól</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Moving Average (MA20, MA50, MA200) – trendszűrő</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Candlestick minták – doji, hammer, engulfing</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>MACD – mi az és mikor erősíti az RSI jelzést</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>TradingView-on saját TURBO chart annotálása visszamenőleg</span></div>
-    <div style="margin-top:10px">
-      <span class="tag" style="background:#E6F1FB;color:#0C447C">TradingView (ingyenes)</span>
-      <span class="tag" style="background:#E6F1FB;color:#0C447C">Babypips TA szekció</span>
-    </div>
-  </div>
-</div>
-
-<div class="phase-card" onclick="toggle(this)">
-  <div class="phase-header">
-    <div class="phase-badge" style="background:#FAEEDA;color:#633806">3</div>
-    <div><div class="phase-title">Trade menedzsment és kockázat</div><div class="phase-sub">~4-6 hét | Talán a legfontosabb szint</div></div>
-    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
-  </div>
-  <div class="phase-body">
-    <div class="progress-bar"><div class="progress-fill" style="width:15%;background:#FF9800"></div></div>
-    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">~15% kész</p>
-    <div class="check-row"><div class="check-box done" onclick="event.stopPropagation()">✓</div><span style="color:var(--color-text-primary)">Take profit előre meghatározása (te ezt már ösztönösen csináltad)</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Stop loss – hol van a "tévedtem" pont és hogyan számold ki</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Pozícióméretezés – maximum tőke % meghatározása trade-enként</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Részleges kiszállás – fele pozíció +30%-nál, maradék fut tovább</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Risk/Reward arány – csak 1:2+ trade-eket vegyél fel</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>Trade napló vezetése – minden trade dokumentálva</span></div>
-    <div class="check-row"><div class="check-box" onclick="chk(this);event.stopPropagation()"></div><span>FOMO és pánik felismerése saját magadban</span></div>
-    <div style="margin-top:10px">
-      <span class="tag" style="background:#FAEEDA;color:#633806">Notion trade napló</span>
-      <span class="tag" style="background:#FAEEDA;color:#633806">Trading in the Zone (könyv)</span>
-    </div>
-  </div>
-</div>
-
-<div class="phase-card" onclick="toggle(this)">
-  <div class="phase-header">
-    <div class="phase-badge" style="background:#EEEDFE;color:#3C3489">4</div>
-    <div><div class="phase-title">On-chain elemzés és makro</div><div class="phase-sub">~6-8 hét | Itt különülnek el a jó trader-ek</div></div>
-    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
-  </div>
-  <div class="phase-body">
-    <div class="progress-bar"><div class="progress-fill" style="width:5%;background:#9C27B0"></div></div>
-    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">~5% kész – ez a haladó terep</p>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Glassnode – láncon belüli adatok: exchange beáramlás/kiáramlás, whale mozgások</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>BTC dominancia – altcoin szezon azonosítása</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Funding rate (futures piac) – a piac irányára utal</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Fed kamatdöntések és crypto korreláció</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Liquidity heatmap – hol vannak a stop loss-ok felhalmozva</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#9C27B0" aria-hidden="true"></i><span>Token unlock ütemezések – mikor jön sok új supply a piacra</span></div>
-    <div style="margin-top:10px">
-      <span class="tag" style="background:#EEEDFE;color:#3C3489">Glassnode</span>
-      <span class="tag" style="background:#EEEDFE;color:#3C3489">CryptoQuant</span>
-      <span class="tag" style="background:#EEEDFE;color:#3C3489">The Block</span>
-    </div>
-  </div>
-</div>
-
-<div class="phase-card" onclick="toggle(this)">
-  <div class="phase-header">
-    <div class="phase-badge" style="background:#E1F5EE;color:#085041">5</div>
-    <div><div class="phase-title">Haladó szint – rendszer és pszichológia</div><div class="phase-sub">~3-6 hónap folyamatos gyakorlás után</div></div>
-    <i class="ti ti-chevron-down" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
-  </div>
-  <div class="phase-body">
-    <div class="progress-bar"><div class="progress-fill" style="width:3%;background:#1D9E75"></div></div>
-    <p style="font-size:12px;color:var(--color-text-tertiary);margin:0 0 10px">Ide vezet az út – de időbe telik</p>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Saját, ismételhető trade rendszer – leírva, tesztelt szabályokkal</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Backtesting – múltbeli adatokon ellenőrizted-e a stratégiád</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Érzelemmentes végrehajtás – a rendszered szerint cselekszel, nem az érzés szerint</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Több timeframe elemzés egyszerre (heti → napi → 4h → 1h)</span></div>
-    <div class="item-row"><i class="ti ti-circle-dot item-icon" style="color:#1D9E75" aria-hidden="true"></i><span>Altcoin szelekció fundamentálisan is alátámasztva (nem csak chart)</span></div>
-    <div style="margin-top:10px;padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:12px;color:var(--color-text-secondary);">
-      A legtöbb trader sosem jut el ide – nem tudás hiánya miatt, hanem mert nem tartják be a saját szabályaikat.
-    </div>
-  </div>
-</div>
-
-<div style="margin-top:16px;padding:12px 16px;border-left:3px solid var(--color-border-tertiary);background:var(--color-background-secondary);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:13px;color:var(--color-text-secondary);">
-  <strong style="color:var(--color-text-primary)">Legközelebbi konkrét lépés:</strong> Nyisd meg a TradingView-t, keresd meg a BTC/USDT chartot, nézd vissza 2020 egész évét napi gyertyákon, és jelöld meg kézzel a support szinteket + az RSI 30 alatti pontokat. Már tudod mit keress.
-</div>
-
-</div>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
-function toggle(card) {
+const OWNER_EMAIL    = 'xlopojackx@gmail.com';
+const STORAGE_TODAY  = 'crypto_today_v2';
+const STORAGE_CHECKS = 'crypto_checks_v2';
+
+firebase.initializeApp({
+  apiKey: "AIzaSyDbQUbxQUCli_ZaU5sGlKIueAcaRL4NmVU",
+  authDomain: "csr-app-9f41c.firebaseapp.com",
+  databaseURL: "https://csr-app-9f41c-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "csr-app-9f41c",
+  storageBucket: "csr-app-9f41c.firebasestorage.app",
+  messagingSenderId: "452006201935",
+  appId: "1:452006201935:web:8bfca2af227fca4911b83a"
+});
+const db   = firebase.database().ref('crypto_roadmap');
+const auth = firebase.auth();
+
+const DEFAULT_CARDS = [
+  { title: 'DCA stratégia',  body: 'Rendszeres fix összeg → kisebb átlagár, kevesebb stressz a piaci ingadozás közben' },
+  { title: 'BTC dominancia', body: 'Ha BTC dominancia csökken, altcoin szezon kezdődhet – érdemes figyelni' },
+  { title: 'HODL logika',    body: 'Long-term holder-ek ritkán adnak el → csökkenti a piaci eladási nyomást, stabilabb ár' },
+];
+
+const PHASES = [
+  { id:1, bg:'#EAF3DE', col:'#27500A', bar:'#4CAF50',
+    title:'Alapok – tőke és biztonság',
+    sub:'~2–3 hét · Ezt csináld meg mielőtt komoly pénzt fektetsz be',
+    items:[
+      'Market cap vs ár – melyik mutatja a valódi projekt méretét',
+      'BTC vs altcoin kockázati különbség (BTC = stabil alap, alt = nagyobb kockázat/hozam)',
+      'DCA stratégia: rendszeres fix összeg → csökkenti az átlagárat, kevesebb stressz',
+      'Bitcoin halving ciklus – miért jelent 4 éves ütemet a piacnak',
+      'Cold wallet (Ledger/Trezor) – mi ez és miért ne hagyd az exchange-en hosszú távon',
+      'CEX megbízhatóság: Kraken, Coinbase, Binance – melyikben bízol meg és miért',
+      'Saját portfólió allokáció leírva papíron: pl. 70% BTC, 20% ETH, 10% alt',
+      'Magyar adózás alapjai: árfolyamnyereség, TBSZ lehetőség kriptóra (utánajárni)',
+    ]
+  },
+  { id:2, bg:'#E6F1FB', col:'#0C447C', bar:'#378ADD',
+    title:'Ciklusok és belépési stratégia',
+    sub:'~3–4 hét · Mikor és hogyan vásárolj okosan',
+    items:[
+      'BTC 4 éves halving ciklus fázisai: akkumuláció → bull → eufória → bear',
+      'Fear & Greed index: "Extreme Fear" = potenciális vásárlási lehetőség – DCA itt jó',
+      'BTC dominancia figyelése: emelkedik = altcoin szezon vége közel',
+      'MA200 (napi chart): ár tartósan alatta = bear piac, felette = bull piac – trendszűrő',
+      'Akkumulációs fázis jelei: alacsony volume, stagnáló ár, kevés mainstream hír',
+      'DCA vs lump sum: mikor melyik stratégia célszerűbb',
+      'Heti RSI 30 alatti zóna = potenciális akkumulációs jelzés – nem trading, hanem belépési ötlet',
+    ]
+  },
+  { id:3, bg:'#FAEEDA', col:'#633806', bar:'#FF9800',
+    title:'Kiszállási stratégia',
+    sub:'~3–4 hét · A legtöbb befektető ezt nem tervezi meg előre – és megbánja',
+    items:[
+      'Profit-rögzítési terv megírva előre: pl. 2x-nél 25% ki, 3x-nál 25% ki, 5x-nél 50% ki',
+      'Részleges kiszállás begyakorolva: sosem mindent egyszerre, sajnálkozás nélkül',
+      'Bull market tetőpontjának jelei: FOMO hírek, mainstream média, ismerősök kérdeznek',
+      'Stablecoin tartalék fenntartása (10–20%) bear piaci vásárlási lehetőségekre',
+      'Altcoin rebalancing: BTC/ETH arányra visszanyírni ha altok túlnőnek a portfólióban',
+      '"Mikor szállok ki?" kérdés megválaszolva minden pozícióra – előre, nem érzelmesen',
+    ]
+  },
+  { id:4, bg:'#FEE2E2', col:'#991b1b', bar:'#E53E3E',
+    title:'Gyanús jelek és kockázatkezelés',
+    sub:'Folyamatos · Ez védi a tőkédet – mindig aktuális',
+    items:[
+      'Rug pull jelei: ismeretlen token, hirtelen hype, nincs dokumentált csapat vagy audit',
+      'Exchange kockázat (FTX tanulsága): csak a forgatott összeg marad exchange-en, a többi cold wallet',
+      'Pump & dump felismerése: 100x ígéret rövid időn belül, nagy hype = szinte mindig átverés',
+      'FOMO kezelése: "már késő" érzés tipikusan rossz belépési pont – ilyenkor inkább DCA',
+      'Max pozícióméret altcoinokra: portfólió max 10–15%-a legyen 1 altcoinban',
+      'Csak elveszíthető tőkét fektesd kriptóba – a DCA kis összegekkel csökkenti a kockázatot',
+      'Influencer ajánlások = gyanú – fizetett promóció, nem a te hozamod az érdekük',
+    ]
+  },
+  { id:5, bg:'#EEEDFE', col:'#3C3489', bar:'#7F77DD',
+    title:'Haladó on-chain jelzések',
+    sub:'~6–12 hónap múlva · Ide vezet az út, ha az alapok megvannak',
+    items:[
+      'MVRV ratio: olcsó (< 1) vagy drága (> 3) a BTC a realizált értékhez képest',
+      'Long-term holder supply (Glassnode): erős kezek tartják a BTC-t = bull jel',
+      'Exchange kiáramlás: BTC elhagyja az exchange-t = akkumuláció, beáramlás = eladási nyomás',
+      'BTC dominancia + altcoin rotation pontosabb időzítése on-chain adatokkal',
+      'Funding rate (perpetual futures): magas pozitív = túlfűtött piac, figyelmeztető jel',
+      'Pi Cycle Top indicator: historikusan pontos BTC ciklus-csúcs jelzés',
+    ]
+  },
+];
+
+let isOwner    = false;
+let todayCards = [];
+let checks     = {};
+
+/* ─── PERSIST ─── */
+function saveLS() {
+  try {
+    localStorage.setItem(STORAGE_TODAY,  JSON.stringify(todayCards));
+    localStorage.setItem(STORAGE_CHECKS, JSON.stringify(checks));
+  } catch(e) {}
+}
+
+function showSaveInd() {
+  const ind = document.getElementById('saveInd');
+  ind.classList.add('show');
+  setTimeout(() => ind.classList.remove('show'), 1500);
+}
+
+function saveToday() {
+  saveLS();
+  if (isOwner) db.child('today_cards').set(todayCards).then(showSaveInd).catch(() => {});
+}
+
+function saveChecks() {
+  saveLS();
+  if (isOwner) db.child('checks').set(checks).then(showSaveInd).catch(() => {});
+}
+
+function loadFromLS() {
+  try {
+    const t = localStorage.getItem(STORAGE_TODAY);
+    todayCards = t ? JSON.parse(t) : DEFAULT_CARDS.map(c => ({...c}));
+    const c = localStorage.getItem(STORAGE_CHECKS);
+    checks = c ? JSON.parse(c) : {};
+  } catch(e) {
+    todayCards = DEFAULT_CARDS.map(c => ({...c}));
+    checks = {};
+  }
+}
+
+function valToArr(v) {
+  if (!v) return [];
+  return Array.isArray(v) ? v : Object.values(v);
+}
+
+function loadFromFirebase() {
+  db.get().then(snapshot => {
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      checks = data.checks || {};
+      const raw = valToArr(data.today_cards).filter(c => c && c.title);
+      todayCards = raw.length ? raw : DEFAULT_CARDS.map(c => ({...c}));
+    }
+    renderTodayCards();
+    PHASES.forEach(renderChecks);
+  }).catch(() => {
+    loadFromLS();
+    renderTodayCards();
+    PHASES.forEach(renderChecks);
+  });
+}
+
+/* ─── AUTH ─── */
+auth.onAuthStateChanged(u => {
+  isOwner = !!(u && u.email === OWNER_EMAIL);
+  if (isOwner) {
+    loadFromFirebase();
+  } else {
+    loadFromLS();
+    renderTodayCards();
+    PHASES.forEach(renderChecks);
+  }
+});
+
+function escH(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ─── TODAY CARDS ─── */
+function renderTodayCards() {
+  const el = document.getElementById('todayCards');
+  if (!todayCards.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:4px 0">Még nincs kártya – kattints a + gombra!</div>';
+    return;
+  }
+  el.innerHTML = todayCards.map((c, i) => `
+    <div class="today-card">
+      <button class="today-del" onclick="delCard(${i});event.stopPropagation()">×</button>
+      <div class="today-card-title" contenteditable="true" spellcheck="false"
+           onblur="updateCard(${i},'title',this.textContent)">${escH(c.title)}</div>
+      <div class="today-card-body"  contenteditable="true" spellcheck="false"
+           onblur="updateCard(${i},'body', this.textContent)">${escH(c.body)}</div>
+    </div>`).join('');
+}
+
+function updateCard(i, field, val) {
+  todayCards[i][field] = val.trim();
+  saveToday();
+}
+
+function addCard() {
+  todayCards.push({ title: 'Új tanulás', body: 'Írd ide amit megtanultál…' });
+  saveToday();
+  renderTodayCards();
+  const cards   = document.querySelectorAll('.today-card');
+  const titleEl = cards[cards.length - 1].querySelector('.today-card-title');
+  titleEl.focus();
+  const range = document.createRange();
+  range.selectNodeContents(titleEl);
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(range);
+}
+
+function delCard(i) {
+  todayCards.splice(i, 1);
+  saveToday();
+  renderTodayCards();
+}
+
+/* ─── PHASES ─── */
+function renderPhases() {
+  document.getElementById('phasesContainer').innerHTML = PHASES.map(ph => `
+    <div class="phase-card" id="ph${ph.id}">
+      <div class="phase-header" onclick="togglePhase(${ph.id})">
+        <div class="phase-badge" style="background:${ph.bg};color:${ph.col}">${ph.id}</div>
+        <div class="phase-info">
+          <div class="phase-title">${ph.title}</div>
+          <div class="phase-sub">${ph.sub}</div>
+        </div>
+        <span class="phase-chevron">&#9662;</span>
+      </div>
+      <div class="phase-body">
+        <div class="prog-bar"><div class="prog-fill" id="pf${ph.id}" style="background:${ph.bar};width:0%"></div></div>
+        <div class="prog-label" id="pl${ph.id}">0 / ${ph.items.length} teljesítve</div>
+        <div id="pc${ph.id}"></div>
+      </div>
+    </div>`).join('');
+}
+
+function renderChecks(ph) {
+  document.getElementById(`pc${ph.id}`).innerHTML = ph.items.map((item, i) => {
+    const k = `p${ph.id}_${i}`, done = !!checks[k];
+    return `<div class="check-row${done ? ' done' : ''}" onclick="toggleCheck('${k}',${ph.id})">
+      <div class="chk-box">${done ? '&#x2713;' : ''}</div>
+      <div class="check-txt">${item}</div>
+    </div>`;
+  }).join('');
+  const total = ph.items.length;
+  const done  = ph.items.filter((_, i) => !!checks[`p${ph.id}_${i}`]).length;
+  const pct   = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById(`pf${ph.id}`).style.width = pct + '%';
+  document.getElementById(`pl${ph.id}`).textContent = `${done} / ${total} teljesítve`;
+}
+
+function toggleCheck(k, phId) {
+  checks[k] = !checks[k];
+  saveChecks();
+  renderChecks(PHASES.find(p => p.id === phId));
+}
+
+function togglePhase(id) {
+  const card = document.getElementById(`ph${id}`);
   const wasOpen = card.classList.contains('open');
-  document.querySelectorAll('.phase-card').forEach(c => c.classList.remove('open'));
+  PHASES.forEach(ph => document.getElementById(`ph${ph.id}`).classList.remove('open'));
   if (!wasOpen) card.classList.add('open');
 }
-function chk(box) {
-  box.classList.toggle('done');
-  box.textContent = box.classList.contains('done') ? '✓' : '';
-}
 
+/* ─── SEARCH ─── */
 function doSearch(q) {
-  const low = q.trim().toLowerCase();
+  const low    = q.trim().toLowerCase();
   const banner = document.getElementById('searchBanner');
-  const cards = document.querySelectorAll('.phase-card');
+  const cards  = document.querySelectorAll('.phase-card');
   let hits = 0;
-
   if (!low) {
     cards.forEach(c => c.classList.remove('no-match'));
     banner.classList.remove('visible');
-    window.parent.postMessage({ type: 'searchResult', count: 0, total: 0 }, '*');
+    window.parent?.postMessage({ type:'searchResult', count:0, total:0 }, '*');
     return;
   }
-
   cards.forEach(card => {
     const match = card.textContent.toLowerCase().includes(low);
     card.classList.toggle('no-match', !match);
     if (match) hits++;
   });
-
   banner.textContent = hits > 0 ? `${hits} fázis tartalmazza: "${q}"` : `Nincs találat: "${q}"`;
   banner.classList.add('visible');
-  window.parent.postMessage({ type: 'searchResult', count: hits, total: cards.length }, '*');
+  window.parent?.postMessage({ type:'searchResult', count:hits, total:cards.length }, '*');
 }
+
+/* ─── INIT ─── */
+renderPhases();
+document.getElementById('ph1').classList.add('open');
 
 window.addEventListener('message', e => {
   if (!e.data) return;
-  if (e.data.type === 'theme') {
-    document.documentElement.setAttribute('data-theme', e.data.value);
-  }
-  if (e.data.type === 'search') {
-    doSearch(e.data.query || '');
+  if (e.data.type === 'theme')  document.documentElement.setAttribute('data-theme', e.data.value);
+  if (e.data.type === 'search') doSearch(e.data.query || '');
+  if (e.data.type === 'authState') {
+    isOwner = e.data.isOwner;
   }
 });
+try { const t = localStorage.getItem('csr_theme'); if(t) document.documentElement.setAttribute('data-theme',t); } catch(e) {}
 </script>
 </body>
 </html>

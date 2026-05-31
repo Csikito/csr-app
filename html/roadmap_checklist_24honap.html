@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#f8fafc; --bg2:#f1f5f9; --card:#fff; --border:#e2e8f0; --border2:#f1f5f9;
+  --text:#1e293b; --muted:#64748b; --subtle:#94a3b8;
+  --shadow:0 1px 3px rgba(0,0,0,.08); --shadow-md:0 4px 12px rgba(0,0,0,.08);
+  --radius:10px; --radius-sm:7px; --transition:.15s ease;
+  --g-dot:#1D9E75; --g-bg:#e8faf3; --g-text:#065f46; --g-border:#6ee7b7;
+  --b-dot:#378ADD; --b-bg:#dbeafe; --b-text:#1e40af; --b-border:#93c5fd;
+  --o-dot:#BA7517; --o-bg:#fef3c7; --o-text:#92400e; --o-border:#fcd34d;
+  --p-dot:#7F77DD; --p-bg:#ede9fe; --p-text:#4c1d95; --p-border:#c4b5fd;
+  --r-dot:#D4554A; --r-bg:#fee2e2; --r-text:#991b1b; --r-border:#fca5a5;
+  --check-active:#1D9E75;
+}
+[data-theme="dark"] {
+  --bg:#0f172a; --bg2:#1e293b; --card:#1e293b; --border:#334155; --border2:#1e293b;
+  --text:#f1f5f9; --muted:#94a3b8; --subtle:#475569;
+  --shadow:0 1px 4px rgba(0,0,0,.4); --shadow-md:0 4px 16px rgba(0,0,0,.4);
+  --g-dot:#34d399; --g-bg:rgba(29,158,117,.15); --g-text:#6ee7b7; --g-border:rgba(29,158,117,.4);
+  --b-dot:#60a5fa; --b-bg:rgba(55,138,221,.15); --b-text:#93c5fd; --b-border:rgba(55,138,221,.4);
+  --o-dot:#fbbf24; --o-bg:rgba(186,117,23,.15); --o-text:#fcd34d; --o-border:rgba(186,117,23,.4);
+  --p-dot:#a78bfa; --p-bg:rgba(127,119,221,.15); --p-text:#c4b5fd; --p-border:rgba(127,119,221,.4);
+  --r-dot:#f87171; --r-bg:rgba(212,85,74,.15); --r-text:#fca5a5; --r-border:rgba(212,85,74,.4);
+  --check-active:#34d399;
+}
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); padding:20px; min-height:100vh; transition:background var(--transition),color var(--transition); font-size:14px; }
+
+.search-banner { display:none; font-size:12px; color:var(--muted); background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:7px 12px; margin-bottom:14px; }
+.search-banner.visible { display:block; }
+
+.topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:12px; }
+.prog-wrap { display:flex; align-items:center; gap:14px; }
+.prog-ring-wrap { position:relative; }
+.prog-ring { transform:rotate(-90deg); }
+.prog-ring-bg { fill:none; stroke:var(--border); stroke-width:4; }
+.prog-ring-fill { fill:none; stroke:var(--check-active); stroke-width:4; stroke-linecap:round; transition:stroke-dashoffset .4s ease; }
+.prog-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:2px; }
+.prog-num { font-size:22px; font-weight:700; color:var(--text); line-height:1; }
+.save-ind { font-size:11px; color:var(--check-active); opacity:0; transition:opacity .3s; margin-left:8px; }
+.save-ind.show { opacity:1; }
+.btn-group { display:flex; gap:6px; }
+.btn-sm { font-size:12px; font-weight:500; color:var(--muted); background:var(--card); border:1px solid var(--border); padding:7px 14px; border-radius:999px; cursor:pointer; transition:all var(--transition); box-shadow:var(--shadow); }
+.btn-sm:hover { border-color:var(--subtle); color:var(--text); }
+
+/* Phase switcher */
+.phase-switch { display:flex; gap:6px; margin-bottom:16px; }
+.phase-btn { flex:1; padding:11px 14px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--card); color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; transition:all var(--transition); box-shadow:var(--shadow); text-align:center; }
+.phase-btn:hover { border-color:var(--subtle); color:var(--text); }
+.phase-btn.active { background:#4f46e5; color:#fff; border-color:#4f46e5; box-shadow:0 2px 8px rgba(79,70,229,.3); }
+.phase-btn .pb-sub { display:block; font-size:10px; font-weight:500; opacity:.8; margin-top:2px; }
+
+/* Month chips */
+.mrow { display:grid; grid-template-columns:repeat(6,1fr); gap:5px; margin-bottom:14px; }
+.mc { padding:7px 4px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--card); color:var(--muted); font-size:11px; font-weight:500; cursor:pointer; text-align:center; transition:all var(--transition); border-top:3px solid transparent; box-shadow:var(--shadow); }
+.mc:hover { border-color:var(--subtle); color:var(--text); }
+.mc.ph1 { border-top-color:var(--g-dot); }
+.mc.ph2 { border-top-color:var(--b-dot); }
+.mc.ph3 { border-top-color:var(--o-dot); }
+.mc.active.ph1 { background:var(--g-bg); color:var(--g-text); border-color:var(--g-border); }
+.mc.active.ph2 { background:var(--b-bg); color:var(--b-text); border-color:var(--b-border); }
+.mc.active.ph3 { background:var(--o-bg); color:var(--o-text); border-color:var(--o-border); }
+.mc-pct { font-size:9px; color:var(--muted); margin-top:2px; }
+
+/* Week tabs */
+.wtabs { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+.wtab { padding:7px 18px; border-radius:999px; border:1px solid var(--border); background:var(--card); color:var(--muted); font-size:13px; font-weight:500; cursor:pointer; transition:all var(--transition); box-shadow:var(--shadow); }
+.wtab:hover { border-color:var(--subtle); color:var(--text); }
+.wtab.active { background:#4f46e5; color:#fff; border-color:#4f46e5; box-shadow:0 2px 8px rgba(79,70,229,.3); }
+.wtab .hit-badge { display:inline-block; font-size:10px; background:#4f46e5; color:#fff; border-radius:999px; padding:0 5px; margin-left:4px; line-height:16px; vertical-align:middle; }
+.wtab.active .hit-badge { background:rgba(255,255,255,.3); }
+
+/* Month title + artifact banner */
+.month-title { font-size:15px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.artifact-box { font-size:12px; padding:9px 13px; border-left:3px solid var(--b-dot); background:var(--b-bg); border-radius:0 var(--radius-sm) var(--radius-sm) 0; color:var(--b-text); margin-bottom:14px; line-height:1.5; }
+.artifact-box b { font-weight:700; }
+
+/* Week note */
+.wnote { font-size:13px; font-style:italic; padding:10px 14px; border-left:3px solid var(--g-dot); background:var(--g-bg); border-radius:0 var(--radius-sm) var(--radius-sm) 0; color:var(--g-text); margin-bottom:14px; line-height:1.55; }
+
+/* Pillar grid */
+.pillars-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.pillars-grid .psec:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.psec { border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; background:var(--card); box-shadow:var(--shadow); transition:background var(--transition); }
+.psec-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; display:flex; align-items:center; gap:6px; color:var(--muted); }
+.pdot { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+
+/* Task rows */
+.task-row { display:flex; align-items:flex-start; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); cursor:pointer; transition:opacity var(--transition); border-radius:4px; }
+.task-row:last-child { border-bottom:none; }
+.task-row:hover { opacity:.8; }
+.task-row.done .task-txt { color:var(--muted); text-decoration:line-through; }
+.task-row.no-match { display:none; }
+.cb { width:18px; height:18px; border-radius:4px; border:1.5px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all var(--transition); margin-top:1px; background:var(--card); }
+.task-row.done .cb { background:var(--check-active); border-color:var(--check-active); }
+.ckmark { display:none; }
+.task-row.done .ckmark { display:block; }
+.task-txt { font-size:13px; color:var(--text); line-height:1.5; }
+
+/* Daily box */
+.daily-box { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px 14px; margin-top:12px; }
+.daily-hd { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:8px; }
+.daily-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px 16px; }
+.daily-r { display:flex; justify-content:space-between; font-size:13px; color:var(--text); padding:4px 0; border-bottom:1px solid var(--border); }
+.daily-r:last-child { border-bottom:none; }
+.dt { font-size:12px; color:var(--muted); font-weight:500; }
+
+/* Phase 2 quarter cards */
+.q-intro { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:16px; padding:11px 14px; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-sm); }
+.q-card { border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; background:var(--card); box-shadow:var(--shadow); margin-bottom:12px; }
+.q-card-hd { font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.q-chip { font-size:10px; font-weight:600; padding:2px 8px; border-radius:999px; background:var(--p-bg); color:var(--p-text); }
+
+mark { background:rgba(250,204,21,.4); color:inherit; border-radius:2px; padding:0 1px; }
+[data-theme="dark"] mark { background:rgba(250,204,21,.22); }
+
+/* Auth */
+.btn-sm.owner { color:var(--check-active); border-color:var(--check-active); }
+body.ro .task-row { cursor:default; }
+body.ro .task-row:hover { opacity:1 !important; }
+body.ro .cb { opacity:.4; }
+</style>
+</head>
+<body>
+<div class="search-banner" id="searchBanner"></div>
+<div class="topbar">
+  <div class="prog-wrap">
+    <div class="prog-ring-wrap">
+      <svg class="prog-ring" width="52" height="52" viewBox="0 0 52 52">
+        <circle class="prog-ring-bg" cx="26" cy="26" r="22"/>
+        <circle class="prog-ring-fill" id="ringFill" cx="26" cy="26" r="22" stroke-dasharray="138.2" stroke-dashoffset="138.2"/>
+      </svg>
+    </div>
+    <div class="prog-info">
+      <div class="prog-label">Összes elvégzett feladat</div>
+      <div class="prog-num" id="progNum">0 / 0</div>
+    </div>
+    <div class="save-ind" id="saveInd">✓ Mentve</div>
+  </div>
+  <div class="btn-group">
+    <button class="btn-sm" id="btnResetMonth" onclick="resetMonth()" style="display:none">Hónap törlése</button>
+    <button class="btn-sm" id="btnResetAll" onclick="resetAll()" style="display:none">Mind törlése</button>
+  </div>
+</div>
+
+<div class="phase-switch" id="phaseSwitch">
+  <button class="phase-btn active" id="phaseBtn1" onclick="selPhase(1)">1. fázis — Alapok és portfólió<span class="pb-sub">0–12. hó · részletes</span></button>
+  <button class="phase-btn" id="phaseBtn2" onclick="selPhase(2)">2. fázis — Mélységépítés<span class="pb-sub">12–24. hó · áttekintő</span></button>
+</div>
+
+<div id="phase1">
+  <div class="mrow" id="mrow"></div>
+  <div class="wtabs" id="wtabs"></div>
+  <div id="content"></div>
+</div>
+
+<div id="phase2" style="display:none"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDbQUbxQUCli_ZaU5sGlKIueAcaRL4NmVU",
+  authDomain: "csr-app-9f41c.firebaseapp.com",
+  databaseURL: "https://csr-app-9f41c-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "csr-app-9f41c",
+  storageBucket: "csr-app-9f41c.firebasestorage.app",
+  messagingSenderId: "452006201935",
+  appId: "1:452006201935:web:8bfca2af227fca4911b83a"
+};
+firebase.initializeApp(firebaseConfig);
+// Külön ág, hogy ne ütközzön a meglévő 12 hónapos checklist adatával
+const dbRef = firebase.database().ref('fejlodesi_checklist_24');
+
+const OWNER_EMAIL = 'xlopojackx@gmail.com';
+let isOwner = false;
+let dataLoaded = false;
+
+const auth = firebase.auth();
+auth.onAuthStateChanged(u => {
+  isOwner = !!(u && u.email === OWNER_EMAIL);
+  document.getElementById('btnResetMonth').style.display = isOwner ? '' : 'none';
+  document.getElementById('btnResetAll').style.display = isOwner ? '' : 'none';
+  document.body.classList.toggle('ro', !isOwner);
+  if (dataLoaded) render();
+});
+
+const P = {
+  angol:  { label:"🇬🇧 Angol",   varname:"g" },
+  tech:   { label:"🔧 Technika", varname:"b" },
+  karrier:{ label:"💼 Szakmai jelenlét", varname:"o" },
+  elet:   { label:"💪 Életmód",  varname:"p" },
+  penz:   { label:"💰 Pénzügy",  varname:"r" }
+};
+
+/* ===== 1. FÁZIS — részletes, havi bontás (a feladatok hetekre osztva) ===== */
+const MONTHS = [
+  // ---- ALAP FÁZIS (1–4) ----
+  {name:"1. hó", ph:1, title:"1. hónap – Rutin + MQTT alapok",
+   artifact:"BACnet→MQTT pipeline, GitHub repo, README angolul",
+   daily:[{t:"Ingázás: angol podcast",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti tech blokk",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: csak a rutin elindítása, ne akarj mindent egyszerre.",
+     angol:["Podcast kiválasztva (Fireship / BBC Learning English)","Napi ingázási hallgatás bevezetve (oda-vissza)"],
+     tech:["MQTT elmélet: broker, topic, QoS – videó megnézve","Mosquitto broker telepítve lokálisan","paho-mqtt Python könyvtár telepítve"],
+     karrier:["GitHub profil megnyitva, bio angolul"],
+     elet:["Edzésnapok naptárba (H, Sze, P)","Első 3 edzés teljesítve"],
+     penz:["Aktuális pénzügyi helyzet áttekintve","Havi megtakarítás összege eldöntve"]},
+    {note:"2. hét – intenzív: a pipeline és az aktív angol is beindul.",
+     angol:["1 rövid technikai cikk elolvasása angolul","5 új szakszó kijegyzetelve (saját szólista indítása)"],
+     tech:["BACnet → MQTT pipeline Python-ban megírva","Mosquitto-n látható az adat","Script angolul kommentelve"],
+     karrier:["5 korábbi projekt listázva a profilhoz (magyarul is jó)"],
+     elet:["Heti 3 edzés tartva","Esti rutin kipróbálva (fix lefekvés)"],
+     penz:["Megtakarítás automatizálva (állandó átutalás)"]},
+    {note:"3. hét – intenzív: dokumentáció és az első aktív angol produktum.",
+     angol:["A pipeline README-jének 3 mondatos angol összefoglalója megírva","Szólista bővítve 5 új szóval"],
+     tech:["README angolul megírva a repóhoz","Pipeline futtatható, dokumentált","Hibakezelés hozzáadva"],
+     karrier:["GitHub profil pinned repo beállítva"],
+     elet:["Heti 3 edzés","Alvás 7.5h – ellenőrizve"],
+     penz:["Kiadások egy hónapra kategorizálva"]},
+    {note:"4. hét – konszolidáció: összegzés és könnyebb tempó, készülj a 2. hónapra.",
+     angol:["A havi 10 új szó átismételve","Önértékelés: hány napon ment a napi angol?"],
+     tech:["BACnet→MQTT pipeline kész, publikus, dokumentált","Havi tech összefoglaló: mit tanultál?"],
+     karrier:["Hónap végi visszatekintés leírva (1 bekezdés)"],
+     elet:["Könnyű mozgás-hét (séta, nyújtás) – regeneráció","Energiaszint őszinte értékelése"],
+     penz:["Havi pénzügyi review – terv tartható?"]}
+   ]},
+  {name:"2. hó", ph:1, title:"2. hónap – OPC-UA + online jelenlét",
+   artifact:"OPC-UA server Pythonban, szimulált node-okkal",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti tech blokk",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: új téma (OPC-UA), könnyű belépő.",
+     angol:["Napi hallgatás tartva","Shadowing technika kipróbálva (1x, hangos utánmondás)"],
+     tech:["OPC-UA architektúra megértve: server, client, node","opcua-asyncio telepítve","OPC Foundation getting started elolvasva"],
+     karrier:["Szakmai online profil megnyitva, alapadatok angolul"],
+     elet:["Heti 3 edzés tartva"],
+     penz:["Megtakarítás tartva, nem nyúlni hozzá"]},
+    {note:"2. hét – intenzív: a server épül, az angol aktívabb.",
+     angol:["3 munkahelyi/technikai fogalom leírva angolul","Szólista bővítve"],
+     tech:["Lokális OPC-UA server felállítva Pythonban","2-3 szimulált szenzor node hozzáadva","Klienssel adatok olvasva"],
+     karrier:["Szakmai profil teljes átírása angolul","Niche kulcsszavak: BACnet, BMS, IoT, Python"],
+     elet:["Heti 3 edzés","Ebédszünetben séta 2x"],
+     penz:["Vésztartalék célösszeg meghatározva"]},
+    {note:"3. hét – intenzív: összehasonlítás és írásos produktum.",
+     angol:["BACnet vs OPC-UA összevetés 5 mondatban angolul megírva","Shadowing 2. alkalom"],
+     tech:["BACnet + OPC-UA párhuzam leírva angolul (mikor melyik)","OPC-UA repo README angolul","Első commit az OPC-UA projektre"],
+     karrier:["Jelenlegi és előző szerep leírva angolul (2-3 mondat)"],
+     elet:["Heti 3 edzés","Alvás 7.5h"],
+     penz:["Vésztartalék-építés elindítva"]},
+    {note:"4. hét – konszolidáció: profil kész, levezetés.",
+     angol:["Havi szavak átismételve","Önértékelés: könnyebb-e a hallgatás, mint a múlt hónapban?"],
+     tech:["OPC-UA server publikus GitHub-on, README kész","MQTT + OPC-UA: mindkettő elmagyarázható"],
+     karrier:["Szakmai profil 100%-ban angolul kész"],
+     elet:["Könnyű mozgás-hét – regeneráció"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  {name:"3. hó", ph:1, title:"3. hónap – Docker stack + önéletrajz",
+   artifact:"Teljes lokális stack: BACnet→MQTT→InfluxDB→Grafana",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti tech / CV",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: Docker belépő, könnyű tempó.",
+     angol:["Napi hallgatás tartva","1 technikai videó angolul, felirat nélkül megpróbálva"],
+     tech:["Docker + Docker Compose alapok átvéve","InfluxDB konténerben fut","Első adat InfluxDB-be írva"],
+     karrier:["Önéletrajz nyers angol verzió elkezdve (skills szekció)"],
+     elet:["Reggeli/esti rutin stabilizálva"],
+     penz:["Vésztartalék: aktuális állás ellenőrizve"]},
+    {note:"2. hét – intenzív: a stack összeáll, az angol írás erősödik.",
+     angol:["Kódkommentek angolul a saját projektben","Szólista bővítve technikai kifejezésekkel"],
+     tech:["Grafana konténerben, első dashboard panel","Node-RED flow: MQTT → InfluxDB","MQTT adatok láthatók Grafanában"],
+     karrier:["CV: skills section (Python, BACnet, Modbus, MQTT, OPC-UA)"],
+     elet:["Heti 3 edzés","Szabad vasárnap – pihenő"],
+     penz:["Befektetési alap (ETF/TBSZ) átgondolva"]},
+    {note:"3. hét – intenzív: teljes lánc + önbemutató hangosan.",
+     angol:["2 perces önbemutató megírva és hangosan elmondva angolul","Felvétel telefonnal, visszahallgatva"],
+     tech:["Teljes stack: BACnet→MQTT→InfluxDB→Grafana fut","Screenshot a dashboardról","GitHub README: stack + screenshot"],
+     karrier:["CV 1 oldalon elfér, konkrét számokkal"],
+     elet:["Heti 3 edzés","Stressz figyelése"],
+     penz:["ETF megtakarítás elindítva (kis összeg is jó)"]},
+    {note:"4. hét – konszolidáció: első komoly portfólió-darab kész, levezetés.",
+     angol:["Havi szavak átismételve","Önértékelés: az önbemutató mennyivel ment gördülékenyebben?"],
+     tech:["Alap-stack mérleg: MQTT+OPC-UA+InfluxDB+Grafana+Node-RED","Min. 2 publikus repo angolul dokumentálva"],
+     karrier:["CV nyers verzió kész"],
+     elet:["Könnyű mozgás-hét – regeneráció"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  {name:"4. hó", ph:1, title:"4. hónap – Azure IoT Hub + tudásmegosztás",
+   artifact:"Azure-ban futó device-szimulátor, cloud adatokkal",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti Azure/tech",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: az építés fázis kezdete, Azure belépő.",
+     angol:["Napi hallgatás tartva","1 technikai cikk olvasása, 5 új szakszó"],
+     tech:["Ingyenes Azure fiók létrehozva (free tier)","Azure IoT Hub F1 tier létrehozva","Első device regisztrálva"],
+     karrier:["Szakmai poszt ötlet kiválasztva: 'What I learned about MQTT'"],
+     elet:["Heti 3 edzés – már automatikus?"],
+     penz:["ETF: első befizetés megtörtént?"]},
+    {note:"2. hét – intenzív: cloud device + az első publikus írás.",
+     angol:["Szakmai poszt draft megírva angolul (200-300 szó)","Szólista bővítve"],
+     tech:["Python script: szimulált szenzor → IoT Hub","Cloud adatok láthatók az Azure portálon","Azure Stream Analytics alapok"],
+     karrier:["Poszt draft átnézve, javítva (nyelvtan + tartalom)"],
+     elet:["Heti 3 edzés","Ebédszünet aktívan (séta/levegő)"],
+     penz:["Vésztartalék gyarapodik"]},
+    {note:"3. hét – intenzív: publikálás – kilépsz a nyilvánosság elé.",
+     angol:["Első szakmai poszt PUBLIKÁLVA angolul","2 releváns szakmai bejegyzéshez érdemi hozzászólás"],
+     tech:["IoT Hub → Stream Analytics pipeline kipróbálva","GitHub repo rendbe téve: README, screenshot"],
+     karrier:["A poszt reakcióinak megfigyelése, tanulság levonása"],
+     elet:["Heti 3 edzés","Alvás 7.5h"],
+     penz:["Crypto: nem változtatni, hosszú táv"]},
+    {note:"4. hét – konszolidáció: levezetés a következő intenzív hónap előtt.",
+     angol:["Havi szavak átismételve","Önértékelés: milyen volt először angolul publikálni?"],
+     tech:["Azure device-szimulátor működik, cloud adatokkal","Havi tech összefoglaló"],
+     karrier:["GitHub portfólió rendben, profil naprakész"],
+     elet:["Könnyű mozgás-hét – regeneráció"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  // ---- ÉPÍTÉS FÁZIS (5–8) ----
+  {name:"5. hó", ph:2, title:"5. hónap – Brick Schema + system design",
+   artifact:"Lekérdezhető AHU Brick modell Pythonban",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti Brick/tech",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: a gépészeti tudásod itt válik előnnyé.",
+     angol:["Napi hallgatás + 1 technikai cikk, 5 új szakszó"],
+     tech:["Brick Schema megértve: mi és miért fontos","brickschema Python könyvtár telepítve"],
+     karrier:["2 szakmai cikk elolvasása a niche-ben (mit írnak smart building / IoT témában?)"],
+     elet:["Heti 3 edzés, alvás 7.5h – alapszint"],
+     penz:["Pénzügyi egyensúly áttekintve"]},
+    {note:"2. hét – intenzív: AHU Brick modell + aktív angol produkció.",
+     angol:["1 szakmai történet (STAR) megírva angolul + hangosan felmondva, rögzítve"],
+     tech:["Egyszerű AHU Brick modell létrehozva","Project Haystack tagging fogalma megértve"],
+     karrier:["Egy korábbi integráció anonimizált esettanulmányként megírva"],
+     elet:["Edzés intenzitás növelése (nehezebb súly / hosszabb futás)"],
+     penz:["Befektetési stratégia finomítva"]},
+    {note:"3. hét – intenzív: a hónap csúcsa – prezentálás és publikálás.",
+     angol:["A system design szöveg angolul hangosan prezentálva magadnak (5 perc), akadások jegyzetelve"],
+     tech:["AHU Brick modell lekérdezhető","Modell dokumentálva angolul"],
+     karrier:["Az esettanulmány publikálva (LinkedIn/GitHub) + 2 érdemi hozzászólás"],
+     elet:["Heti 3 edzés + tudatos stresszkezelés (ez a hónap legnehezebb hete)"],
+     penz:["Vésztartalék állapot ellenőrizve"]},
+    {note:"4. hét – konszolidáció: levezetés, test és fej is regenerál.",
+     angol:["Havi új szavak átismételve","Önértékelés: mi ment könnyebben, mint múlt hónapban?"],
+     tech:["AHU Brick modell Pythonban, lekérdezhető","Havi tech összefoglaló"],
+     karrier:["2 célcég kutatása (stack, termék, kultúra) – jegyzet, nem jelentkezés"],
+     elet:["Könnyű mozgás-hét (séta, nyújtás) – regeneráció"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  {name:"6. hó", ph:2, title:"6. hónap – Azure Digital Twins",
+   artifact:"Digital Twin: épület-modell Azure-ban, élő IoT adatokkal",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti ADT/tech",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: Digital Twin belépő.",
+     angol:["Napi hallgatás + 5 új szakszó"],
+     tech:["Azure Digital Twins instance létrehozva","DTDL alapok megértve"],
+     karrier:["Szakmai kapcsolatépítés: 2-3 BMS/IoT emberrel kapcsolat (követés, érdemi reakció)"],
+     elet:["Heti 3 edzés"],
+     penz:["Megtakarítás: 6 havi összesítés"]},
+    {note:"2. hét – intenzív: a modell épül, az írás komolyodik.",
+     angol:["Cover letter sablon megírva a niche-re, angolul (gyakorlásként)"],
+     tech:["DTDL modell: épület szobákkal, AHU-val","IoT Hub → Digital Twin kapcsolat beállítva"],
+     karrier:["Második szakmai poszt megírva angolul"],
+     elet:["Edzés intenzitás növelése","Alvás 7.5h"],
+     penz:["Crypto: áttekintés, nem eladni"]},
+    {note:"3. hét – intenzív: az adu ász összeáll + publikálás.",
+     angol:["Szakmai beszélgetés szimulálva angolul (5 perc, hangos, természetes)"],
+     tech:["Digital Twin élő IoT adattal frissül","Brick Schema + ADT összekötés megértve"],
+     karrier:["Második poszt publikálva + iparági hirdetések elemzése (mit kérnek?)"],
+     elet:["Heti 3 edzés + stresszkezelés (csúcshét)"],
+     penz:["6 havi pénzügyi áttekintés"]},
+    {note:"4. hét – konszolidáció: félidős visszatekintés, levezetés.",
+     angol:["6 hónapos angol önértékelés: hol tartasz a C1 felé?"],
+     tech:["Digital Twin: épület-modell Azure-ban, élő adatokkal kész","6 havi tech összefoglaló"],
+     karrier:["6 hónapos szakmai visszatekintés leírva"],
+     elet:["Könnyű mozgás-hét – regeneráció","Mi változott? Test, energia, rutin"],
+     penz:["Megtakarítási szokás kialakult?"]}
+   ]},
+  {name:"7. hó", ph:2, title:"7. hónap – IoT Edge (kiegyensúlyozva)",
+   artifact:"IoT Edge modul: szűri az adatot, csak releváns megy cloudba",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti Edge/tech",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: ez a hónap eleve könnyebb, ne terheld túl.",
+     angol:["Napi hallgatás + 5 új szakszó"],
+     tech:["Azure IoT Edge: modul-architektúra megértve"],
+     karrier:["Releváns hirdetések elemzése: mit tudsz, mi hiányzik? (jegyzet)"],
+     elet:["Alvás és stressz figyelése – figyelj a jelekre"],
+     penz:["ETF: 4 hónap alatt mennyi gyűlt?"]},
+    {note:"2. hét – mérsékelt intenzív: Edge teszt + beszédgyakorlás.",
+     angol:["Angol szakmai beszédgyakorlás (hangos előadásmód, 5 perc)"],
+     tech:["Edge deployment manifest VM-en tesztelve","Modul: adatszűrés implementálva"],
+     karrier:["CV frissítve új skillekkel: MQTT, OPC-UA, Azure IoT, Brick"],
+     elet:["Heti 3 edzés – intenzitás a komfort szerint"],
+     penz:["Hosszú távú cél (pl. sportautó alap) – terv megvan"]},
+    {note:"3. hét – mérsékelt intenzív: megszilárdítás.",
+     angol:["Szakmai projektbemutatók véglegesítése angolul"],
+     tech:["IoT Edge modul fut, csak releváns adat megy cloudba"],
+     karrier:["Portfólió-repo karbantartva, projektleírások csiszolva"],
+     elet:["Heti 3 edzés","Alvás 7.5h tartva"],
+     penz:["Vésztartalék állapot"]},
+    {note:"4. hét – konszolidáció: levezetés.",
+     angol:["Havi szavak átismételve","Önértékelés"],
+     tech:["IoT Edge modul kész és dokumentált","Havi tech összefoglaló"],
+     karrier:["CV naprakész"],
+     elet:["Könnyű mozgás-hét – regeneráció"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  {name:"8. hó", ph:2, title:"8. hónap – A központi hibrid demó",
+   artifact:"Egyesített demó: AI-driven predictive maintenance + cloud BMS",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti demó-építés",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: a terv szíve, a meglévő ML rákerül a cloudra.",
+     angol:["Napi hallgatás + 5 új szakszó (ML/cloud terminológia)"],
+     tech:["A meglévő PFR/XGBoost filter-RUL modell előkészítve","Szenzoradat-formátum tisztázva a cloudhoz"],
+     karrier:["Demó koncepció leírva angolul (mit mutat be, kinek szól)"],
+     elet:["Heti 3 edzés"],
+     penz:["Megtakarítás összesítése: ETF + tartalék"]},
+    {note:"2. hét – intenzív: a modell a felhőbe kerül + esettanulmány.",
+     angol:["3. szakmai poszt megírva – esettanulmány vagy tanulság angolul"],
+     tech:["Szenzoradat Azure-ba töltve","XGBoost modell predikál a cloud-adatból"],
+     karrier:["GitHub: összefoglaló repo elkezdve"],
+     elet:["Edzés intenzitás növelése"],
+     penz:["Crypto: cél elérve? Terv szerint járj el"]},
+    {note:"3. hét – intenzív: a csúcs – a teljes lánc együtt + publikálás.",
+     angol:["A demót bemutató 3 perces angol 'elevator pitch' megírva és felmondva"],
+     tech:["RUL-predikció megjelenik a Digital Twin felületen","Az egész lánc együtt működik"],
+     karrier:["3. poszt publikálva + README: az egész éves munka bemutatva angolul"],
+     elet:["Heti 3 edzés + stresszkezelés (csúcshét)"],
+     penz:["Pénzügyi helyzet áttekintve"]},
+    {note:"4. hét – konszolidáció: a portfólió csúcspontja kész, levezetés.",
+     angol:["Havi szavak átismételve","Önértékelés: el tudod magyarázni a demót folyékonyan angolul?"],
+     tech:["Egyesített demó kész: gépészet + ML + cloud","Architekturális diagram (draw.io)"],
+     karrier:["'Smart Building IoT Stack' összefoglaló repo kész"],
+     elet:["Könnyű mozgás-hét – regeneráció","8 hónap – őszinte értékelés"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  // ---- MEGSZILÁRDÍTÁS FÁZIS (9–12) ----
+  {name:"9. hó", ph:3, title:"9. hónap – OT Security + összefoglalás",
+   artifact:"'Smart Building IoT Stack' repo + security assessment",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti security/portfólió",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: OT security belépő, a megszilárdítás fázis kezdete.",
+     angol:["Napi hallgatás + 5 új szakszó (security terminológia)"],
+     tech:["OT/IT biztonság különbsége megértve","IEC 62443 Zone & Conduit alapok"],
+     karrier:["Célterületek/cégek listája bővítve"],
+     elet:["Rutin tartva – fontos a fej tisztán tartásához"],
+     penz:["Pénzügyi helyzet stabil?"]},
+    {note:"2. hét – intenzív: security assessment a saját rendszerre.",
+     angol:["Security fogalmak elmagyarázva angolul (írásban, 5 mondat)"],
+     tech:["Zone & Conduit modell a saját BMS-re alkalmazva","Írásos security assessment elkezdve"],
+     karrier:["Összefoglaló portfólió-repo szerkezete kész"],
+     elet:["Edzés intenzitás a komfort szerint","Stresszkezelés"],
+     penz:["Vésztartalék: egészséges szinten?"]},
+    {note:"3. hét – intenzív: a teljes portfólió egy helyen + nyilvánosság.",
+     angol:["Szakmai beszélgetés angolul (hangos, 5 perc)"],
+     tech:["Security assessment kész, GitHub-on","ISA/ICS security alapok átnézve"],
+     karrier:["Összefoglaló repo: az egész év munkája egy helyen, publikálva"],
+     elet:["Heti 3 edzés (csúcshét)"],
+     penz:["Befektetési terv frissítve"]},
+    {note:"4. hét – konszolidáció: levezetés.",
+     angol:["Havi szavak átismételve","Önértékelés"],
+     tech:["Security assessment a portfólióban","Havi tech összefoglaló"],
+     karrier:["'Smart Building IoT Stack' repo kész és dokumentált"],
+     elet:["Könnyű mozgás-hét – regeneráció"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  {name:"10. hó", ph:3, title:"10. hónap – Szakmai láthatóság",
+   artifact:"Aktív szakmai jelenlét + iparági térkép",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti írás/kutatás",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: a tudásod látható, most tedd is azzá.",
+     angol:["Napi hallgatás – most már munkanyelv-szintű cél","2 perces önbemutató folyékonyan"],
+     tech:["Tech kérdések angolul: BACnet, MQTT, Digital Twin"],
+     karrier:["Rendszeres tudásmegosztás ütemezve (poszt/írás naptárba)"],
+     elet:["Rutin tartva"],
+     penz:["Pénzügyi stabilitás ellenőrizve"]},
+    {note:"2. hét – intenzív: iparági térkép + aktív jelenlét.",
+     angol:["Szabad témájú szakmai beszélgetés angolul (10 perc)"],
+     tech:["Hiányterületek azonosítva, célzott pótlás"],
+     karrier:["Szakmai kapcsolatépítés BMS/IoT körökben","Iparági szereplők feltérképezve (kik, mit csinálnak)"],
+     elet:["Heti 3 edzés","Baráti kör, szabadidő – ne hagyd el"],
+     penz:["Befektetés automatikusan megy"]},
+    {note:"3. hét – intenzív: közösség és láthatóság csúcsra.",
+     angol:["Egy technikai téma elmagyarázva angolul valakinek (vagy posztban)"],
+     tech:["Egy érdekes tech téma mélyebben átvéve"],
+     karrier:["Szakmai közösségek: BuildingOS, Smart Building Tech – aktív részvétel","Iparági térkép leírva"],
+     elet:["Heti 3 edzés (csúcshét)","Motiváció fenntartása"],
+     penz:["Vésztartalék állapot"]},
+    {note:"4. hét – konszolidáció: levezetés.",
+     angol:["Havi önértékelés: mennyire természetes már az angol?"],
+     tech:["Tech tudás naprakész"],
+     karrier:["Aktív szakmai jelenlét kialakult, iparági térkép kész"],
+     elet:["Könnyű mozgás-hét – regeneráció"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  {name:"11. hó", ph:3, title:"11. hónap – Hálózat + önismeret",
+   artifact:"Tiszta kép a saját szakmai értékről",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti reflexió/tanulás",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: beszélgetések a területen dolgozókkal.",
+     angol:["Napi hallgatás","Magabiztos szakmai kommunikáció gyakorlása angolul"],
+     tech:["Ha egy beszélgetés hiányt jelez: célzott pótlás tervezve"],
+     karrier:["Szakmai párbeszédek kezdeményezve (2-3 ember)"],
+     elet:["Rutin tartva – a 11. hónap lehet kihívó"],
+     penz:["Pénzügyi puffer egészséges?"]},
+    {note:"2. hét – intenzív: tanulás a tapasztaltaktól.",
+     angol:["Szakmai történetek csiszolása (a legjobb 3 véglegesítve)"],
+     tech:["Egy mélyebb téma feldolgozva (amit a beszélgetések felszínre hoztak)"],
+     karrier:["Beszélgetések tapasztaltabb szakemberekkel","Piaci értékszintek megismerése"],
+     elet:["Heti 3 edzés"],
+     penz:["Befektetés folytatva"]},
+    {note:"3. hét – intenzív: önismeret – hol tartok, mi a következő réteg?",
+     angol:["Hosszabb szakmai beszélgetés angolul (15 perc, természetes)"],
+     tech:["Önreflexió: melyik terület érdekel a legjobban? (mély vs architekt)"],
+     karrier:["Önértékelés: tisztán látod a szakmai értéked"],
+     elet:["Heti 3 edzés (csúcshét)","Mentális egyensúly figyelése"],
+     penz:["Vésztartalék állapot"]},
+    {note:"4. hét – konszolidáció: levezetés.",
+     angol:["Havi önértékelés"],
+     tech:["Tudás konszolidálva"],
+     karrier:["Hálózat bővült, önismeret tisztult"],
+     elet:["Könnyű mozgás-hét – regeneráció","11 hónap – ünnepeld a kis győzelmeket"],
+     penz:["Havi pénzügyi review"]}
+   ]},
+  {name:"12. hó", ph:3, title:"12. hónap – Szintlépésre kész",
+   artifact:"Szintlépésre kész szakmai csomag + 2. fázis terve",
+   daily:[{t:"Ingázás: angol",d:"~2h"},{t:"Munka",d:"8h"},{t:"Esti tervezés",d:"30–45p"},{t:"Edzés H,Sze,P",d:"40p"},{t:"Alvás",d:"7.5h"}],
+   weeks:[
+    {note:"1. hét – ráhangolódás: a portfólió, tudás és jelenlét együtt áll.",
+     angol:["Napi hallgatás – munkanyelv szinten, nem 'tanulás'"],
+     tech:["Teljes portfólió átnézve, hiányok azonosítva"],
+     karrier:["Szakmai csomag összeállítva (repo-k, CV, jelenlét)"],
+     elet:["Nagy visszatekintés: mi változott 12 hónap alatt?"],
+     penz:["Éves pénzügyi összesítés"]},
+    {note:"2. hét – intenzív: a következő karrierlépcső előkészítése.",
+     angol:["Magabiztos szakmai önbemutató angolul (végleges, felvéve)"],
+     tech:["Demók és repo-k bemutatásra készen, hiányok pótolva"],
+     karrier:["Következő lépcső átgondolva (irány, lehetőségek)"],
+     elet:["Test, energia, rutin őszinte értékelése"],
+     penz:["Befektetési stratégia finomhangolva"]},
+    {note:"3. hét – intenzív: a 2. fázis kijelölése.",
+     angol:["Angol fenntartási terv a 2. fázisra (hogyan tartod a szintet?)"],
+     tech:["2. fázis témakörök átgondolva (architektúra, security mélyen, skálázás)"],
+     karrier:["2. fázis céljainak felállítása"],
+     elet:["Következő 12 hónap életmód-céljai","Heti 3 edzés"],
+     penz:["Hosszú távú célok konkrét számokkal"]},
+    {note:"4. hét – konszolidáció: éves zárás, szilárd alap minden továbbihoz.",
+     angol:["12 hónapos angol önértékelés: B1-B2 → C1 felé, mérhető eredmény"],
+     tech:["Teljes 1. fázis tech-mérleg"],
+     karrier:["Szintlépésre kész szakmai csomag kész"],
+     elet:["Fenntartható életmód kialakult? – őszinte mérleg"],
+     penz:["1. fázis pénzügyi mérleg, 2. fázis terv"]}
+   ]}
+];
+
+/* ===== 2. FÁZIS — negyedéves áttekintő (egyszerűbb checklist) ===== */
+const Q_INTRO = "Itt válsz a jó eszközhasználóból kiváló mérnökké. A nehéz témák ide kerülnek – immár szilárd alapokon, érettebb szakmai pozícióból, kevésbé fáradtan. A komolyabb, valódi rendszerekkel végzett munka maga is tananyag. A tempó ugyanaz: hétköznap könnyű, hétvégén egy mély blokk. Ez irányváz, nem napról-napra terv – a negyedévek témakörök, nem kötelező menetrend.";
+const QUARTERS = [
+  {chip:"Q1 · 13–15. hó", title:"Elmélyülés + rendszer-olvasás", tasks:[
+    "Egy éles, skálázott rendszer mély megértése: hogyan van valójában felépítve (nem tutorial-méretű)",
+    "A '2. réteg' indul: figyeld, hogyan hoznak architekturális döntéseket a tapasztaltabbak, és miért",
+    "Olvasási szokás: heti 1 valódi rendszer-leírás / mérnöki blogposzt / RFC",
+    "Tapasztaltabb szakemberek mellett tanulni – a környezet maga is tananyag"
+  ]},
+  {chip:"Q2 · 16–18. hó", title:"Skálázás és megbízhatóság", tasks:[
+    "Mi történik 10 helyett 10 000 eszköznél? Üzenetsorok, backpressure",
+    "Time-series adattárolás nagyban (a Redis Streams tudás kibővítése)",
+    "Hibatűrés: mi van, ha a hálózat elesik, ha egy edge-node offline megy?",
+    "Idempotencia, retry-stratégiák, store-and-forward",
+    "Felfedezés: a mély technikai probléma vagy a rendszer egészének tervezése húz jobban?"
+  ]},
+  {chip:"Q3 · 19–21. hó", title:"OT Security és adat-architektúra mélyen", tasks:[
+    "IEC 62443 a felszínesnél mélyebben: valódi zónázás, secure-by-design",
+    "Adat-architektúra: lakehouse / streaming pipeline-ok",
+    "A digital twin mint élő rendszer (nem demó)",
+    "ML-modellek éles üzemben: monitoring, retraining, drift-detektálás",
+    "A PFR-tudás ipari szintre emelve"
+  ]},
+  {chip:"Q4 · 22–24. hó", title:"Az elágazás", tasks:[
+    "Mélymérnök irány: a legjobb a szakmában egy területen (pl. IoT edge/cloud megbízhatóság, vagy ML éles üzemeltetés épületeknél)",
+    "Architekt irány: a nagy kép – rendszerek tervezése, technológiai döntések, koordináció",
+    "Itt fizet ki igazán a gépészet + szoftver + cloud kombó (a fizikai ÉS digitális oldal átlátása)",
+    "Nem kell most választani – a 0–24 hó alapja mindkettőt szolgálja. Ez a felfedezés a terv célja, nem rizikó."
+  ]}
+];
+
+let cur = {m:0, w:0};
+let phase = 1;
+let checked = {};
+
+function load() {
+  return dbRef.get().then(snapshot => {
+    if (snapshot.exists()) checked = snapshot.val();
+  }).catch(() => {});
+}
+
+function save() {
+  if (!isOwner) return;
+  dbRef.set(checked).then(() => {
+    const ind = document.getElementById('saveInd');
+    ind.classList.add('show');
+    setTimeout(() => ind.classList.remove('show'), 1500);
+  }).catch(() => {});
+}
+
+function key(m,w,p,i) { return `${m}-${w}-${p}-${i}`; }
+function qkey(qi,i) { return `q-${qi}-${i}`; }
+
+function totalTasks() {
+  let t = 0;
+  MONTHS.forEach(m => m.weeks.forEach(w => Object.keys(P).forEach(p => t += (w[p]||[]).length)));
+  QUARTERS.forEach(q => t += q.tasks.length);
+  return t;
+}
+function doneTasks() { return Object.values(checked).filter(Boolean).length; }
+
+function monthDone(mi) {
+  let done=0, total=0;
+  MONTHS[mi].weeks.forEach((w,wi) => Object.keys(P).forEach(p => {
+    (w[p]||[]).forEach((_,i) => { total++; if(checked[key(mi,wi,p,i)]) done++; });
+  }));
+  return total > 0 ? Math.round(done/total*100) : 0;
+}
+
+function updateProgress() {
+  const done = doneTasks(), total = totalTasks();
+  document.getElementById('progNum').textContent = done + ' / ' + total;
+  const circ = 138.2;
+  document.getElementById('ringFill').style.strokeDashoffset = circ - (total > 0 ? (done/total)*circ : 0);
+}
+
+function renderMonths() {
+  document.getElementById('mrow').innerHTML = MONTHS.map((m,i) => {
+    const pct = monthDone(i);
+    return `<div class="mc ph${m.ph} ${i===cur.m?'active':''}" onclick="selM(${i})">
+      ${m.name}
+      <div class="mc-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+function renderWeekTabs() {
+  document.getElementById('wtabs').innerHTML = [1,2,3,4].map((n,i) =>
+    `<button class="wtab ${i===cur.w?'active':''}" onclick="selW(${i})">${n}. hét</button>`
+  ).join('');
+}
+
+function renderContent() {
+  const m = MONTHS[cur.m], w = m.weeks[cur.w];
+  const q = currentQuery;
+  let html = `<div class="month-title">${hl(m.title, q)}</div>`;
+  html += `<div class="artifact-box"><b>Artifact:</b> ${hl(m.artifact, q)}</div>`;
+  html += `<div class="wnote">${hl(w.note, q)}</div><div class="pillars-grid">`;
+  Object.keys(P).forEach(p => {
+    const tasks = w[p] || [];
+    if (!tasks.length) return;
+    const col = `var(--${P[p].varname}-dot)`;
+    html += `<div class="psec" data-pillar="${p}" data-week="${cur.w}" data-month="${cur.m}">
+      <div class="psec-title"><div class="pdot" style="background:${col}"></div>${P[p].label}</div>`;
+    tasks.forEach((t,i) => {
+      const k = key(cur.m,cur.w,p,i);
+      const done = !!checked[k];
+      const hidden = q && !t.toLowerCase().includes(q.toLowerCase()) ? ' no-match' : '';
+      html += `<div class="task-row ${done?'done':''}${hidden}" data-taskkey="${k}" onclick="toggle('${k}')">
+        <div class="cb">
+          <svg class="ckmark" width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="task-txt">${hl(t, q)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  const daily = m.daily;
+  html += `<div class="daily-box"><div class="daily-hd">Napi rutin – ebben a hónapban</div><div class="daily-grid">`;
+  daily.forEach(d => { html += `<div class="daily-r"><span>${hl(d.t, q)}</span><span class="dt">${d.d}</span></div>`; });
+  html += `</div></div>`;
+  document.getElementById('content').innerHTML = html;
+}
+
+function renderPhase2() {
+  const q = currentQuery;
+  let html = `<div class="q-intro">${hl(Q_INTRO, q)}</div>`;
+  QUARTERS.forEach((qu, qi) => {
+    html += `<div class="q-card"><div class="q-card-hd"><span class="q-chip">${qu.chip}</span>${hl(qu.title, q)}</div>`;
+    qu.tasks.forEach((t,i) => {
+      const k = qkey(qi,i);
+      const done = !!checked[k];
+      const hidden = q && !t.toLowerCase().includes(q.toLowerCase()) ? ' no-match' : '';
+      html += `<div class="task-row ${done?'done':''}${hidden}" data-taskkey="${k}" onclick="toggle('${k}')">
+        <div class="cb">
+          <svg class="ckmark" width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="task-txt">${hl(t, q)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('phase2').innerHTML = html;
+}
+
+let currentQuery = '';
+
+function hl(text, q) {
+  if (!q) return text;
+  const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${esc})`, 'gi'), '<mark>$1</mark>');
+}
+
+function applySearch(q) {
+  currentQuery = q;
+  const banner = document.getElementById('searchBanner');
+  if (!q) {
+    banner.classList.remove('visible');
+    document.querySelectorAll('.task-row').forEach(r => r.classList.remove('no-match'));
+    document.querySelectorAll('.wtab .hit-badge').forEach(b => b.remove());
+    window.parent?.postMessage({type:'searchResult',count:0,total:0},'*');
+    if (phase===1) render(); else renderPhase2();
+    return;
+  }
+  const low = q.toLowerCase();
+  let totalHits = 0;
+  if (phase === 1) {
+    const m = MONTHS[cur.m];
+    const weekHits = m.weeks.map(w =>
+      Object.keys(P).reduce((sum, p) => sum + (w[p]||[]).filter(t => t.toLowerCase().includes(low)).length, 0)
+    );
+    totalHits = weekHits.reduce((a,b)=>a+b,0);
+    renderContent();
+    document.querySelectorAll('.wtab').forEach((btn, i) => {
+      btn.querySelector('.hit-badge')?.remove();
+      if (weekHits[i] > 0) {
+        const badge = document.createElement('span');
+        badge.className = 'hit-badge';
+        badge.textContent = weekHits[i];
+        btn.appendChild(badge);
+      }
+    });
+    if (weekHits[cur.w] === 0 && totalHits > 0) {
+      const best = weekHits.indexOf(Math.max(...weekHits));
+      selW(best);
+    }
+  } else {
+    totalHits = QUARTERS.reduce((s,qu)=> s + qu.tasks.filter(t=>t.toLowerCase().includes(low)).length, 0);
+    renderPhase2();
+  }
+  banner.textContent = totalHits ? `🔍 "${q}" — ${totalHits} egyező feladat` : `🔍 "${q}" — nincs találat`;
+  banner.classList.add('visible');
+  window.parent?.postMessage({type:'searchResult',count:totalHits,total:0},'*');
+}
+
+function render() { renderMonths(); renderWeekTabs(); renderContent(); updateProgress(); }
+
+function selPhase(p) {
+  phase = p;
+  document.getElementById('phaseBtn1').classList.toggle('active', p===1);
+  document.getElementById('phaseBtn2').classList.toggle('active', p===2);
+  document.getElementById('phase1').style.display = p===1 ? '' : 'none';
+  document.getElementById('phase2').style.display = p===2 ? '' : 'none';
+  document.getElementById('btnResetMonth').textContent = p===1 ? 'Hónap törlése' : 'Fázis 2 törlése';
+  if (p===1) render(); else { renderPhase2(); updateProgress(); }
+  if (currentQuery) applySearch(currentQuery);
+}
+
+function selM(i) { cur.m=i; cur.w=0; render(); if(currentQuery) applySearch(currentQuery); }
+function selW(i) { cur.w=i; renderWeekTabs(); renderContent(); if(currentQuery) applySearch(currentQuery); }
+
+function toggle(k) {
+  if (!isOwner) return;
+  checked[k] = !checked[k];
+  save();
+  if (phase===1) render(); else { renderPhase2(); updateProgress(); }
+  if (currentQuery) applySearch(currentQuery);
+}
+
+function resetMonth() {
+  if (!isOwner) return;
+  if (phase === 1) {
+    const m = cur.m;
+    MONTHS[m].weeks.forEach((w,wi) => Object.keys(P).forEach(p =>
+      (w[p]||[]).forEach((_,i) => { delete checked[key(m,wi,p,i)]; })
+    ));
+  } else {
+    QUARTERS.forEach((qu,qi)=> qu.tasks.forEach((_,i)=> { delete checked[qkey(qi,i)]; }));
+  }
+  save();
+  if (phase===1) render(); else { renderPhase2(); updateProgress(); }
+}
+
+function resetAll() {
+  if (!isOwner) return;
+  checked = {};
+  save();
+  if (phase===1) render(); else { renderPhase2(); updateProgress(); }
+}
+
+window.addEventListener('message', e => {
+  if (!e.data) return;
+  if (e.data.type === 'theme') document.documentElement.setAttribute('data-theme', e.data.value);
+  if (e.data.type === 'search') applySearch(e.data.query);
+  if (e.data.type === 'authState') {
+    isOwner = e.data.isOwner;
+    document.getElementById('btnResetMonth').style.display = isOwner ? '' : 'none';
+    document.getElementById('btnResetAll').style.display = isOwner ? '' : 'none';
+    document.body.classList.toggle('ro', !isOwner);
+  }
+});
+try { const t = localStorage.getItem('csr_theme'); if(t) document.documentElement.setAttribute('data-theme',t); } catch(e){}
+
+load().then(() => { dataLoaded = true; render(); renderPhase2(); });
+</script>
+</body>
+</html>

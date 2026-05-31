@@ -19,9 +19,24 @@
       --muted:         #64748b;
       --shadow:        0 1px 3px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.06);
 
-      --sidebar-bg:     #1e1b4b;
-      --sidebar-text:   #c7d2fe;
+      --sidebar-bg:     #f1f5f9;
+      --sidebar-text:   #64748b;
       --sidebar-active: #ffffff;
+      --sb-border:      #e2e8f0;
+      --sb-hover:       rgba(79,70,229,.07);
+      --sb-input-bg:    rgba(0,0,0,.04);
+      --sb-input-bdr:   #d1d5db;
+      --sb-input-col:   #1e293b;
+      --sb-input-ph:    #94a3b8;
+      --sb-toggle-bg:   rgba(0,0,0,.05);
+      --sb-toggle-btn:  rgba(0,0,0,.10);
+      --sb-logo-col:    #1e293b;
+      --sb-logo-acc:    #4f46e5;
+      --sb-footer-col:  #94a3b8;
+      --sb-shadow:      2px 0 6px rgba(0,0,0,.06);
+      --sb-clear-col:   #94a3b8;
+      --sb-hits-col:    #94a3b8;
+      --sb-clear-hover: #1e293b;
 
       --welcome-title:  #475569;
       --welcome-card:   #ffffff;
@@ -36,6 +51,24 @@
       --muted: #94a3b8;
       --shadow: 0 1px 4px rgba(0,0,0,.4);
       --accent-light: rgba(79,70,229,.2);
+
+      --sidebar-bg:     #1e1b4b;
+      --sidebar-text:   #c7d2fe;
+      --sb-border:      rgba(255,255,255,.08);
+      --sb-hover:       rgba(255,255,255,.08);
+      --sb-input-bg:    rgba(255,255,255,.07);
+      --sb-input-bdr:   rgba(255,255,255,.11);
+      --sb-input-col:   #ffffff;
+      --sb-input-ph:    rgba(199,210,254,.38);
+      --sb-toggle-bg:   rgba(255,255,255,.06);
+      --sb-toggle-btn:  rgba(255,255,255,.15);
+      --sb-logo-col:    #ffffff;
+      --sb-logo-acc:    #818cf8;
+      --sb-footer-col:  rgba(199,210,254,.35);
+      --sb-shadow:      2px 0 8px rgba(0,0,0,.25);
+      --sb-clear-col:   rgba(199,210,254,.5);
+      --sb-hits-col:    rgba(199,210,254,.45);
+      --sb-clear-hover: #ffffff;
 
       --welcome-title: #94a3b8;
       --welcome-card:  #1e293b;
@@ -59,22 +92,22 @@
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      box-shadow: 2px 0 8px rgba(0,0,0,.25);
+      box-shadow: var(--sb-shadow);
       z-index: 10;
     }
 
     .sidebar-header {
       padding: 26px 20px 20px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      border-bottom: 1px solid var(--sb-border);
     }
 
     .sidebar-logo {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #fff;
+      color: var(--sb-logo-col);
       letter-spacing: .5px;
     }
-    .sidebar-logo span { color: #818cf8; }
+    .sidebar-logo span { color: var(--sb-logo-acc); }
 
     .sidebar-subtitle {
       font-size: .72rem;
@@ -114,8 +147,8 @@
       text-align: center;
     }
     nav ul li a:hover {
-      background: rgba(255,255,255,.08);
-      color: #fff;
+      background: var(--sb-hover);
+      color: var(--sb-logo-col);
     }
     nav ul li a.active {
       background: var(--accent);
@@ -131,8 +164,8 @@
       justify-content: space-between;
       padding: 10px 14px;
       border-radius: 8px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.08);
+      background: var(--sb-toggle-bg);
+      border: 1px solid var(--sb-border);
     }
     .theme-label {
       font-size: .8rem;
@@ -143,7 +176,7 @@
       width: 44px;
       height: 24px;
       border-radius: 999px;
-      background: rgba(255,255,255,.15);
+      background: var(--sb-toggle-btn);
       border: none;
       cursor: pointer;
       position: relative;
@@ -170,9 +203,9 @@
 
     .sidebar-footer {
       padding: 14px 20px;
-      border-top: 1px solid rgba(255,255,255,.08);
+      border-top: 1px solid var(--sb-border);
       font-size: .72rem;
-      color: rgba(199,210,254,.35);
+      color: var(--sb-footer-col);
     }
 
     /* ── MAIN ── */
@@ -276,20 +309,20 @@
     }
     .search-input {
       width: 100%;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.11);
+      background: var(--sb-input-bg);
+      border: 1px solid var(--sb-input-bdr);
       border-radius: 8px;
       padding: 8px 34px 8px 34px;
-      color: #fff;
+      color: var(--sb-input-col);
       font-size: 13px;
       font-family: inherit;
       outline: none;
       transition: border-color .15s, background .15s;
     }
-    .search-input::placeholder { color: rgba(199,210,254,.38); }
+    .search-input::placeholder { color: var(--sb-input-ph); }
     .search-input:focus {
       border-color: rgba(129,140,248,.6);
-      background: rgba(255,255,255,.11);
+      background: var(--sb-input-bg);
     }
     .search-icon {
       position: absolute;
@@ -305,17 +338,17 @@
       right: 21px;
       top: 50%;
       transform: translateY(-50%);
-      color: rgba(199,210,254,.5);
+      color: var(--sb-clear-col);
       cursor: pointer;
       font-size: 17px;
       line-height: 1;
       display: none;
       transition: color .15s;
     }
-    .search-clear:hover { color: #fff; }
+    .search-clear:hover { color: var(--sb-clear-hover); }
     .search-hits {
       font-size: .7rem;
-      color: rgba(199,210,254,.45);
+      color: var(--sb-hits-col);
       text-align: right;
       padding: 0 14px 10px;
       min-height: 18px;
@@ -330,6 +363,28 @@
       width: 100%;
       height: 100%;
     }
+
+    /* ── AUTH ── */
+    .sidebar-auth { padding: 0 12px 10px; }
+    .auth-btn {
+      width: 100%;
+      padding: 9px 14px;
+      border-radius: 8px;
+      background: var(--sb-toggle-bg);
+      border: 1px solid var(--sb-border);
+      color: var(--sidebar-text);
+      font-size: .8rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: background .15s, color .15s;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .auth-btn:hover { background: var(--sb-hover); color: var(--sb-logo-col); }
+    .auth-btn.owner { color: #86efac; border-color: rgba(134,239,172,.25); }
   </style>
 </head>
 <body>
@@ -343,27 +398,15 @@
   <nav>
     <ul>
       <li>
-        <a href="#" class="nav-link" data-file="html/12_honap_roadmap.html" data-title="12 hónapos roadmap">
-          <span class="nav-icon">🗺️</span>
-          12 hónapos roadmap
-        </a>
-      </li>
-      <li>
         <a href="#" class="nav-link" data-file="html/napi_heti_honapi_planner.html" data-title="Napi / Heti / Hónapi planner">
           <span class="nav-icon">📅</span>
           Napi / Heti / Hónapi planner
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link" data-file="html/master_12honap_planner.html" data-title="Master 12 hónapos planner">
-          <span class="nav-icon">🧭</span>
-          Master 12 hónapos planner
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link" data-file="html/master_checklist_12honap.html" data-title="Master 12 hónapos checklist">
-          <span class="nav-icon">📋</span>
-          Master 12 hónapos checklist
+        <a href="#" class="nav-link" data-file="html/roadmap_checklist_24honap.html" data-title="24 hónapos fejlődési checklist">
+          <span class="nav-icon">🚀</span>
+          24 hónapos fejlődési checklist
         </a>
       </li>
       <li>
@@ -395,6 +438,12 @@
     </button>
   </div>
 
+  <div class="sidebar-auth">
+    <button class="auth-btn" id="authBtn" onclick="handleAuth()">
+      <span id="authIcon">🔑</span><span id="authLabel">Bejelentkezés</span>
+    </button>
+  </div>
+
   <div class="sidebar-footer">CSR App &copy; 2026</div>
 </aside>
 
@@ -409,17 +458,11 @@
     <h2>Üdvözlünk a CSR Learning App-ban!</h2>
     <p>Válassz egy menüpontot a bal oldali sávból a tartalom megnyitásához.</p>
     <div class="welcome-cards">
-      <div class="welcome-card" onclick="loadPage('html/12_honap_roadmap.html','12 hónapos roadmap')">
-        🗺️ 12 hónapos roadmap
-      </div>
       <div class="welcome-card" onclick="loadPage('html/napi_heti_honapi_planner.html','Napi / Heti / Hónapi planner')">
         📅 Napi / Heti / Hónapi planner
       </div>
-      <div class="welcome-card" onclick="loadPage('html/master_12honap_planner.html','Master 12 hónapos planner')">
-        🧭 Master 12 hónapos planner
-      </div>
-      <div class="welcome-card" onclick="loadPage('html/master_checklist_12honap.html','Master 12 hónapos checklist')">
-        📋 Master 12 hónapos checklist
+      <div class="welcome-card" onclick="loadPage('html/roadmap_checklist_24honap.html','24 hónapos fejlődési checklist')">
+        🚀 24 hónapos fejlődési checklist
       </div>
       <div class="welcome-card" onclick="loadPage('html/compound_interest_explainer.html','Kamatos kamat kalkulátor')">
         💰 Kamatos kamat kalkulátor
@@ -433,6 +476,8 @@
   <iframe id="content-frame" title="Tartalom"></iframe>
 </main>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
   const frame      = document.getElementById('content-frame');
   const welcome    = document.getElementById('welcome');
@@ -447,6 +492,44 @@
 
   let currentTheme = 'light';
   let currentQuery = '';
+  const OWNER_EMAIL = 'xlopojackx@gmail.com';
+
+  firebase.initializeApp({
+    apiKey: "AIzaSyDbQUbxQUCli_ZaU5sGlKIueAcaRL4NmVU",
+    authDomain: "csr-app-9f41c.firebaseapp.com",
+    databaseURL: "https://csr-app-9f41c-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "csr-app-9f41c",
+    storageBucket: "csr-app-9f41c.firebasestorage.app",
+    messagingSenderId: "452006201935",
+    appId: "1:452006201935:web:8bfca2af227fca4911b83a"
+  });
+  const auth = firebase.auth();
+
+  auth.onAuthStateChanged(u => {
+    const isOwner = !!(u && u.email === OWNER_EMAIL);
+    const btn  = document.getElementById('authBtn');
+    const icon = document.getElementById('authIcon');
+    const lbl  = document.getElementById('authLabel');
+    if (isOwner) {
+      icon.textContent = '✓';
+      lbl.textContent  = (u.displayName || u.email).split(' ')[0];
+      btn.classList.add('owner');
+    } else if (u) {
+      icon.textContent = '👤';
+      lbl.textContent  = 'Más fiók – Kilépés';
+      btn.classList.remove('owner');
+    } else {
+      icon.textContent = '🔑';
+      lbl.textContent  = 'Bejelentkezés';
+      btn.classList.remove('owner');
+    }
+    postToFrame({ type: 'authState', isOwner });
+  });
+
+  function handleAuth() {
+    if (auth.currentUser) auth.signOut();
+    else auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  }
 
   try {
     const saved = localStorage.getItem('csr_theme');
@@ -507,6 +590,8 @@
     frame.onload = () => {
       postToFrame({ type: 'theme', value: currentTheme });
       if (currentQuery) postToFrame({ type: 'search', query: currentQuery });
+      const isOwner = !!(auth.currentUser && auth.currentUser.email === OWNER_EMAIL);
+      postToFrame({ type: 'authState', isOwner });
     };
   }
 
