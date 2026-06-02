@@ -595,11 +595,28 @@ function load() {
 
 function save() {
   if (!isOwner) return;
-  dbRef.set(checked).then(() => {
-    const ind = document.getElementById('saveInd');
-    ind.classList.add('show');
-    setTimeout(() => ind.classList.remove('show'), 1500);
-  }).catch(() => {});
+  const doWrite = () => {
+    dbRef.set(checked).then(() => {
+      const ind = document.getElementById('saveInd');
+      ind.textContent = '✓ Mentve'; ind.style.color = '';
+      ind.classList.add('show');
+      setTimeout(() => ind.classList.remove('show'), 1500);
+    }).catch(err => {
+      console.error('Firebase save error:', err.code, err.message);
+      const ind = document.getElementById('saveInd');
+      ind.textContent = '✗ Mentés sikertelen'; ind.style.color = '#f87171';
+      ind.classList.add('show');
+      setTimeout(() => { ind.classList.remove('show'); ind.textContent = '✓ Mentve'; ind.style.color = ''; }, 3000);
+    });
+  };
+  if (auth.currentUser) {
+    doWrite();
+  } else {
+    const unsub = auth.onAuthStateChanged(u => {
+      unsub();
+      if (u && u.email === OWNER_EMAIL) doWrite();
+    });
+  }
 }
 
 function key(m,w,p,i) { return `${m}-${w}-${p}-${i}`; }
