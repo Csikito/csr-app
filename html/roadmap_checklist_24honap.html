@@ -117,6 +117,8 @@ body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:
 mark { background:rgba(250,204,21,.4); color:inherit; border-radius:2px; padding:0 1px; }
 [data-theme="dark"] mark { background:rgba(250,204,21,.22); }
 
+.arch-chip { font-size:10px; font-weight:600; padding:2px 8px; border-radius:999px; background:var(--o-bg); color:var(--o-text); }
+
 /* Auth */
 .btn-sm.owner { color:var(--check-active); border-color:var(--check-active); }
 body.ro .task-row { cursor:default; }
@@ -149,6 +151,7 @@ body.ro .cb { opacity:.4; }
 <div class="phase-switch" id="phaseSwitch">
   <button class="phase-btn active" id="phaseBtn1" onclick="selPhase(1)">1. fázis — Alapok és portfólió<span class="pb-sub">0–12. hó · részletes</span></button>
   <button class="phase-btn" id="phaseBtn2" onclick="selPhase(2)">2. fázis — Mélységépítés<span class="pb-sub">12–24. hó · áttekintő</span></button>
+  <button class="phase-btn" id="phaseBtn3" onclick="selPhase(3)">3. fázis — Architektúra<span class="pb-sub">párhuzamos · háttér</span></button>
 </div>
 
 <div id="phase1">
@@ -158,6 +161,7 @@ body.ro .cb { opacity:.4; }
 </div>
 
 <div id="phase2" style="display:none"></div>
+<div id="phase3" style="display:none"></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -583,6 +587,64 @@ const QUARTERS = [
   ]}
 ];
 
+/* ===== 3. FÁZIS — Architektúra & Rendszertervezés (párhuzamos, háttér-fókusz) ===== */
+const ARCH_INTRO = "Rendszertervezés és skálázhatóság – a szoftverarchitekt gondolkodás alapjai. Nem technológiából indulsz ki, hanem adatáramlás → szűk keresztmetszetek → döntések sorrendben. Párhuzamos fókusz, hétvégi blokkokban. Cél: 100 000 adatpont/perc ingestion pipeline önálló megtervezése és dokumentálása. Könyv: Martin Kleppmann – Designing Data-Intensive Applications.";
+const ARCH_MONTHS = [
+  {chip:"1. hó – Teljesítmény & mérés", title:"Latency, throughput, batch insert, load testing", tasks:[
+    "HTTP, TCP, connection pooling elméleti alapok átismételve – CPU-bound vs IO-bound különbség értve",
+    "Szinkron API megírva Pythonban: request → validálás → közvetlen PostgreSQL insert",
+    "Load test futtatva k6 vagy Locust eszközzel: mennyi request/sec bír el a szinkron API?",
+    "Connection pool beépítve (psycopg2 pool / asyncpg), load test megismételve – különbség mérve",
+    "Batch insert implementálva: 100, 500, 1000 rekord/batch variánsok megírva és összehasonlítva",
+    "Eredmények táblázatban dokumentálva: szinkron vs. pooled vs. batch – mi volt a szűk keresztmetszet?"
+  ]},
+  {chip:"2. hó – Queue & Worker", title:"Redis Streams, consumer group, retry, dead-letter queue, idempotencia", tasks:[
+    "Redis List vs Redis Streams különbség megértve és saját szavakkal leírva (mikor melyik?)",
+    "API átírva: csak Redis Stream-be ír (XADD), DB-t nem érint – API latency lecsökkent?",
+    "Worker megírva: Stream-ből olvas (XREAD), batch-elve PostgreSQL-be ír",
+    "Consumer group beállítva (XREADGROUP), 2 worker párhuzamosan fut, feldolgozás mérve",
+    "Retry logika implementálva: sikertelen üzenet visszakerül, max 3 kísérlet",
+    "Dead-letter queue megvalósítva: 3x sikertelen üzenet külön stream-be kerül, riasztható",
+    "Idempotencia: device_id + timestamp egyedi kulcsként – duplikátum beérkezéskor nem ír DB-be"
+  ]},
+  {chip:"3. hó – Time-series adatbázis", title:"TimescaleDB, aggregáció, retention policy, lekérdezési stratégia", tasks:[
+    "TimescaleDB Docker-ben felállítva, hypertable létrehozva a szenzor adatokhoz",
+    "50 millió fake adatpont generálva és betöltve (script megírva)",
+    "Sima PostgreSQL tábla vs TimescaleDB hypertable lekérdezési sebesség mérve (EXPLAIN ANALYZE)",
+    "Retention policy beállítva: nyers adat 90 napra automatikusan törlődik",
+    "1 perces és 5 perces continuous aggregate táblák létrehozva és automatikus frissítés beállítva",
+    "Dashboard lekérdezés optimalizálva: mikor a nyers táblából, mikor az aggregáltból érdemes olvasni?",
+    "Downsampling stratégia dokumentálva: raw → 1min → 5min → 1h – melyik mennyi ideig marad?"
+  ]},
+  {chip:"4. hó – Event-driven architektúra", title:"Domain eventek, pub/sub, több consumer, event schema", tasks:[
+    "Domain eventek azonosítva a saját rendszerhez: SensorReadingReceived, ThresholdExceeded, DeviceOffline",
+    "Pub/sub architektúra implementálva: 1 esemény → 3 különböző consumer kap belőle",
+    "Storage consumer: nyers adatot TimescaleDB-be ment",
+    "Alerting consumer: threshold átlépéskor bejegyzést ír egy riasztás-naplóba",
+    "Aggregation consumer: érkező adatból folyamatosan számolja az 1 perces átlagot",
+    "Event schema verziókezelés megértve: mi van, ha mezőt adunk hozzá / törlünk?",
+    "Sorrendiség és duplikáció probléma tapasztalva és írásban dokumentálva"
+  ]},
+  {chip:"5. hó – Observability", title:"Prometheus, Grafana, OpenTelemetry, structured logging, p99 latencia", tasks:[
+    "Prometheus Python client beépítve az API-ba és a workerekbe",
+    "6 kulcsmetrika implementálva: incoming_datapoints_per_sec, queue_depth, oldest_message_age_sec, worker_error_rate, db_insert_latency_ms, dropped_messages_total",
+    "Grafana dashboard létrehozva: minden metrika panel megjelenítve",
+    "Alert szabályok beállítva: queue_depth > 10 000 → figyelmeztetés, db_latency > 500ms → riasztás",
+    "Structured JSON logging bevezetve: request_id, timestamp, severity, üzenet minden log sorban",
+    "OpenTelemetry trace hozzáadva: API fogad → queue-ba ír → worker feldolgoz – teljes útvonal látható",
+    "p95 és p99 end-to-end latencia mérve (szenzor befutástól DB-be írásig) és dashboardon megjelenítve"
+  ]},
+  {chip:"6. hó – Rendszertervezés & dokumentáció", title:"ADR, C4 diagram, kapacitásszámítás, teljes design dokumentum", tasks:[
+    "C4 modell 4 szintje megértve (Context, Container, Component, Code) – mikor melyiket rajzoljuk?",
+    "Saját pipeline C4 Context és Container diagramja megrajzolva (draw.io vagy Mermaid)",
+    "ADR (Architecture Decision Record) megírva: Redis Streams vs Kafka – kontextus, opciók, döntés, következmények",
+    "Kapacitásszámítás elvégezve: 100 000 adat/perc → mekkora tárhelyet, hálózatot, CPU-t igényel 1 évre?",
+    "Failure mode elemzés: mi történik ha a queue megtelik? Ha a DB 5 percre kiesik? Ha egy worker elhal?",
+    "Teljes design dokumentum megírva: követelmények, komponensdiagram, adatáramlás, tárolási stratégia, hibakezelés, skálázási terv",
+    "Kafka / NATS migráció mikor indokolt – döntési fa dokumentálva (mikor lép túl a Redis Streams a határain?)"
+  ]}
+];
+
 let cur = {m:0, w:0};
 let phase = 1;
 let checked = {};
@@ -621,11 +683,13 @@ function save() {
 
 function key(m,w,p,i) { return `${m}-${w}-${p}-${i}`; }
 function qkey(qi,i) { return `q-${qi}-${i}`; }
+function akey(mi,i) { return `a-${mi}-${i}`; }
 
 function totalTasks() {
   let t = 0;
   MONTHS.forEach(m => m.weeks.forEach(w => Object.keys(P).forEach(p => t += (w[p]||[]).length)));
   QUARTERS.forEach(q => t += q.tasks.length);
+  ARCH_MONTHS.forEach(m => t += m.tasks.length);
   return t;
 }
 function doneTasks() { return Object.values(checked).filter(Boolean).length; }
@@ -719,6 +783,29 @@ function renderPhase2() {
   document.getElementById('phase2').innerHTML = html;
 }
 
+function renderPhase3() {
+  const q = currentQuery;
+  let html = `<div class="q-intro">${hl(ARCH_INTRO, q)}</div>`;
+  ARCH_MONTHS.forEach((am, mi) => {
+    html += `<div class="q-card"><div class="q-card-hd"><span class="arch-chip">${am.chip}</span>${hl(am.title, q)}</div>`;
+    am.tasks.forEach((t, i) => {
+      const k = akey(mi, i);
+      const done = !!checked[k];
+      const hidden = q && !t.toLowerCase().includes(q.toLowerCase()) ? ' no-match' : '';
+      html += `<div class="task-row ${done?'done':''}${hidden}" data-taskkey="${k}" onclick="toggle('${k}')">
+        <div class="cb">
+          <svg class="ckmark" width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="task-txt">${hl(t, q)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  document.getElementById('phase3').innerHTML = html;
+}
+
 let currentQuery = '';
 
 function hl(text, q) {
@@ -760,9 +847,12 @@ function applySearch(q) {
       const best = weekHits.indexOf(Math.max(...weekHits));
       selW(best);
     }
-  } else {
+  } else if (phase === 2) {
     totalHits = QUARTERS.reduce((s,qu)=> s + qu.tasks.filter(t=>t.toLowerCase().includes(low)).length, 0);
     renderPhase2();
+  } else {
+    totalHits = ARCH_MONTHS.reduce((s,am)=> s + am.tasks.filter(t=>t.toLowerCase().includes(low)).length, 0);
+    renderPhase3();
   }
   banner.textContent = totalHits ? `🔍 "${q}" — ${totalHits} egyező feladat` : `🔍 "${q}" — nincs találat`;
   banner.classList.add('visible');
@@ -775,10 +865,13 @@ function selPhase(p) {
   phase = p;
   document.getElementById('phaseBtn1').classList.toggle('active', p===1);
   document.getElementById('phaseBtn2').classList.toggle('active', p===2);
+  document.getElementById('phaseBtn3').classList.toggle('active', p===3);
   document.getElementById('phase1').style.display = p===1 ? '' : 'none';
   document.getElementById('phase2').style.display = p===2 ? '' : 'none';
-  document.getElementById('btnResetMonth').textContent = p===1 ? 'Hónap törlése' : 'Fázis 2 törlése';
-  if (p===1) render(); else { renderPhase2(); updateProgress(); }
+  document.getElementById('phase3').style.display = p===3 ? '' : 'none';
+  if (p===1) { document.getElementById('btnResetMonth').textContent = 'Hónap törlése'; render(); }
+  else if (p===2) { document.getElementById('btnResetMonth').textContent = 'Fázis 2 törlése'; renderPhase2(); updateProgress(); }
+  else { document.getElementById('btnResetMonth').textContent = 'Fázis 3 törlése'; renderPhase3(); updateProgress(); }
   if (currentQuery) applySearch(currentQuery);
 }
 
@@ -789,7 +882,7 @@ function toggle(k) {
   if (!isOwner) return;
   checked[k] = !checked[k];
   save();
-  if (phase===1) render(); else { renderPhase2(); updateProgress(); }
+  if (phase===1) render(); else if (phase===2) { renderPhase2(); updateProgress(); } else { renderPhase3(); updateProgress(); }
   if (currentQuery) applySearch(currentQuery);
 }
 
@@ -800,18 +893,20 @@ function resetMonth() {
     MONTHS[m].weeks.forEach((w,wi) => Object.keys(P).forEach(p =>
       (w[p]||[]).forEach((_,i) => { delete checked[key(m,wi,p,i)]; })
     ));
-  } else {
+  } else if (phase === 2) {
     QUARTERS.forEach((qu,qi)=> qu.tasks.forEach((_,i)=> { delete checked[qkey(qi,i)]; }));
+  } else {
+    ARCH_MONTHS.forEach((am,mi)=> am.tasks.forEach((_,i)=> { delete checked[akey(mi,i)]; }));
   }
   save();
-  if (phase===1) render(); else { renderPhase2(); updateProgress(); }
+  if (phase===1) render(); else if (phase===2) { renderPhase2(); updateProgress(); } else { renderPhase3(); updateProgress(); }
 }
 
 function resetAll() {
   if (!isOwner) return;
   checked = {};
   save();
-  if (phase===1) render(); else { renderPhase2(); updateProgress(); }
+  if (phase===1) render(); else if (phase===2) { renderPhase2(); updateProgress(); } else { renderPhase3(); updateProgress(); }
 }
 
 window.addEventListener('message', e => {
@@ -827,7 +922,7 @@ window.addEventListener('message', e => {
 });
 try { const t = localStorage.getItem('csr_theme'); if(t) document.documentElement.setAttribute('data-theme',t); } catch(e){}
 
-load().then(() => { dataLoaded = true; render(); renderPhase2(); });
+load().then(() => { dataLoaded = true; render(); renderPhase2(); renderPhase3(); });
 </script>
 </body>
 </html>
