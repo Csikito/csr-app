@@ -1,0 +1,2532 @@
+<!DOCTYPE html>
+<html lang="hu" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BMS &amp; IT/OT – 12 hónapos program</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+:root {
+  --bg:#f8fafc; --bg2:#f1f5f9; --card:#fff; --border:#e2e8f0;
+  --text:#1e293b; --muted:#64748b; --subtle:#94a3b8;
+  --shadow:0 1px 3px rgba(0,0,0,.08);
+  --radius:10px; --radius-sm:7px; --tr:.15s ease;
+  --accent-strong:#4f46e5; --accent-bg:#eef2ff; --accent-text:#3730a3;
+  --g-dot:#1D9E75; --g-bg:#e8faf3; --g-text:#065f46; --g-border:#6ee7b7;
+  --b-dot:#378ADD; --b-bg:#dbeafe; --b-text:#1e40af; --b-border:#93c5fd;
+  --o-dot:#BA7517; --o-bg:#fef3c7; --o-text:#92400e; --o-border:#fcd34d;
+  --r-dot:#D4554A; --r-bg:#fee2e2; --r-text:#991b1b; --r-border:#fca5a5;
+  --check:#1D9E75;
+}
+[data-theme="dark"] {
+  --bg:#0f172a; --bg2:#1e293b; --card:#1e293b; --border:#334155;
+  --text:#f1f5f9; --muted:#94a3b8; --subtle:#475569;
+  --shadow:0 1px 4px rgba(0,0,0,.4);
+  --accent-bg:rgba(79,70,229,.22); --accent-text:#c7d2fe;
+  --g-dot:#34d399; --g-bg:rgba(29,158,117,.15); --g-text:#6ee7b7; --g-border:rgba(29,158,117,.4);
+  --b-dot:#60a5fa; --b-bg:rgba(55,138,221,.15); --b-text:#93c5fd; --b-border:rgba(55,138,221,.4);
+  --o-dot:#fbbf24; --o-bg:rgba(186,117,23,.15); --o-text:#fcd34d; --o-border:rgba(186,117,23,.4);
+  --r-dot:#f87171; --r-bg:rgba(212,85,74,.15); --r-text:#fca5a5; --r-border:rgba(212,85,74,.4);
+  --check:#34d399;
+}
+body { font-family:'Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); padding:20px; min-height:100vh; font-size:14px; line-height:1.5; transition:background var(--tr),color var(--tr); }
+a { color:var(--b-text); }
+button { font-family:inherit; font-size:inherit; color:inherit; }
+code { font-family:Consolas,monospace; font-size:12px; background:var(--bg2); padding:1px 5px; border-radius:4px; }
+input, textarea, select { font-family:inherit; font-size:13px; color:var(--text); background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:7px 10px; width:100%; transition:border-color var(--tr),box-shadow var(--tr); }
+input:focus, textarea:focus, select:focus { outline:none; border-color:var(--accent-strong); box-shadow:0 0 0 3px var(--accent-bg); }
+textarea { resize:vertical; min-height:70px; line-height:1.5; }
+input[type=checkbox] { width:17px; height:17px; flex-shrink:0; margin-top:2px; accent-color:var(--check); cursor:pointer; padding:0; }
+input[readonly], textarea[readonly] { background:var(--bg2); }
+
+/* Fejléc */
+.topbar { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+.tb-title { font-size:16px; font-weight:700; }
+.tb-goal { font-size:12.5px; color:var(--muted); margin-top:2px; max-width:680px; }
+.tb-right { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.save-ind { font-size:11px; color:var(--check); opacity:0; transition:opacity .3s; }
+.save-ind.show { opacity:1; }
+
+/* Fülek */
+.tabs { display:flex; gap:6px; margin-bottom:16px; flex-wrap:wrap; }
+.tab { padding:8px 16px; border-radius:999px; border:1px solid var(--border); background:var(--card); color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; box-shadow:var(--shadow); transition:all var(--tr); white-space:nowrap; }
+.tab:hover { color:var(--text); border-color:var(--subtle); }
+.tab.active { background:var(--accent-strong); border-color:var(--accent-strong); color:#fff; box-shadow:0 2px 8px rgba(79,70,229,.3); }
+
+/* Elrendezés */
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow); }
+.card.inner { box-shadow:none; background:var(--bg); }
+.card-hd { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.card-hd > span:first-child { flex:1; }
+.big { font-size:26px; font-weight:700; line-height:1.15; }
+.muted { color:var(--muted); }
+.small { font-size:12.5px; }
+.mt8 { margin-top:8px; } .mt12 { margin-top:12px; } .mb12 { margin-bottom:12px; }
+.row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.spacer { flex:1; }
+.sec-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:6px; }
+.stat-rows > div { display:flex; justify-content:space-between; gap:8px; padding:6px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.stat-rows > div:last-child { border-bottom:none; }
+
+/* Haladásjelző */
+.bar { height:10px; background:var(--bg2); border:1px solid var(--border); border-radius:999px; overflow:hidden; }
+.bar > span { display:block; height:100%; background:var(--check); border-radius:999px; transition:width .4s ease; }
+.bar.lg { height:16px; }
+.bar.sm { height:6px; }
+.bar.warn > span { background:var(--o-dot); }
+.hero { margin-bottom:12px; }
+.hero .big { font-size:30px; }
+
+/* Címkék, gombok */
+.badge { display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; background:var(--bg2); color:var(--muted); border:1px solid var(--border); white-space:nowrap; text-transform:none; letter-spacing:0; }
+.badge.g { background:var(--g-bg); color:var(--g-text); border-color:var(--g-border); }
+.badge.b { background:var(--b-bg); color:var(--b-text); border-color:var(--b-border); }
+.badge.o { background:var(--o-bg); color:var(--o-text); border-color:var(--o-border); }
+.badge.r { background:var(--r-bg); color:var(--r-text); border-color:var(--r-border); }
+.badge.a { background:var(--accent-bg); color:var(--accent-text); border-color:transparent; }
+button.badge { cursor:pointer; }
+.btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:999px; border:1px solid var(--border); background:var(--card); color:var(--text); font-size:12.5px; font-weight:600; cursor:pointer; box-shadow:var(--shadow); transition:all var(--tr); text-decoration:none; white-space:nowrap; }
+.btn:hover { border-color:var(--subtle); }
+.btn:disabled { opacity:.45; cursor:default; }
+.btn.primary { background:var(--accent-strong); border-color:var(--accent-strong); color:#fff; }
+.btn.primary:hover { filter:brightness(1.08); }
+.btn.danger { color:var(--r-text); border-color:var(--r-border); background:var(--r-bg); }
+.btn.sm { padding:4px 11px; font-size:12px; }
+.icon-btn { border:none; background:none; color:var(--subtle); font-size:18px; line-height:1; cursor:pointer; padding:2px 7px; border-radius:6px; flex-shrink:0; }
+.icon-btn:hover { color:var(--r-dot); background:var(--r-bg); }
+
+/* Kiemelő dobozok */
+.callout { font-size:12.5px; padding:10px 14px; border-left:3px solid var(--b-dot); background:var(--b-bg); color:var(--b-text); border-radius:0 var(--radius-sm) var(--radius-sm) 0; line-height:1.55; }
+.callout.g { border-color:var(--g-dot); background:var(--g-bg); color:var(--g-text); }
+.callout.o { border-color:var(--o-dot); background:var(--o-bg); color:var(--o-text); }
+.callout.r { border-color:var(--r-dot); background:var(--r-bg); color:var(--r-text); }
+.callout b { font-weight:700; }
+.cloud-warn { margin-bottom:14px; }
+
+/* Hónapkártyák */
+.mcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; margin-bottom:16px; }
+.mcard { text-align:left; background:var(--card); border:1px solid var(--border); border-top:3px solid var(--border); border-radius:var(--radius); padding:11px 12px; cursor:pointer; box-shadow:var(--shadow); transition:all var(--tr); display:flex; flex-direction:column; gap:6px; }
+.mcard:hover { border-color:var(--subtle); }
+.mcard.prog { border-top-color:var(--b-dot); }
+.mcard.done { border-top-color:var(--g-dot); }
+.mcard.active { border-color:var(--accent-strong); box-shadow:0 0 0 3px var(--accent-bg); }
+.mc-top { display:flex; justify-content:space-between; align-items:center; gap:6px; }
+.mc-num { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; }
+.mc-title { font-size:13.5px; font-weight:700; line-height:1.3; }
+.mc-foot { font-size:11px; color:var(--muted); }
+
+/* Hónap- és hétnézet */
+.md-title { font-size:17px; font-weight:700; }
+.md-goal { color:var(--muted); margin-top:2px; }
+.res-list { list-style:none; display:flex; flex-direction:column; gap:3px; font-size:13px; }
+.res-list li::before { content:'📘 '; }
+.wtabs { display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 12px; }
+.wtab { padding:7px 16px; border-radius:999px; border:1px solid var(--border); background:var(--card); color:var(--muted); font-size:13px; font-weight:600; cursor:pointer; box-shadow:var(--shadow); transition:all var(--tr); }
+.wtab:hover { color:var(--text); border-color:var(--subtle); }
+.wtab.active { background:var(--accent-strong); border-color:var(--accent-strong); color:#fff; }
+.wp-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap; }
+.wp-title { font-size:15px; font-weight:700; }
+.wp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.topics { padding-left:18px; font-size:13px; }
+.topics li { margin:2px 0; }
+.qs { padding-left:20px; font-size:13px; }
+.qs li { margin:3px 0; }
+details summary { cursor:pointer; font-weight:600; font-size:13px; }
+.task-row { display:flex; align-items:flex-start; gap:10px; padding:7px 0; border-bottom:1px solid var(--border); cursor:pointer; }
+.task-row:last-child { border-bottom:none; }
+.task-row.done .task-txt { color:var(--muted); text-decoration:line-through; }
+.task-txt { font-size:13px; line-height:1.5; }
+.task-line { display:flex; align-items:flex-start; gap:4px; border-bottom:1px solid var(--border); }
+.task-line .task-row { flex:1; border-bottom:none; }
+.ro input[type=checkbox] { opacity:.55; }
+.time-list { list-style:none; margin-top:6px; }
+.time-list li { display:flex; justify-content:space-between; align-items:center; font-size:12.5px; padding:3px 0; border-bottom:1px dashed var(--border); }
+
+/* Diagram */
+.chart-area { position:relative; height:120px; display:flex; align-items:flex-end; gap:6px; border-bottom:1px solid var(--border); }
+.chart-col { flex:1; height:100%; display:flex; align-items:flex-end; }
+.chart-col span { display:block; width:100%; min-height:2px; background:var(--b-dot); border-radius:4px 4px 0 0; opacity:.85; }
+.chart-col.cur span { background:var(--accent-strong); opacity:1; }
+.target-line { position:absolute; left:0; right:0; border-top:1px dashed var(--o-dot); pointer-events:none; }
+.chart-labels { display:flex; gap:6px; margin-top:4px; }
+.chart-labels div { flex:1; text-align:center; font-size:10px; color:var(--muted); }
+
+/* Időbeosztás */
+.table-wrap { overflow-x:auto; }
+table.sched { width:100%; border-collapse:collapse; min-width:520px; }
+table.sched th, table.sched td { padding:6px 8px; border-bottom:1px solid var(--border); text-align:left; font-size:13px; }
+table.sched th { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+table.sched input { padding:5px 8px; }
+table.sched td.day { font-weight:600; white-space:nowrap; }
+
+/* Munkahelyi napló */
+.wl-form { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.wl-form .full { grid-column:1 / -1; }
+.wl-form label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; display:flex; flex-direction:column; gap:4px; }
+.wl-card { margin-bottom:10px; }
+.wl-card h4 { font-size:14px; }
+.wl-sec { margin-top:8px; }
+.wl-sec b { font-size:11px; text-transform:uppercase; color:var(--muted); letter-spacing:.05em; display:block; }
+.wl-sec p { white-space:pre-wrap; font-size:13px; }
+
+/* Havi értékelés */
+.chips { display:flex; gap:6px; flex-wrap:wrap; }
+.chip { padding:5px 11px; border-radius:999px; border:1px solid var(--border); background:var(--card); font-size:12px; font-weight:600; cursor:pointer; color:var(--muted); }
+.chip:hover { color:var(--text); border-color:var(--subtle); }
+.chip.active { background:var(--accent-strong); border-color:var(--accent-strong); color:#fff; }
+.q-label { font-weight:600; font-size:13px; margin-bottom:4px; display:block; }
+
+/* Keresés */
+.search-banner { font-size:12px; color:var(--muted); background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:7px 12px; margin-bottom:14px; display:flex; justify-content:space-between; gap:8px; align-items:center; flex-wrap:wrap; }
+.s-item { display:block; width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:8px; cursor:pointer; box-shadow:var(--shadow); }
+.s-item:hover { border-color:var(--subtle); }
+mark { background:rgba(250,204,21,.4); color:inherit; border-radius:2px; padding:0 1px; }
+[data-theme="dark"] mark { background:rgba(250,204,21,.22); }
+
+/* Értesítés */
+.toast { position:fixed; left:50%; bottom:18px; transform:translateX(-50%) translateY(20px); background:#1e293b; color:#fff; padding:9px 16px; border-radius:999px; font-size:12.5px; box-shadow:0 6px 20px rgba(0,0,0,.25); opacity:0; pointer-events:none; transition:all .25s; z-index:50; max-width:calc(100% - 32px); text-align:center; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+@media (max-width: 767px) {
+  body { padding:12px; }
+  .tabs { flex-wrap:nowrap; overflow-x:auto; padding-bottom:4px; }
+  .tab { flex:0 0 auto; }
+  .wp-grid, .wl-form { grid-template-columns:1fr; }
+  .mcards { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+  .hero .big { font-size:24px; }
+}
+</style>
+</head>
+<body class="ro">
+<div id="app">
+  <div class="search-banner" id="searchBanner" hidden></div>
+  <header class="topbar">
+    <div>
+      <div class="tb-title">🏢 BMS &amp; IT/OT – 12 hónapos program</div>
+      <div class="tb-goal" id="tbGoal"></div>
+    </div>
+    <div class="tb-right">
+      <span class="save-ind" id="saveInd">✓ Mentve</span>
+      <span id="tbBadges"></span>
+    </div>
+  </header>
+  <div class="callout r cloud-warn" id="cloudWarn" hidden></div>
+  <nav class="tabs" aria-label="Nézetek">
+    <button class="tab" data-action="tab" data-view="overview">Áttekintés</button>
+    <button class="tab" data-action="tab" data-view="program">Program</button>
+    <button class="tab" data-action="tab" data-view="schedule">Időbeosztás</button>
+    <button class="tab" data-action="tab" data-view="worklog">Munkahelyi napló</button>
+    <button class="tab" data-action="tab" data-view="review">Havi értékelés</button>
+    <button class="tab" data-action="tab" data-view="data">Adatok</button>
+  </nav>
+  <section id="view-overview"></section>
+  <section id="view-program" hidden></section>
+  <section id="view-schedule" hidden></section>
+  <section id="view-worklog" hidden></section>
+  <section id="view-review" hidden></section>
+  <section id="view-data" hidden></section>
+  <section id="view-search" hidden></section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- A 48 hetes tananyag. Szerkeszthető: a szerkezetet a havi/heti mezők adják (title, goal, topics, practice, work, result, questions). -->
+<script type="application/json" id="program-data">
+{
+ "version": 1,
+ "meta": {
+  "title": "BMS & IT/OT – 12 hónapos program",
+  "goal12": "BMS/OT integrációs mérnök, aki átlátja a hálózatot és a teljes rendszert – a kontrollertől a szerverig.",
+  "longTerm": "Hosszú táv (5+ év): BMS Systems Engineer / BMS Architect.",
+  "buildingDefault": "Javaslat: egy anonimizált valós projekted. Alternatíva: kitalált 6 szintes irodaház (~8 000 m²) – 2 légkezelő (AHU), hűtő-fűtő központ (chiller + kazán/hőszivattyú), fan-coilok, világítás (DALI/KNX), energiamérés (M-Bus/Modbus), egy Siemens PLC-s gépészeti alrendszer, BMS-szerver, bérlői IT-hálózat.",
+  "minimumRule": "Rossz hét? Legalább 60 perc tanulás VAGY 1 munkahelyi napló-bejegyzés → a hét „megtartott”, a sorozat nem szakad meg.",
+  "englishTask": "🇬🇧 Angol: ingázós hallgatás vagy egy angol szakcikk / doksi-fejezet",
+  "theoryTask": "Elmélet: a heti témák átvéve",
+  "selfCheckTask": "Önellenőrzés: meg tudom válaszolni a kérdéseket",
+  "reviewQuestions": [
+   "Mit tanultam ebben a hónapban?",
+   "Melyik témát értem a legjobban?",
+   "Mi okozta a legnagyobb nehézséget?",
+   "Mit tudtam alkalmazni a munkámban?",
+   "Mit kell még gyakorolnom?",
+   "Készen állok a következő hónapra?",
+   "Piaci visszacsatolás: 3 friss hirdetés (pl. „BACnet”, „Modbus”, „épületautomatizálás” kulcsszóval) – milyen elvárások ismétlődnek, és mi hiányzik még nálam?"
+  ],
+  "defaultSchedule": [
+   {
+    "day": "Hétfő",
+    "label": "Elmélet",
+    "min": 60,
+    "time": ""
+   },
+   {
+    "day": "Kedd",
+    "label": "Tananyag / olvasás",
+    "min": 60,
+    "time": ""
+   },
+   {
+    "day": "Szerda",
+    "label": "Pihenő vagy ismétlés",
+    "min": 0,
+    "time": ""
+   },
+   {
+    "day": "Csütörtök",
+    "label": "Gyakorlás",
+    "min": 60,
+    "time": ""
+   },
+   {
+    "day": "Péntek",
+    "label": "Gyakorlás",
+    "min": 60,
+    "time": ""
+   },
+   {
+    "day": "Szombat",
+    "label": "Projekt / összefoglalás",
+    "min": 90,
+    "time": ""
+   },
+   {
+    "day": "Vasárnap",
+    "label": "Opcionális ismétlés",
+    "min": 0,
+    "time": ""
+   }
+  ]
+ },
+ "months": [
+  {
+   "title": "Újraindítás + BMS-rendszerarchitektúra",
+   "short": "BMS-architektúra",
+   "goal": "Visszatalálni a ritmusba, és átlátni, hogyan épül fel egy teljes BMS a terepi szinttől a felügyeleti szintig.",
+   "output": "1. fejezet: a referencia-épület BMS-architektúra rajza (szintek, komponensek, kommunikációs utak).",
+   "resources": [
+    {
+     "t": "Saját cég: egy lezárt projekt rendszerterve és adatpontlistája",
+     "u": ""
+    },
+    {
+     "t": "A külsős hálózati cég topológiai rajza (kérd el a következő projektnél)",
+     "u": ""
+    },
+    {
+     "t": "Wikipedia – Building automation (áttekintés)",
+     "u": "https://en.wikipedia.org/wiki/Building_automation"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "Újraindulás: napló, referencia-épület, BMS-szintek",
+     "light": true,
+     "goal": "Könnyű visszatérés: elindítani a munkahelyi naplót és kijelölni a referencia-épületet.",
+     "topics": [
+      "BMS vs. BAS vs. SCADA vs. EMS – mi a különbség",
+      "Automatizálási piramis: terepi (field), automatizálási (automation) és felügyeleti (management) szint",
+      "Mi a referencia-épület, és miért ugyanazon dolgozol egész évben"
+     ],
+     "practice": [
+      "Munkahelyi napló: 1 valós, nemrégi probléma leírása (probléma → ok → megoldás → tanulság)",
+      "Referencia-épület kiválasztása és 5–10 mondatos leírása az Adatok fülön"
+     ],
+     "work": "Gyűjtsd össze, milyen BMS-projekteken dolgoztál eddig, és melyik szinten (terepi / automatizálási / felügyeleti) voltak a feladataid.",
+     "result": "Elindult a napló, és megvan a referencia-épület leírása.",
+     "questions": [
+      "Melyik szinten fut egy DDC-kontroller, és melyiken a BMS-szerver?",
+      "Miben más egy SCADA és egy BMS célja?",
+      "A te mostani feladataid melyik szinthez kötődnek leginkább?"
+     ]
+    },
+    {
+     "title": "Komponensek és egy adat útja a felületig",
+     "light": true,
+     "goal": "Megérteni, milyen komponenseken halad át egy mérés, mire megjelenik a BMS-felületen.",
+     "topics": [
+      "Érzékelők és beavatkozók (hőmérséklet-érzékelő, szelepmozgató, frekvenciaváltó)",
+      "Kontrollerek (DDC/PLC) és I/O modulok: AI, AO, DI, DO",
+      "Gateway-ek, BMS-szerver, kliens / operátori felület",
+      "Hol vált protokollt az adat (pl. Modbus RTU → BACnet/IP)"
+     ],
+     "practice": [
+      "Rajzold fel egy AHU befúvott levegő hőmérsékletének útját az érzékelőtől a BMS-felületig, minden komponenssel és protokollal"
+     ],
+     "extra": [
+      "Egyszeri (~1 óra): LinkedIn/CV-cím frissítése, pl. „Software Engineer – BMS/OT integration (BACnet, Modbus, OPC UA)”"
+     ],
+     "work": "Válassz egy pontot egy valós projektből, és kövesd végig az adatpontlistán és a rajzokon: honnan jön, milyen protokollon, melyik kontrolleren át.",
+     "result": "Egy adat útjának rajza, a protokollváltásokkal.",
+     "questions": [
+      "Mi a különbség egy AI és egy DI pont között?",
+      "Mikor kell gateway, és pontosan mit „fordít le”?",
+      "A rajzod alapján hány ponton romolhat el az adat útja?"
+     ]
+    },
+    {
+     "title": "Architektúra: centralizált, decentralizált, redundancia",
+     "goal": "Megérteni az architekturális alapdöntéseket és a következményeiket.",
+     "topics": [
+      "Centralizált vs. decentralizált (elosztott) vezérlés",
+      "Kliens–szerver architektúra a BMS-ben",
+      "Redundancia, single point of failure (SPOF)",
+      "Bővíthetőség: mi történik +200 adatpontnál vagy egy új épületszárnynál"
+     ],
+     "practice": [
+      "Jelöld be a referencia-épület rajzán az összes SPOF-ot, és mindegyikhez írj egy lehetséges mitigációt"
+     ],
+     "work": "Nézd meg egy valós rendszerben: mi történik, ha a BMS-szerver leáll? A kontrollerek tovább szabályoznak?",
+     "result": "SPOF-lista mitigációkkal a referencia-épületre.",
+     "questions": [
+      "Miért szabályoz tovább egy jól tervezett DDC, ha a BMS-szerver kiesik?",
+      "Mi a SPOF egy egyetlen core switch-csel épített hálózatban?",
+      "Mikor éri meg a redundancia költsége?"
+     ]
+    },
+    {
+     "title": "Valós rendszerrajz értelmezése",
+     "goal": "Megtanulni olvasni a valós projektdokumentációt, és célzott kérdéseket feltenni.",
+     "topics": [
+      "Hálózati rajz vs. automatizálási (gépészeti / villamos) rajz",
+      "Eszközazonosítás: kontrollerek, switchek, tűzfalak, gateway-ek",
+      "Hiányzó információk összegyűjtése kérdéslistává"
+     ],
+     "practice": [
+      "Kérd el (vagy keress elő) egy valós topológiai rajzot / rendszertervet, és készíts róla 1 oldalas jegyzetet + kérdéslistát",
+      "Véglegesítsd a referencia-épület BMS-architektúra rajzát (1. fejezet)"
+     ],
+     "work": "A kérdéslistából válassz 2–3 kérdést, és tedd fel a külsős hálózati cégnek vagy az IT-vezetőnek.",
+     "result": "Kész az 1. fejezet: BMS-architektúra rajz + kérdéslista.",
+     "questions": [
+      "Mi alapján ismered fel a rajzon a hálózati szegmenseket?",
+      "Milyen információ hiányzott a rajzról, ami egy hibakereséshez kellene?",
+      "Kitől kapod meg ezeket az információkat a cégnél?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Hálózati alapok és IP-címzés",
+   "short": "Hálózati alapok",
+   "goal": "Biztos alapot szerezni az IP-alapú kommunikációhoz, hogy hibakeresésnél tudd, melyik rétegben keress.",
+   "output": "2. fejezet: a referencia-épület IP-címzési és VLAN-terve.",
+   "resources": [
+    {
+     "t": "Cisco Networking Academy – ingyenes hálózati kurzusok és Packet Tracer",
+     "u": "https://www.netacad.com/"
+    },
+    {
+     "t": "Jeremy's IT Lab – ingyenes CCNA 200-301 videókurzus",
+     "u": "https://www.youtube.com/c/JeremysITLab"
+    },
+    {
+     "t": "Wireshark User's Guide",
+     "u": "https://www.wireshark.org/docs/wsug_html_chunked/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "TCP/IP alapok + első Wireshark-capture",
+     "goal": "Átismételni a TCP/IP-modellt, és először ránézni a valós forgalomra.",
+     "topics": [
+      "OSI és TCP/IP modell – melyik rétegben mi történik",
+      "TCP vs. UDP, portok",
+      "MAC- és IP-cím, ARP",
+      "DNS és DHCP"
+     ],
+     "practice": [
+      "Telepítsd a Wiresharkot, rögzíts 2 percnyi saját forgalmat, és keress benne egy ARP-, egy DNS- és egy TCP-handshake-csomagot"
+     ],
+     "work": "Gyűjtsd ki, hogy a munkádban használt protokollok TCP-t vagy UDP-t használnak (BACnet/IP, Modbus TCP, OPC UA, S7).",
+     "result": "Első saját capture, felismert alapcsomagokkal.",
+     "questions": [
+      "Miért UDP-t használ a BACnet/IP, és milyen következménye van ennek?",
+      "Mit csinál az ARP, és mikor van rá szükség?",
+      "Mi történik egy DHCP-kérésnél lépésről lépésre?"
+     ]
+    },
+    {
+     "title": "IPv4, subnet, CIDR – IP-terv",
+     "goal": "Magabiztosan számolni subneteket, és IP-tervet készíteni.",
+     "topics": [
+      "IPv4-cím, subnet mask, CIDR-jelölés",
+      "Default gateway",
+      "Privát és publikus címtartományok",
+      "Subnetting: hálózati cím, broadcast-cím, kiosztható tartomány"
+     ],
+     "practice": [
+      "Oldj meg 10 subnetting-feladatot",
+      "Készíts IP-tervet a referencia-épületre: kontrollerek, szerverek, gateway-ek, menedzsment – külön tartományokkal"
+     ],
+     "work": "Nézd meg egy valós projekt IP-címeit: milyen tartományokat és maszkokat használnak, és miért?",
+     "result": "Első IP-terv a referencia-épülethez.",
+     "questions": [
+      "Hány kiosztható cím van egy /26-os hálózatban?",
+      "Mi történik, ha egy kontrolleren rossz a subnet mask?",
+      "Miért érdemes a BMS-eszközöket külön tartományba tenni?"
+     ]
+    },
+    {
+     "title": "Switching és VLAN",
+     "goal": "Megérteni, hogyan választják szét a hálózatot a 2. rétegben.",
+     "topics": [
+      "A switch működése, MAC address table",
+      "Broadcast domain",
+      "VLAN, 802.1Q tagging",
+      "Access és trunk port",
+      "Managed vs. unmanaged switch"
+     ],
+     "practice": [
+      "Packet Tracerben építs egy 3 VLAN-os hálózatot (BMS, IT, menedzsment), és ellenőrizd, hogy a VLAN-ok között nincs kapcsolat"
+     ],
+     "work": "Kérdezd meg a külsős céget vagy az IT-vezetőt: a BMS-eszközök külön VLAN-ban vannak? Ha igen, melyikben?",
+     "result": "Működő 3 VLAN-os labor és a referencia-épület VLAN-terve.",
+     "questions": [
+      "Miért nem lát egy eszköz egy másik VLAN-ban lévő eszközt router nélkül?",
+      "Mi a különbség az access és a trunk port között?",
+      "Hogyan érinti a VLAN-határ a BACnet Who-Is broadcastot?"
+     ]
+    },
+    {
+     "title": "Hibakereső parancsok és a több NIC-es szerverek",
+     "goal": "Rutinszerűen használni a hálózati diagnosztikai eszközöket, főleg több hálózati kártyás szervereken.",
+     "topics": [
+      "ping, tracert, ipconfig /all, arp -a, nslookup",
+      "netstat -ano: melyik folyamat melyik porton figyel",
+      "route print, interface metric: melyik NIC-en megy ki a forgalom",
+      "Több NIC + több default gateway problémája"
+     ],
+     "practice": [
+      "Saját gépen / VM-en értelmezd a route print kimenetét; állítsd át egy interfész metrikáját, és nézd meg, hogyan változik a kimenő útvonal",
+      "Szimulálj egy hibát (rossz gateway vagy maszk), és keresd meg a parancsokkal"
+     ],
+     "work": "Egy valós, több NIC-es szerveren nézd meg (engedéllyel) a route print kimenetét, és rajzold fel, melyik hálózat melyik interfészen érhető el.",
+     "result": "Kész a 2. fejezet: IP- és VLAN-terv + hibakereső parancs-puska.",
+     "questions": [
+      "Mit jelent, ha két interfészen is van default gateway?",
+      "Hogyan derítenéd ki, melyik folyamat foglalja az UDP 47808-as portot?",
+      "Mit mutat a tracert, és mit nem?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Routing, tűzfalak és szegmentáció",
+   "short": "Routing és tűzfal",
+   "goal": "Megérteni, hogyan kommunikálnak az elkülönített hálózatok, és mit enged át (vagy nem) a tűzfal.",
+   "output": "3. fejezet: szegmentált hálózati terv + kommunikációs mátrix (forrás, cél, protokoll, port, irány, indoklás).",
+   "checkpoint": "Döntési pont: a havi értékelés és a piaci visszacsatolás alapján döntsd el, maradsz-e ebben az irányban, vagy hangolunk rajta.",
+   "resources": [
+    {
+     "t": "Cisco Networking Academy – ingyenes hálózati kurzusok és Packet Tracer",
+     "u": "https://www.netacad.com/"
+    },
+    {
+     "t": "Jeremy's IT Lab – ingyenes CCNA 200-301 videókurzus",
+     "u": "https://www.youtube.com/c/JeremysITLab"
+    },
+    {
+     "t": "NIST SP 800-82 Rev. 3 – Guide to Operational Technology (OT) Security",
+     "u": "https://csrc.nist.gov/pubs/sp/800/82/r3/final"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "Routing alapok és a broadcast-határ",
+     "goal": "Megérteni, hogyan jut át a forgalom a hálózatok között – és mi az, ami nem jut át.",
+     "topics": [
+      "Router, routing table",
+      "Static és default route",
+      "Inter-VLAN routing (router-on-a-stick, L3 switch)",
+      "Miért áll meg a broadcast a routeren – és mit jelent ez a BACnet/IP-nek (BBMD előkészítés)"
+     ],
+     "practice": [
+      "Packet Tracerben kösd össze routinggal az előző hónap 3 VLAN-ját, majd korlátozd, mi mehet át"
+     ],
+     "work": "Egy valós projektben: a BMS-szerver és a kontrollerek ugyanabban a subnetben vannak? Ha nem, mi routol köztük?",
+     "result": "Működő inter-VLAN routing a laborban.",
+     "questions": [
+      "Miért nem találja meg a Who-Is egy másik subnetben lévő BACnet-eszközt BBMD nélkül?",
+      "Mi a default route szerepe?",
+      "Mi a különbség az L2 és az L3 switch között?"
+     ]
+    },
+    {
+     "title": "Tűzfalak és ipari portok",
+     "goal": "Megérteni a tűzfalszabályok logikáját, és felismerni a tipikus „blokkol a tűzfal” tüneteket.",
+     "topics": [
+      "Stateful vs. stateless tűzfal",
+      "Inbound / outbound szabályok, allow / deny, alapértelmezett tiltás",
+      "NAT alapjai",
+      "Ipari portok: BACnet/IP UDP 47808, Modbus TCP 502, OPC UA 4840, S7 TCP 102, MQTT 1883 / 8883",
+      "Windows Defender Firewall: alkalmazás- és portszabályok"
+     ],
+     "practice": [
+      "Készíts táblázatot a fenti protokollokról: port, TCP/UDP, ki kezdeményez, milyen irányban",
+      "Windows-on hozz létre (majd törölj) egy inbound szabályt egy Python-szkripthez, és teszteld, mi változik"
+     ],
+     "work": "Nézd meg az integrációs szervereden, milyen tűzfalszabályok engedik a protokollokat – és melyik hiányozhatott egy korábbi hibánál.",
+     "result": "Protokoll–port táblázat, a kommunikációs mátrix alapja.",
+     "questions": [
+      "Miért okozhat gondot a Windows tűzfal, ha a BACnet Explorer működik, de a Python-szkripted nem?",
+      "Mit jelent, hogy egy tűzfal stateful?",
+      "Ha a BMS-szerver kezdeményezi a Modbus TCP kapcsolatot, melyik irányban kell szabály?"
+     ]
+    },
+    {
+     "title": "IT/OT szegmentáció, DMZ, Purdue-modell",
+     "goal": "Megérteni, miért és hogyan választják szét az IT- és OT-hálózatokat.",
+     "topics": [
+      "IT vs. OT: eltérő prioritások (rendelkezésre állás, élettartam, patchelhetőség)",
+      "Szegmentáció és zónák",
+      "DMZ az IT és az OT között (pl. historian, jump host)",
+      "Purdue-modell – és hogy a BMS-ben ezt lazábban alkalmazzák"
+     ],
+     "practice": [
+      "Rajzold fel a referencia-épület hálózatát zónákra bontva (IT, BMS/OT, DMZ, távoli elérés)"
+     ],
+     "work": "Kérdezd meg: a cégetek projektjeiben hol van az IT/OT határ, és ki felel érte?",
+     "result": "Zónákra bontott hálózati rajz.",
+     "questions": [
+      "Miért nem patchelhető egy kontroller olyan gyakran, mint egy irodai PC?",
+      "Mire jó a DMZ az IT és az OT között?",
+      "Melyik Purdue-szintre tennéd a BMS-szervert, és miért?"
+     ]
+    },
+    {
+     "title": "Távoli elérés és kommunikációs mátrix",
+     "goal": "Megérteni a biztonságos távoli elérés alapjait, és elkészíteni a kommunikációs mátrixot.",
+     "topics": [
+      "VPN: site-to-site vs. remote access",
+      "Jump host / bastion",
+      "Miért nem jó a közvetlen port-forward a BMS-re",
+      "Kommunikációs mátrix: forrás, cél, protokoll, port, irány, indoklás"
+     ],
+     "practice": [
+      "Készítsd el a referencia-épület kommunikációs mátrixát (legalább 10 sor)",
+      "Töltsd ki a 3. hónap havi értékelését a döntési ponttal együtt"
+     ],
+     "work": "Gyűjtsd össze, hogyan érik el a cégnél távolról a projekteket (VPN, távoli asztal, jump host), és milyen hibák jöttek elő ezzel.",
+     "result": "Kész a 3. fejezet: szegmentált terv + kommunikációs mátrix; meghoztad a döntést az irányról.",
+     "questions": [
+      "Miért veszélyes egy BMS-szervert port-forwarddal közvetlenül az internetre tenni?",
+      "Miben más egy jump host, mint egy VPN?",
+      "Melyik sor a legkockázatosabb a mátrixodban, és miért?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Wireshark-alapú hibakeresés",
+   "short": "Wireshark",
+   "goal": "A tényleges forgalom alapján hibát keresni – találgatás helyett bizonyítékkal.",
+   "output": "4. fejezet: hibakeresési kézikönyv (3 esettanulmány + display filter puska); működő Docker-labor.",
+   "resources": [
+    {
+     "t": "Wireshark User's Guide",
+     "u": "https://www.wireshark.org/docs/wsug_html_chunked/"
+    },
+    {
+     "t": "Wireshark Display Filter Reference",
+     "u": "https://www.wireshark.org/docs/dfref/"
+    },
+    {
+     "t": "Docker Desktop dokumentáció (Windows, WSL2)",
+     "u": "https://docs.docker.com/desktop/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "Capture-pont és szűrők",
+     "goal": "Tudni, hol érdemes mérni, és hogyan találd meg gyorsan a releváns csomagokat.",
+     "topics": [
+      "Capture filter vs. display filter",
+      "Hol mérj: a szerveren, a kontroller felőli oldalon, port mirror (SPAN)",
+      "Ethernet frame, IP-csomag, TCP/UDP fejléc mezői",
+      "Hasznos szűrők: ip.addr, tcp.port, udp.port, bvlc, bacapp, mbtcp"
+     ],
+     "practice": [
+      "Készíts display filter puskát legalább 10 szűrővel, mindegyikhez egy mondattal, hogy mire jó"
+     ],
+     "work": "Gondold végig egy korábbi hibánál: hol kellett volna mérni, hogy kiderüljön az ok?",
+     "result": "Saját szűrő-puska.",
+     "questions": [
+      "Miért nem látod két másik eszköz forgalmát egy sima switch-portra kötött laptoppal?",
+      "Mi a különbség a capture és a display filter között?",
+      "Melyik szűrővel látod csak a BACnet-forgalmat?"
+     ]
+    },
+    {
+     "title": "TCP: handshake, RST vs. timeout",
+     "goal": "A TCP viselkedéséből kiolvasni, hogy a hiba port-, tűzfal- vagy alkalmazásszintű-e.",
+     "topics": [
+      "TCP háromutas kézfogás: SYN, SYN-ACK, ACK",
+      "RST (connection refused) vs. válasz nélküli SYN (timeout, tipikusan tűzfal-drop)",
+      "Retransmission, FIN",
+      "Socketek és portok"
+     ],
+     "practice": [
+      "Mérd le és hasonlítsd össze a capture-öket: kapcsolódás (1) nyitott porthoz, (2) zárt porthoz, (3) tűzfallal blokkolt porthoz"
+     ],
+     "work": "Egy korábbi „nem jön létre a kapcsolat” hibát sorolj be: RST volt vagy timeout?",
+     "result": "Három összehasonlított capture, magyarázattal.",
+     "questions": [
+      "Mit jelent, ha a SYN-re RST jön vissza?",
+      "Mit jelent, ha a SYN-re semmi nem jön vissza?",
+      "Miért fontos ez a különbség a külsős hálózati céggel való egyeztetésnél?"
+     ]
+    },
+    {
+     "title": "UDP, broadcast, BACnet/IP és Modbus TCP + Docker-labor",
+     "goal": "Ipari protokollokat dekódolni Wiresharkkal, és felépíteni a saját Docker-laborodat.",
+     "topics": [
+      "UDP, broadcast, multicast",
+      "BACnet/IP: Who-Is / I-Am, BVLC",
+      "Modbus TCP: MBAP-fejléc, Unit ID, function code",
+      "Docker alapok: image, konténer, port-mapping, bridge-hálózat (NAT)"
+     ],
+     "practice": [
+      "Telepítsd a Docker Desktopot (WSL2), futtass konténerben egy Modbus TCP szervert (pl. pymodbus-alapút), olvass belőle, és dekódold a forgalmat Wiresharkkal",
+      "Jegyzetben magyarázd el a broadcast domain fogalmával, miért nem jut át a BACnet Who-Is broadcast a Docker NAT-on"
+     ],
+     "work": "Rögzíts (engedéllyel) egy rövid BACnet- vagy Modbus-forgalmat egy valós rendszeren, és azonosítsd a kéréseket és a válaszokat.",
+     "result": "Működő Docker-labor és dekódolt ipari csomagok.",
+     "questions": [
+      "Mi a Unit ID szerepe a Modbus TCP-ben?",
+      "Miért nem működik a BACnet-eszközfelderítés NAT mögül?",
+      "Mi a különbség a bridge és a host hálózati mód között Dockerben?"
+     ]
+    },
+    {
+     "title": "Valós hibák – 3 esettanulmány",
+     "goal": "A munkahelyi naplóból strukturált, újrahasznosítható esettanulmányokat írni.",
+     "topics": [
+      "Módszer: tünet → hipotézis → mérés → ok → javítás → tanulság",
+      "Tipikus okok: tűzfal, rossz IP / maszk, rossz port, routing, timeout, portütközés"
+     ],
+     "practice": [
+      "Írj 3 esettanulmányt (lehetőleg valós esetből, anonimizálva) a fenti sablonnal"
+     ],
+     "work": "A következő munkahelyi hibánál alkalmazd tudatosan a sablont, és mérj Wiresharkkal, mielőtt javítasz.",
+     "result": "Kész a 4. fejezet: hibakeresési kézikönyv.",
+     "questions": [
+      "Melyik esetben segített volna a leggyorsabban egy capture?",
+      "Mi a leggyakoribb hibaforrás a te eseteidben?",
+      "Hogyan bizonyítanád egy külsős cégnek, hogy a hiba a tűzfalban van?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Modbus haladó + BMS-tervezés I (adatpontlista)",
+   "short": "Modbus + adatpontlista",
+   "goal": "A Modbus buktatóit rutinból kezelni, saját connectort írni, és megtanulni adatpontlistát tervezni – nem csak megkapni.",
+   "output": "5. fejezet: AHU adatpontlista + I/O-összesítő + Modbus regisztertérkép-sablon; bms-connectors v1 (Modbus).",
+   "resources": [
+    {
+     "t": "Modbus specifikációk (Application Protocol, TCP/IP, Serial Line)",
+     "u": "https://modbus.org/specs.php"
+    },
+    {
+     "t": "pymodbus dokumentáció",
+     "u": "https://pymodbus.readthedocs.io/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "Címzés, adattípusok, byte / word order",
+     "goal": "Elkerülni a leggyakoribb Modbus-hibákat: elcsúszott cím, rossz adattípus, felcserélt szavak.",
+     "topics": [
+      "Function code-ok: 01 / 02 / 03 / 04 és 05 / 06 / 15 / 16",
+      "0-alapú vs. 1-alapú címzés (40001 vs. 0-s offset)",
+      "INT16, UINT16, INT32, FLOAT32 – két regiszteren",
+      "Byte order és word order (big / little endian, word swap)",
+      "Scaling és mértékegység"
+     ],
+     "practice": [
+      "Készíts regisztertérkép-sablont (cím, function code, adattípus, sorrend, szorzó, egység, leírás)",
+      "Dekódolj kézzel 3 FLOAT32 értéket különböző word orderrel"
+     ],
+     "work": "Nézd meg egy valós eszköz Modbus-dokumentációját: 0- vagy 1-alapú a címzése, és milyen word ordert használ?",
+     "result": "Regisztertérkép-sablon és biztos byte/word order tudás.",
+     "questions": [
+      "Miért olvasol „szemetet”, ha egy FLOAT32-nél eggyel elcsúszik a cím?",
+      "Mi a különbség a holding és az input register között?",
+      "Melyik function code-dal írsz egyetlen regisztert?"
+     ]
+    },
+    {
+     "title": "RTU, RS-485, gateway + Modbus-connector",
+     "goal": "Megérteni a soros Modbus és a gateway-ek világát, és megírni az első saját connectort.",
+     "topics": [
+      "Modbus RTU: RS-485, kétvezetékes busz, lezáró ellenállás, biasing",
+      "Baud rate, paritás, stop bit – a beállítások egyezése",
+      "TCP ↔ RTU gateway és a Unit ID szerepe",
+      "Timeout és retry stratégia"
+     ],
+     "practice": [
+      "Írj async Python Modbus-connectort (pymodbus): konfigurációból olvas, timeout + retry, strukturált naplózás – a Docker-labor szerverén teszteld",
+      "Indítsd el a „bms-connectors” gyakorló repót egy README-vel"
+     ],
+     "work": "Keress egy valós esetet, ahol gateway mögötti eszközt olvastatok: milyen Unit ID kellett, és mi történt rossz ID-val?",
+     "result": "bms-connectors v1: működő Modbus-connector.",
+     "questions": [
+      "Mi történik, ha egy RS-485 buszon két eszköznek ugyanaz a címe?",
+      "Mire való a lezáró ellenállás?",
+      "Hogyan kezeled, ha egy eszköz időnként nem válaszol?"
+     ]
+    },
+    {
+     "title": "BMS-tervezés I: az adatpontlista anatómiája",
+     "goal": "Megérteni, hogyan épül fel egy jó adatpontlista – az, amit eddig csak megkaptál.",
+     "topics": [
+      "Fizikai pontok (AI, AO, DI, DO) és szoftveres pontok",
+      "BACnet objektumtípus-hozzárendelés (Analog Input, Binary Output stb.)",
+      "Egység, méréstartomány, riasztási határok, trendelés",
+      "Elnevezési konvenció: épület – szint – rendszer – eszköz – pont"
+     ],
+     "practice": [
+      "Elemezz egy valós adatpontlistát (mi jó, mi hiányzik, mi következetlen), és írj belőle saját elnevezési konvenciót"
+     ],
+     "work": "A következő kapott adatpontlistánál jelezd a hiányosságokat (pl. hiányzó egység vagy tartomány) – ez már tervezői hozzájárulás.",
+     "result": "Saját elnevezési konvenció és pontlista-ellenőrző szempontok.",
+     "questions": [
+      "Miért kell egy hőmérséklet-pontnál a tartomány és az egység is?",
+      "Mi a különbség egy fizikai és egy szoftveres pont között?",
+      "Miért fontos a következetes elnevezés a későbbi integrációnál?"
+     ]
+    },
+    {
+     "title": "AHU adatpontlista és I/O-méretezés",
+     "goal": "Saját adatpontlistát készíteni egy légkezelőre, és kiszámolni a szükséges I/O-t.",
+     "topics": [
+      "Egy AHU tipikus pontjai: hőmérsékletek, ventilátorok, csappantyúk, szelepek, szűrő, fagyvédelem",
+      "I/O-összesítő (I/O summary)",
+      "Kontroller- és I/O-modul-méretezés, tartalékkal (pl. 10–20%)"
+     ],
+     "practice": [
+      "Készítsd el a referencia-épület egyik AHU-jának adatpontlistáját a saját elnevezési konvencióddal",
+      "Készíts I/O-összesítőt, és becsüld meg a szükséges kontroller/I/O-modulokat tartalékkal"
+     ],
+     "work": "Hasonlítsd össze a listádat egy valós AHU pontlistájával: mi maradt ki nálad, és mi maradt ki náluk?",
+     "result": "Kész az 5. fejezet: AHU-pontlista + I/O-összesítő + regisztertérkép-sablon.",
+     "questions": [
+      "Hány DI/DO kell egy ventilátorhoz (üzemjelzés, hiba, start/stop)?",
+      "Miért tervezünk I/O-tartalékot?",
+      "Melyik pont a legkritikusabb egy AHU-n, és miért?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "BACnet haladó + BACnet/SC",
+   "short": "BACnet",
+   "goal": "A BACnet haladó működését érteni (COV, prioritások, hálózatok), és BACnet-connectort írni.",
+   "output": "6. fejezet: a referencia-épület BACnet hálózati terve (network numberek, BBMD/BDT vagy BACnet/SC hub) + BACnet-connector.",
+   "resources": [
+    {
+     "t": "BACpypes3 dokumentáció",
+     "u": "https://bacpypes3.readthedocs.io/"
+    },
+    {
+     "t": "bacnet.org – az ASHRAE BACnet-bizottság oldala (BACnet/SC anyagok)",
+     "u": "https://bacnet.org/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "ReadPropertyMultiple és COV",
+     "goal": "Hatékonyan olvasni sok pontot, és megérteni a polling és a COV közötti kompromisszumot.",
+     "topics": [
+      "A BACnet-modell gyors ismétlése: device, object, property",
+      "ReadProperty vs. ReadPropertyMultiple",
+      "COV: SubscribeCOV, lifetime, COV increment",
+      "Polling vs. COV: hálózati terhelés és késleltetés"
+     ],
+     "practice": [
+      "BACpypes3-mal olvasd ugyanazokat a pontokat ReadProperty-vel és ReadPropertyMultiple-lel, és hasonlítsd össze Wiresharkban a csomagok számát",
+      "Iratkozz fel COV-ra egy pontra, és figyeld az értesítéseket"
+     ],
+     "work": "Nézd meg, a ti integrációitok pollingot vagy COV-ot használnak – és miért?",
+     "result": "Mért különbség az RP, az RPM és a COV között.",
+     "questions": [
+      "Miért terheli kevésbé a hálózatot az RPM?",
+      "Mi történik, ha lejár egy COV-feliratkozás lifetime-ja?",
+      "Mikor rossz választás a COV?"
+     ]
+    },
+    {
+     "title": "Írás, priority array, trend és riasztás",
+     "goal": "Biztonságosan írni BACnet-pontokat, és megérteni a trend- és riasztási objektumokat.",
+     "topics": [
+      "Commandable objektumok és a 16 szintű priority array (1 = legmagasabb)",
+      "Relinquish Default, NULL-írás (felengedés)",
+      "Tipikus hiba: magas prioritáson „beragadt” pont",
+      "Trend Log és Notification Class / riasztások alapjai"
+     ],
+     "practice": [
+      "Labor: írj egy pontot 8-as prioritáson, nézd meg a priority arrayt, majd engedd fel NULL-írással",
+      "Jegyzet: mikor és milyen prioritáson ír a ti integrációtok"
+     ],
+     "work": "Ellenőrizd egy valós integrációban: írtok-e pontot, ha igen, milyen prioritáson, és felengeditek-e?",
+     "result": "Biztos tudás a priority arrayről és saját írási szabály.",
+     "questions": [
+      "Mi lesz a Present Value, ha 8-as prioritáson írsz, de az 1-es prioritás is aktív?",
+      "Hogyan „engedsz fel” egy írást?",
+      "Miért veszélyes a felengedés nélküli írás?"
+     ]
+    },
+    {
+     "title": "BACnet-hálózatok: network number, BBMD, Foreign Device",
+     "goal": "Átlátni, hogyan kapcsolódnak össze a BACnet-hálózatok subneteken át.",
+     "topics": [
+      "BACnet network number és BACnet router (pl. IP ↔ MS/TP)",
+      "BBMD és Broadcast Distribution Table (BDT)",
+      "Foreign Device Registration",
+      "UDP 47808: portütközés egy gépen (pl. BACnet Explorer és Python egyszerre), több NIC kötése"
+     ],
+     "practice": [
+      "Rajzold meg a referencia-épület BACnet hálózati tervét: network numberek, routerek, BBMD-k",
+      "Labor: reprodukáld a portütközést (két alkalmazás ugyanazon a 47808-as porton), és dokumentáld a megoldási lehetőségeket"
+     ],
+     "work": "Egy valós projektben: van BBMD? Ha igen, hol, és mi van a BDT-ben?",
+     "result": "BACnet hálózati terv és portütközés-jegyzet.",
+     "questions": [
+      "Mikor kell BBMD, és mikor elég a Foreign Device Registration?",
+      "Miért nem lehet két hálózatnak ugyanaz a network numbere egy BACnet internetworkön?",
+      "Mit tehetsz, ha két alkalmazásnak is kell a 47808-as port egy szerveren?"
+     ]
+    },
+    {
+     "title": "BACnet/SC + BACnet-connector",
+     "goal": "Megérteni a BACnet/SC lényegét, és megírni a BACnet-connectort.",
+     "topics": [
+      "BACnet/SC: TLS-titkosítás, tanúsítványok, WebSocket-alapú kommunikáció",
+      "Hub-topológia (primary / failover hub), nincs UDP-broadcast és BBMD",
+      "Mit jelent ez az IT/OT-nak: tűzfalbarátabb, de tanúsítványkezelést igényel"
+     ],
+     "practice": [
+      "Írj BACnet-connectort a bms-connectors repóba (BACpypes3): RPM-alapú olvasás + COV, timeout/retry, naplózás",
+      "1 oldalas összefoglaló: BACnet/IP vs. BACnet/SC a referencia-épületre"
+     ],
+     "work": "Nézz utána, a ti projektjeitekben használt kontrollerek és szoftverek támogatják-e a BACnet/SC-t.",
+     "result": "Kész a 6. fejezet: BACnet hálózati terv + BACnet-connector.",
+     "questions": [
+      "Miért nincs szükség BBMD-re BACnet/SC esetén?",
+      "Milyen új üzemeltetési feladatot hoz a BACnet/SC (pl. tanúsítványlejárat)?",
+      "Mi a hub szerepe?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "OPC UA + MQTT",
+   "short": "OPC UA + MQTT",
+   "goal": "Az OPC UA-t magabiztosan integrálni (tanúsítványokkal együtt), és megérteni, hol jön képbe az MQTT.",
+   "output": "7. fejezet: integrációs adatút a referencia-épületre (OPC UA és MQTT) + OPC UA connector és MQTT-publisher.",
+   "resources": [
+    {
+     "t": "OPC UA Online Reference (OPC Foundation)",
+     "u": "https://reference.opcfoundation.org/"
+    },
+    {
+     "t": "asyncua (opcua-asyncio) dokumentáció",
+     "u": "https://opcua-asyncio.readthedocs.io/"
+    },
+    {
+     "t": "UaExpert – ingyenes OPC UA kliens",
+     "u": "https://www.unified-automation.com/products/development-tools/uaexpert.html"
+    },
+    {
+     "t": "MQTT – hivatalos oldal és specifikáció",
+     "u": "https://mqtt.org/"
+    },
+    {
+     "t": "Eclipse Mosquitto – nyílt forrású MQTT broker",
+     "u": "https://mosquitto.org/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "Address space, NodeId, information model",
+     "goal": "Átlátni az OPC UA szerver felépítését, és magabiztosan böngészni.",
+     "topics": [
+      "Client–server, endpoint URL",
+      "Address space, node-osztályok (Object, Variable, Method)",
+      "Namespace és NodeId (numerikus vs. string, pl. szimbolikus nevek)",
+      "Information model alapjai"
+     ],
+     "practice": [
+      "Futtass egy OPC UA szimulációs szervert (pl. asyncua-példát Dockerben), böngészd UaExperttel, és jegyezd fel 5 node NodeId-ját és adattípusát"
+     ],
+     "work": "Egy valós OPC UA szerveren (engedéllyel) nézd meg a namespace-eket: melyik a gyártóé, melyik a projekté?",
+     "result": "Magabiztos böngészés UaExperttel.",
+     "questions": [
+      "Mi a különbség a namespace index és a namespace URI között?",
+      "Miért jobb az URI-ra támaszkodni, mint a fix namespace-indexre?",
+      "Mi egy Variable node legfontosabb attribútuma?"
+     ]
+    },
+    {
+     "title": "Subscription és OPC UA connector",
+     "goal": "Megérteni az előfizetéses adatgyűjtést, és megírni az OPC UA connectort.",
+     "topics": [
+      "Read, Write, Browse",
+      "Subscription, MonitoredItem",
+      "Sampling interval vs. publishing interval, queue size, deadband",
+      "Kapcsolatvesztés és újracsatlakozás kezelése"
+     ],
+     "practice": [
+      "Írj OPC UA connectort a bms-connectors repóba (asyncua): subscription, újracsatlakozás, timeout, naplózás"
+     ],
+     "work": "Nézd meg, a ti OPC UA integrációitok pollingolnak vagy subscriptiont használnak, és milyen intervallummal.",
+     "result": "Működő OPC UA connector subscriptionnel.",
+     "questions": [
+      "Mi a különbség a sampling és a publishing interval között?",
+      "Mire való a deadband?",
+      "Mit csinál a kliensed, ha a szerver újraindul?"
+     ]
+    },
+    {
+     "title": "Biztonság: tanúsítványok, trust list, security policy",
+     "goal": "Érteni a tanúsítványkezelést, hogy ne próbálgatással oldd meg a kapcsolódási hibákat.",
+     "topics": [
+      "Security mode (None, Sign, SignAndEncrypt) és security policy",
+      "Application instance certificate, trust list, rejected certificates",
+      "Felhasználói hitelesítés: anonymous, felhasználónév/jelszó, tanúsítvány",
+      "Tanúsítványok és időszinkron: rossz óra = érvénytelen tanúsítvány"
+     ],
+     "practice": [
+      "Labor: kapcsolódj SignAndEncrypt módban – először utasítsa el a szerver a klienst, majd fogadd el a tanúsítványt a trust listen, és dokumentáld a lépéseket"
+     ],
+     "work": "Írd le, a cégnél hogyan kezelitek az OPC UA tanúsítványokat (ki fogadja el, hol tárolódnak, mi van lejáratkor).",
+     "result": "Lépésről lépésre tanúsítvány-útmutató.",
+     "questions": [
+      "Miért utasíthatja el a szerver a klienst, ha minden beállítás jó?",
+      "Mi történik, ha a szerver órája rossz?",
+      "Miért nem jó éles rendszerben a None security mode?"
+     ]
+    },
+    {
+     "title": "MQTT a BMS → IT irányban",
+     "goal": "Megérteni, mikor jó az MQTT, és a connectoraid adatait MQTT-re publikálni.",
+     "topics": [
+      "Broker, publish/subscribe, topic-hierarchia",
+      "QoS 0 / 1 / 2, retained message, Last Will",
+      "TLS (8883) és hitelesítés",
+      "Mikor BACnet, mikor OPC UA, mikor MQTT – a BMS-ből az IT / felhő felé"
+     ],
+     "practice": [
+      "Futtass Mosquitto brokert Dockerben, és írj publishert, ami a connectorok adatait átgondolt topic-struktúrába küldi",
+      "Rajzold meg a referencia-épület integrációs adatútját (7. fejezet)"
+     ],
+     "work": "Nézz utána, használ-e a cég vagy egy ügyfél MQTT-t (pl. felhőplatform, energiamonitoring).",
+     "result": "Kész a 7. fejezet: integrációs adatút + MQTT-publisher.",
+     "questions": [
+      "Mire jó a retained message egy állapotjelnél?",
+      "Mi a Last Will szerepe?",
+      "Miért nem helyettesíti az MQTT a BACnetet a terepi szinten?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Siemens PLC-kommunikáció + egyéb épületprotokollok",
+   "short": "Siemens PLC + protokollok",
+   "goal": "Tisztán látni, hogyan éred el egy Siemens PLC adatait (és mi a PROFINET szerepe), valamint áttekinteni a többi épületprotokollt.",
+   "output": "8. fejezet: protokoll-térkép és gateway-lista a referencia-épületre + PLC-integrációs döntési tábla + S7-reader.",
+   "resources": [
+    {
+     "t": "PROFIBUS & PROFINET International (PI) – PROFINET-anyagok",
+     "u": "https://www.profibus.com/"
+    },
+    {
+     "t": "python-snap7 dokumentáció",
+     "u": "https://python-snap7.readthedocs.io/"
+    },
+    {
+     "t": "KNX Association",
+     "u": "https://www.knx.org/"
+    },
+    {
+     "t": "DALI Alliance",
+     "u": "https://www.dali-alliance.org/"
+    },
+    {
+     "t": "M-Bus – áttekintés és dokumentáció",
+     "u": "https://m-bus.com/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "PROFINET IO áttekintés",
+     "goal": "Megérteni, mi a PROFINET IO, és miért nem ezen olvassa a BMS-szerver a PLC adatait.",
+     "topics": [
+      "IO Controller, IO Device, IO Supervisor",
+      "Device name (NameOfStation) és DCP – az IP-t a controller osztja ki a név alapján",
+      "A GSDML-fájl szerepe",
+      "Valós idejű (RT) forgalom: közvetlenül Etherneten, nem routolható IP-csomagként"
+     ],
+     "practice": [
+      "1 oldalas jegyzet: PROFINET IO vs. szerveroldali hozzáférés a PLC-hez (S7, OPC UA, Modbus TCP) – ki kivel, milyen célból kommunikál"
+     ],
+     "work": "Egy valós projektben: mi PROFINET IO-eszköz, és mi a PLC felé menő szerveroldali kapcsolat?",
+     "result": "Tiszta kép a PROFINET szerepéről.",
+     "questions": [
+      "Miért nem routolható a PROFINET RT forgalom?",
+      "Mire való a GSDML?",
+      "Mi történik, ha egy IO-device neve nem egyezik a projektben megadottal?"
+     ]
+    },
+    {
+     "title": "S7-kommunikáció: abszolút vs. szimbolikus címzés + S7-reader",
+     "goal": "Megérteni a munkahelyi „szimbolikus vs. abszolút címzés” kérdés valódi helyét, és S7-readert írni.",
+     "topics": [
+      "S7-kommunikáció: ISO-on-TCP, TCP 102",
+      "S7-1200/1500: a PUT/GET hozzáférés engedélyezése",
+      "Optimized block access vs. standard DB – miért kell kikapcsolni az abszolút címzéshez",
+      "Abszolút cím (pl. DB10.DBD4) vs. szimbolikus név"
+     ],
+     "practice": [
+      "Írj S7-readert a bms-connectors repóba (python-snap7), és teszteld a snap7 beépített szerver-szimulátorával (vagy egy céges teszt-PLC-vel, engedéllyel)"
+     ],
+     "work": "Nézd meg egy valós projektben: hogyan olvassátok a Siemens PLC-ket (S7, OPC UA vagy más), és miért azt választottátok?",
+     "result": "Működő S7-reader és tiszta kép a címzésről.",
+     "questions": [
+      "Miért nem érhető el egy optimalizált DB abszolút címmel?",
+      "Milyen biztonsági kockázata van a PUT/GET engedélyezésének?",
+      "Mit jelent a DB10.DBD4 cím?"
+     ]
+    },
+    {
+     "title": "PLC-integrációs utak – döntési tábla",
+     "goal": "Tudatosan választani a Siemens PLC-integrációs módok közül.",
+     "topics": [
+      "S7 (PUT/GET): egyszerű, de gyenge biztonság, abszolút címzés",
+      "OPC UA szerver az S7-1500-on: szimbolikus hozzáférés, tanúsítványok",
+      "Modbus TCP (a PLC mint szerver) és BACnet-gateway",
+      "Szempontok: biztonság, teljesítmény, karbantarthatóság, a PLC-programozó munkaigénye"
+     ],
+     "practice": [
+      "Készíts döntési táblát a 4 integrációs útról a fenti szempontokkal, és válassz a referencia-épület PLC-s alrendszeréhez, indoklással"
+     ],
+     "work": "Beszélj az automatizálási kollégával: ő melyik utat preferálja, és miért?",
+     "result": "PLC-integrációs döntési tábla.",
+     "questions": [
+      "Mikor jobb választás az OPC UA, mint az S7?",
+      "Mi a hátránya, ha a PLC-programozónak kell Modbus-térképet készítenie?",
+      "Melyik út a legbiztonságosabb, és mi az ára?"
+     ]
+    },
+    {
+     "title": "KNX, DALI, M-Bus – áttekintés",
+     "goal": "Felismerni a többi épületprotokollt, és tudni, hogyan kerülnek gateway-en át a BMS-be.",
+     "topics": [
+      "KNX: szoba- és világításautomatizálás, csoportcímek",
+      "DALI: világításvezérlés",
+      "M-Bus: fogyasztásmérők (hő, víz, villany)",
+      "Gateway-ek ezek és a BACnet/Modbus között"
+     ],
+     "practice": [
+      "Készítsd el a referencia-épület protokoll-térképét és gateway-listáját (rendszer, protokoll, gateway, pontok)"
+     ],
+     "work": "Gyűjtsd össze, előfordul-e KNX, DALI vagy M-Bus a cég projektjeiben, és hogyan integráltátok.",
+     "result": "Kész a 8. fejezet: protokoll-térkép + gateway-lista.",
+     "questions": [
+      "Miért gyakori az M-Bus a fogyasztásmérésnél?",
+      "Mi a KNX csoportcím szerepe?",
+      "Milyen kockázata van, ha egy gateway kiesik?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Szerverek és infrastruktúra",
+   "short": "Szerverek",
+   "goal": "Megérteni a BMS mögötti szerverinfrastruktúrát – az operációs rendszertől a mentésig.",
+   "output": "9. fejezet: a referencia-épület szerverarchitektúrája (szerepek, méretezés, mentés, időszinkron).",
+   "resources": [
+    {
+     "t": "Microsoft Learn – Windows Server dokumentáció",
+     "u": "https://learn.microsoft.com/en-us/windows-server/"
+    },
+    {
+     "t": "Linux Journey – ingyenes Linux-alapok",
+     "u": "https://linuxjourney.com/"
+    },
+    {
+     "t": "VirtualBox – ingyenes virtualizáció (Windows 10 Home-on nincs Hyper-V)",
+     "u": "https://www.virtualbox.org/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "Windows Server, Linux, szolgáltatások, NTP",
+     "goal": "Megbízhatóan futtatni az integrációs szolgáltatásokat, és megérteni az időszinkron fontosságát.",
+     "topics": [
+      "Windows-szolgáltatások vs. Task Scheduler; Linuxon systemd",
+      "Távoli elérés: RDP, SSH; jogosultságok, szolgáltatásfiókok",
+      "NTP / időszinkron: trendek, riasztások, tanúsítványok érvényessége",
+      "Naplók: Event Viewer, journalctl"
+     ],
+     "practice": [
+      "Futtasd a bms-connectors egyik connectorát szolgáltatásként (Windows-szolgáltatás vagy systemd unit), automatikus újraindulással",
+      "Ellenőrizd a gépek időszinkronját (w32tm /query /status), és jegyezd fel, mi az időforrás"
+     ],
+     "work": "Nézd meg, hogyan futnak a ti integrációitok (Task Scheduler, szolgáltatás, konténer), és mi történik szerver-újraindításkor.",
+     "result": "Connector szolgáltatásként + időszinkron-jegyzet.",
+     "questions": [
+      "Miért baj, ha a BMS-szerver és a kontrollerek órája eltér?",
+      "Mi az előnye egy szolgáltatásnak a Task Schedulerhez képest?",
+      "Mi történik egy OPC UA kapcsolattal, ha a szerver órája rossz?"
+     ]
+    },
+    {
+     "title": "Virtualizáció",
+     "goal": "Megérteni, hogyan futnak a BMS-szerverek virtuális környezetben, és mi ennek a hálózati vonzata.",
+     "topics": [
+      "Hypervisor: Hyper-V, VMware ESXi – alapfogalmak",
+      "Virtuális switch, VLAN-tag a VM-en",
+      "Snapshot vs. mentés",
+      "Erőforrások: CPU, RAM, tárhely túlfoglalása"
+     ],
+     "practice": [
+      "Hozz létre egy VM-et (pl. VirtualBoxszal), kösd két különböző virtuális hálózatra, és teszteld, melyiket éri el"
+     ],
+     "work": "Kérdezd meg: a projektekben a BMS-szerver fizikai vagy virtuális? Ki üzemelteti a hypervisort?",
+     "result": "Működő VM két hálózattal.",
+     "questions": [
+      "Miért nem mentés a snapshot?",
+      "Hogyan kerül egy VM egy adott VLAN-ba?",
+      "Mi a kockázata, ha több BMS-szerver ugyanazon a hoston fut?"
+     ]
+    },
+    {
+     "title": "BMS-szerverarchitektúra és méretezés",
+     "goal": "Átlátni a BMS-szerver szerepeit, és megbecsülni az erőforrásigényt.",
+     "topics": [
+      "Alkalmazás-, adatbázis- és webszerver-szerepek",
+      "Kliens–szerver forgalom és portok",
+      "Méretezés: adatpontszám, trendelési gyakoriság, megőrzési idő",
+      "Redundáns szerver vs. gyors visszaállítás"
+     ],
+     "practice": [
+      "Becsüld meg a referencia-épület trendadatainak éves tárhelyigényét (pontszám × gyakoriság × rekordméret × megőrzés)",
+      "Rajzold fel a szerverarchitektúrát a 9. fejezethez"
+     ],
+     "work": "Nézd meg egy valós BMS-szerveren: mekkora az adatbázis, és milyen gyorsan nő?",
+     "result": "Szerverarchitektúra-rajz és tárhelybecslés.",
+     "questions": [
+      "Mennyi adat keletkezik naponta 2000 ponttal, percenkénti trendeléssel és 50 bájtos rekordokkal?",
+      "Mikor éri meg külön adatbázisszerver?",
+      "Mi a jobb: redundáns szerver, vagy jó mentés + kipróbált visszaállítási terv?"
+     ]
+    },
+    {
+     "title": "Üzemeltetés: monitoring, naplózás, mentés, DR",
+     "goal": "Megtervezni, hogyan marad üzemben és hogyan áll helyre a BMS-infrastruktúra.",
+     "topics": [
+      "Monitoring: mit figyelj (szolgáltatás él, kapcsolatok, lemez, idő)",
+      "Naplózás és naplómegőrzés",
+      "Mentés: 3-2-1 szabály, visszaállítási teszt",
+      "Disaster recovery: RPO, RTO"
+     ],
+     "practice": [
+      "Írj mentési és visszaállítási tervet a referencia-épület BMS-szerverére RPO/RTO célokkal",
+      "Adj egyszerű health-check végpontot vagy naplóriasztást az egyik connectorodhoz"
+     ],
+     "work": "Kérdezd meg: mikor volt utoljára visszaállítási teszt egy BMS-szervernél? Van leírt eljárás?",
+     "result": "Kész a 9. fejezet: szerverarchitektúra + mentési / DR terv.",
+     "questions": [
+      "Mi a különbség az RPO és az RTO között?",
+      "Miért nem ér semmit a mentés visszaállítási teszt nélkül?",
+      "Mit figyelnél elsőként egy integrációs szerveren?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "IT/OT biztonság",
+   "short": "IT/OT biztonság",
+   "goal": "Felismerni a BMS/OT biztonsági kockázatokat, és biztonsági koncepciót írni.",
+   "output": "10. fejezet: biztonsági koncepció a referencia-épületre (zónák, conduitok, szabályok, hozzáférés).",
+   "resources": [
+    {
+     "t": "NIST SP 800-82 Rev. 3 – Guide to Operational Technology (OT) Security",
+     "u": "https://csrc.nist.gov/pubs/sp/800/82/r3/final"
+    },
+    {
+     "t": "ISA Global Cybersecurity Alliance – ISA/IEC 62443 Quick Start Guide",
+     "u": "https://isagca.org/"
+    },
+    {
+     "t": "CISA – ICS/OT kiberbiztonsági képzések",
+     "u": "https://www.cisa.gov/ics-training-available-through-cisa"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "OT-biztonsági elvek és IEC 62443",
+     "goal": "Megérteni, miben más az OT-biztonság, és mi az IEC 62443 alapgondolata.",
+     "topics": [
+      "CIA vs. AIC: OT-ban jellemzően a rendelkezésre állás az első",
+      "Defense in depth, least privilege",
+      "IEC 62443: zónák és conduitok, security levelek (áttekintés)",
+      "Tipikus BMS-támadási felületek: alapértelmezett jelszavak, nyitott szolgáltatások, távoli elérés"
+     ],
+     "practice": [
+      "Bontsd zónákra és conduitokra a referencia-épületet, és mindegyikhez írj egy mondatot a védelmi igényről"
+     ],
+     "work": "Gyűjtsd össze (anonimizálva), milyen biztonsági gyengeségeket láttál már projekteken (pl. alapértelmezett jelszó, nyitott port).",
+     "result": "Zóna–conduit modell a referencia-épületre.",
+     "questions": [
+      "Miért a rendelkezésre állás az első OT-ban?",
+      "Mi a conduit az IEC 62443-ban?",
+      "Mi a defense in depth lényege egy BMS-nél?"
+     ]
+    },
+    {
+     "title": "Hálózati biztonság és távoli elérés",
+     "goal": "A hálózati védelmi eszközöket a BMS-re alkalmazni.",
+     "topics": [
+      "Tűzfalszabályok tervezése: alapértelmezett tiltás, minimális portok",
+      "VLAN-izoláció és mikroszegmentáció",
+      "Biztonságos távoli elérés: VPN + MFA, jump host, naplózott munkamenetek",
+      "Szállítói (vendor) hozzáférés kezelése"
+     ],
+     "practice": [
+      "Nézd át biztonsági szemmel a 3. hónap kommunikációs mátrixát: minden sor kapjon indoklást, a felesleges sorok kerüljenek ki"
+     ],
+     "work": "Nézd meg, hogyan adnak a cégnél távoli hozzáférést külsősöknek, és hol lehetne szigorítani.",
+     "result": "Biztonsági szempontból átnézett kommunikációs mátrix.",
+     "questions": [
+      "Miért kell MFA a távoli eléréshez?",
+      "Mi a kockázata egy állandóan nyitott vendor-VPN-nek?",
+      "Melyik szabályt törölnéd elsőként a mátrixodból?"
+     ]
+    },
+    {
+     "title": "Kontroller-, szerver- és tanúsítványvédelem",
+     "goal": "Érteni és dokumentálni az eszközszintű védelmet.",
+     "topics": [
+      "Kontrollerek: jelszavak, felesleges szolgáltatások letiltása, firmware-frissítés",
+      "Szerverek: patchelés, fiókok, vírusvédelem, alkalmazás-engedélyezés",
+      "Tanúsítványok (OPC UA, BACnet/SC): lejárat, megújítás, nyilvántartás",
+      "Naplózás és riasztás biztonsági eseményekre"
+     ],
+     "practice": [
+      "Készíts hardening checklistet a referencia-épület kontrollereire és szervereire (legalább 15 pont)",
+      "Készíts tanúsítvány-nyilvántartás sablont (eszköz, típus, lejárat, felelős)"
+     ],
+     "work": "Nézd meg egy valós projektben: van nyilvántartás a tanúsítványokról és a jelszavakról?",
+     "result": "Hardening checklist és tanúsítvány-nyilvántartás.",
+     "questions": [
+      "Mi történik, ha lejár egy OPC UA szerver tanúsítványa?",
+      "Miért nehezebb patchelni egy BMS-szervert, mint egy irodai gépet?",
+      "Melyik a legkönnyebben javítható gyengeség a checklistedben?"
+     ]
+    },
+    {
+     "title": "Kockázatelemzés és biztonsági koncepció",
+     "goal": "Egyszerű kockázatelemzést végezni, és összeállítani a biztonsági koncepciót.",
+     "topics": [
+      "Kockázat = valószínűség × hatás",
+      "Fenyegetések, sérülékenységek, intézkedések",
+      "A biztonsági dokumentáció felépítése",
+      "Kitekintés: az EU NIS2 irányelve és a BMS-t üzemeltető ügyfelek (áttekintés)"
+     ],
+     "practice": [
+      "Végezz kockázatelemzést a referencia-épületre (legalább 8 kockázat), és állítsd össze a biztonsági koncepciót (10. fejezet)"
+     ],
+     "work": "Mutasd meg a koncepciód egy részét egy kollégának, és kérj visszajelzést.",
+     "result": "Kész a 10. fejezet: biztonsági koncepció.",
+     "questions": [
+      "Melyik a legnagyobb kockázat a referencia-épületben, és miért?",
+      "Mi a különbség a fenyegetés és a sérülékenység között?",
+      "Melyik intézkedés hozza a legtöbbet a legkisebb költséggel?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "BMS-tervezés II + szemantika",
+   "short": "BMS-tervezés II",
+   "goal": "A tervezői oldal mélyítése: funkcióleírás, riasztási és trendstratégia, szemantikus tagging, követelmények.",
+   "output": "11. fejezet: AHU funkcióleírás + riasztási / trend-filozófia + tagging-modell + követelménylista.",
+   "resources": [
+    {
+     "t": "ASHRAE Journal – Guideline 36-2021: What's New and Why It's Important",
+     "u": "https://www.ashrae.org/news/ashraejournal/guideline-36-2021-what-s-new-and-why-it-s-important"
+    },
+    {
+     "t": "Project Haystack",
+     "u": "https://project-haystack.org/"
+    },
+    {
+     "t": "Brick Schema",
+     "u": "https://brickschema.org/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "Funkcióleírás és szabályozási szekvencia",
+     "goal": "A gépész tudásodra építve funkcióleírást írni egy AHU-ra.",
+     "topics": [
+      "Sequence of operation: üzemmódok, indítás / leállítás, fagyvédelem",
+      "PID-szabályozás alapjai: alapjel, beavatkozó, hangolás",
+      "Időprogramok, alapjel-eltolás, kaszkádszabályozás",
+      "Az ASHRAE Guideline 36 mint referencia a szekvenciákhoz"
+     ],
+     "practice": [
+      "Írj funkcióleírást a referencia-épület AHU-jára (üzemmódok, szabályozási körök, reteszek, riasztások)"
+     ],
+     "work": "Kérj egy valós funkcióleírást az automatizálási kollégától, és hasonlítsd össze a sajátoddal.",
+     "result": "AHU funkcióleírás.",
+     "questions": [
+      "Mi a fagyvédelmi retesz feladata egy AHU-ban?",
+      "Mi történik, ha egy PID-kör túl agresszívan van hangolva?",
+      "Milyen adatpontok kellenek egy kaszkádszabályozáshoz?"
+     ]
+    },
+    {
+     "title": "Riasztási és trend-filozófia",
+     "goal": "Átgondolt riasztási és trendelési stratégiát tervezni.",
+     "topics": [
+      "Riasztási prioritások és kategóriák; a riasztás-áradat (alarm flood) elkerülése",
+      "Riasztáskésleltetés, hiszterézis, elnyomás",
+      "Trendelés: intervallum vs. COV, megőrzési idő",
+      "Trendtárolás becslése (a 9. hónap számítására építve)"
+     ],
+     "practice": [
+      "Írj riasztási filozófiát (prioritások, címzettek, mikor) és trendstratégiát a referencia-épületre"
+     ],
+     "work": "Nézd meg egy valós rendszerben: hány riasztás jön naponta, és mennyi ebből valódi?",
+     "result": "Riasztási és trendstratégia.",
+     "questions": [
+      "Miért veszélyes a riasztás-áradat?",
+      "Mikor jobb a COV-alapú trendelés az intervallumosnál?",
+      "Ki legyen egy kritikus riasztás címzettje?"
+     ]
+    },
+    {
+     "title": "Haystack / Brick: elnevezés vs. tagek",
+     "goal": "Megérteni, hogyan lesz az adatpontlistából gépileg értelmezhető modell.",
+     "topics": [
+      "Elnevezési konvenció vs. szemantikus tagek",
+      "Project Haystack: tagek (pl. ahu, temp, sensor)",
+      "Brick Schema: osztályok és kapcsolatok (pl. feeds, hasPoint)",
+      "Miért fontos ez analitikánál és felhőplatformoknál"
+     ],
+     "practice": [
+      "Taggeld fel az 5. hónap AHU-pontlistáját Haystack- vagy Brick-szemlélettel, és adj tageket a connectorok kimenetéhez"
+     ],
+     "work": "Nézz utána, használ-e a cég vagy egy ügyfél szemantikus modellt (pl. analitikai vagy energiamonitoring platform).",
+     "result": "Taggelt pontlista és connector-kimenet.",
+     "questions": [
+      "Miben több egy tag, mint egy jó név?",
+      "Mi a különbség a Haystack és a Brick megközelítése között?",
+      "Hogyan segíti a tagging egy új épület bekötését?"
+     ]
+    },
+    {
+     "title": "Követelmények, kapacitás, bővíthetőség",
+     "goal": "A rendszert követelményekből indítani, nem technológiából.",
+     "topics": [
+      "Funkcionális és nem funkcionális követelmények",
+      "Rendszerhatárok: mi tartozik a BMS-hez és mi nem",
+      "Kapacitás és bővíthetőség (pontszám, kontrollerek, hálózat)",
+      "Rendelkezésre állás és karbantarthatóság"
+     ],
+     "practice": [
+      "Írd meg a referencia-épület követelménylistáját (legalább 10 funkcionális és 5 nem funkcionális követelmény)",
+      "Zárd le a 11. fejezetet"
+     ],
+     "work": "Nézd meg egy valós projekt műszaki leírását (ajánlatkérés / tender): milyen követelmények vannak benne a BMS-re?",
+     "result": "Kész a 11. fejezet: funkcióleírás + stratégia + tagging + követelmények.",
+     "questions": [
+      "Mi a különbség a funkcionális és a nem funkcionális követelmény között?",
+      "Mekkora tartalékot terveznél a bővíthetőséghez?",
+      "Melyik követelmény befolyásolja leginkább a hálózati tervet?"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Összefésülés és bemutatás",
+   "short": "Összefésülés",
+   "goal": "A 11 fejezetből egységes, bemutatható rendszerterv-csomagot és rendezett connector-repót készíteni.",
+   "output": "Kész rendszerterv-csomag a referencia-épületre + bms-connectors repo – a portfóliód.",
+   "resources": [
+    {
+     "t": "Saját fejezeteid (1–11) és a bms-connectors repo",
+     "u": ""
+    },
+    {
+     "t": "draw.io (diagrams.net) – ingyenes diagramszerkesztő",
+     "u": "https://www.drawio.com/"
+    }
+   ],
+   "weeks": [
+    {
+     "title": "A fejezetek összefésülése",
+     "goal": "Ellentmondásmentes, egységes dokumentációt készíteni.",
+     "topics": [
+      "Konzisztencia: nevek, címek, VLAN-ok, protokollok egyezése a fejezetek között",
+      "Dokumentum-struktúra: összefoglaló, architektúra, hálózat, integráció, biztonság, üzemeltetés"
+     ],
+     "practice": [
+      "Fésüld össze az 1–11. fejezetet egy dokumentummá, és javítsd az ellentmondásokat (a javításokról vezess listát)"
+     ],
+     "work": "Nézd meg, milyen szerkezetűek a cég dokumentációs sablonjai, és igazodj hozzájuk, ahol lehet.",
+     "result": "Az egységes dokumentum első változata.",
+     "questions": [
+      "Hány ellentmondást találtál a fejezetek között?",
+      "Melyik fejezet szorul a legtöbb javításra?",
+      "Mi hiányzik még egy „átadható” tervből?"
+     ]
+    },
+    {
+     "title": "Végleges IP-terv, kommunikációs mátrix, eszközlista",
+     "goal": "Véglegesíteni a hálózati és eszköz-dokumentációt.",
+     "topics": [
+      "IP-címzési táblázat és VLAN-terv véglegesítése",
+      "A kommunikációs mátrix véglegesítése (a 10. hónap biztonsági szempontjaival)",
+      "Eszközlista: típus, darabszám, hely, IP, protokoll"
+     ],
+     "practice": [
+      "Véglegesítsd az IP-tervet, a kommunikációs mátrixot és az eszközlistát",
+      "Rendezd a bms-connectors repót: README, konfigurációs példák, futtatási útmutató"
+     ],
+     "work": "Vesd össze az eszközlistádat egy valós projekt eszközlistájával: mit csinálnak másképp?",
+     "result": "Végleges hálózati dokumentáció és rendezett repo.",
+     "questions": [
+      "Visszakereshető-e a mátrixod minden sora a tűzfalszabályokban?",
+      "Van-e IP-ütközés a tervedben?",
+      "Érthető-e a repód README-je egy kívülállónak?"
+     ]
+    },
+    {
+     "title": "Hibakeresési terv és üzembe helyezési checklist",
+     "goal": "Felkészíteni a tervet az üzembe helyezésre és az üzemeltetésre.",
+     "topics": [
+      "Üzembe helyezési (commissioning) ellenőrzőlista: pont-pont teszt, kommunikáció, riasztások",
+      "Hibakeresési terv: tipikus hibák és első lépések rétegenként",
+      "Átadás-átvételi dokumentáció"
+     ],
+     "practice": [
+      "Írj üzembe helyezési checklistet és hibakeresési tervet a referencia-épületre (a 4. hónap kézikönyvére építve)"
+     ],
+     "work": "Kérdezd meg a kollégákat: milyen hibák jönnek elő leggyakrabban üzembe helyezéskor?",
+     "result": "Üzembe helyezési checklist és hibakeresési terv.",
+     "questions": [
+      "Mi a pont-pont teszt célja?",
+      "Melyik hibát kell elsőként kizárni egy kommunikációs problémánál?",
+      "Mi kerüljön az átadási dokumentációba?"
+     ]
+    },
+    {
+     "title": "Bemutatás és visszatekintés",
+     "goal": "Megmutatni, amit felépítettél, és megtervezni a következő évet.",
+     "topics": [
+      "10 perces szakmai bemutató: probléma, megoldás, döntések, tanulságok",
+      "Visszatekintés: mi működött, mi nem",
+      "Következő lépés: célpozíciók, hiányzó tudás, esetleges minősítések"
+     ],
+     "practice": [
+      "Tarts 10 perces bemutatót a rendszertervről egy kollégának vagy a vezetődnek",
+      "Írd meg az éves visszatekintést és a következő év irányát"
+     ],
+     "work": "Használd a bemutatót arra, hogy több tervezési feladatot kérj a cégnél (pl. az egyeztetést a külsős hálózati céggel).",
+     "result": "Kész a rendszerterv-csomag és a bms-connectors repo – a portfóliód.",
+     "questions": [
+      "Mit tudsz ma, amit egy éve nem?",
+      "Melyik hirdetésre jelentkeznél most magabiztosan?",
+      "Mi a következő év egyetlen legfontosabb célja?"
+     ]
+    }
+   ]
+  }
+ ]
+}
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ================= Tananyag ================= */
+  let PROGRAM;
+  try {
+    PROGRAM = JSON.parse(document.getElementById('program-data').textContent);
+  } catch (err) {
+    document.getElementById('app').innerHTML =
+      '<div class="callout r">Hibás tananyag-adat (program-data JSON): ' + String(err.message).replace(/[<>&]/g, '') + '</div>';
+    return;
+  }
+  const META = PROGRAM.meta;
+  const MONTHS = PROGRAM.months;
+  const WEEKS = [];
+  MONTHS.forEach((m, mi) => m.weeks.forEach((_, wi) => WEEKS.push({ mi, wi })));
+
+  const OWNER_EMAIL = 'xlopojackx@gmail.com';
+  const LS_KEY = 'bms_itot_state_v1';
+  const DB_PATH = 'bms_itot_12honap';
+  const TECHS = ['BACnet', 'Modbus', 'OPC UA', 'S7 / PROFINET', 'MQTT', 'Hálózat / routing', 'Tűzfal / VPN', 'Szerver / OS', 'Egyéb'];
+  const NOTE_PH = 'Mit tanultam?\nMit értettem meg?\nMi nem világos?\nMilyen kérdéseim vannak?\nMilyen munkahelyi problémával találkoztam?\nMilyen megoldást találtam?';
+  const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+  /* ================= Segédfüggvények ================= */
+  const $ = (sel) => document.querySelector(sel);
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+  let currentQuery = '';
+  function hl(s) {
+    s = String(s == null ? '' : s);
+    if (!currentQuery) return esc(s);
+    const q = currentQuery.toLowerCase();
+    const low = s.toLowerCase();
+    if (low.length !== s.length) return esc(s);
+    let out = '', i = 0, j;
+    while ((j = low.indexOf(q, i)) !== -1) {
+      out += esc(s.slice(i, j)) + '<mark>' + esc(s.slice(j, j + q.length)) + '</mark>';
+      i = j + q.length;
+    }
+    return out + esc(s.slice(i));
+  }
+  function fmtMin(m) {
+    m = Math.max(0, Math.round(Number(m) || 0));
+    const h = Math.floor(m / 60), r = m % 60;
+    if (!h) return r + ' p';
+    return r ? h + ' ó ' + r + ' p' : h + ' ó';
+  }
+  function uid(prefix) { return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function wk(mi, wi) { return 'm' + mi + 'w' + wi; }
+  function parseWeekKey(k) {
+    const m = /^m(\d+)w(\d+)$/.exec(String(k || ''));
+    if (!m) return null;
+    const mi = +m[1], wi = +m[2];
+    return MONTHS[mi] && MONTHS[mi].weeks[wi] ? { mi, wi } : null;
+  }
+  function ymd(dt) { return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0'); }
+  function todayStr() { return ymd(new Date()); }
+  function parseYmd(s) { const p = s.split('-').map(Number); return new Date(p[0], p[1] - 1, p[2]); }
+  function addDays(s, n) { const dt = parseYmd(s); dt.setDate(dt.getDate() + n); return ymd(dt); }
+  function weekStartStr(s) { const dt = parseYmd(s); dt.setDate(dt.getDate() - ((dt.getDay() + 6) % 7)); return ymd(dt); }
+  const isObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+  const obj = (v) => (isObj(v) ? v : {});
+  function valToArr(v) { if (!v) return []; return Array.isArray(v) ? v : Object.values(v); }
+
+  /* ================= Állapot ================= */
+  function emptyState() {
+    return { v: 1, tasks: {}, custom: {}, notes: {}, time: {}, worklog: {}, reviews: {}, schedule: null, pinnedWeek: null, building: '', updatedAt: 0 };
+  }
+  function normalize(raw) {
+    const r = obj(raw), s = emptyState();
+    Object.entries(obj(r.tasks)).forEach(([k, v]) => { if (v === true) s.tasks[k] = true; });
+    Object.entries(obj(r.custom)).forEach(([wkKey, list]) => {
+      const out = {};
+      Object.entries(obj(list)).forEach(([id, c]) => { if (isObj(c) && c.text) out[id] = { text: String(c.text), done: !!c.done }; });
+      if (Object.keys(out).length) s.custom[wkKey] = out;
+    });
+    Object.entries(obj(r.notes)).forEach(([k, v]) => { if (typeof v === 'string' && v) s.notes[k] = v; });
+    Object.entries(obj(r.time)).forEach(([id, t]) => {
+      if (isObj(t) && DATE_RE.test(t.date) && Number(t.min) > 0) {
+        s.time[id] = { date: t.date, min: Math.round(Number(t.min)), week: typeof t.week === 'string' ? t.week : '' };
+      }
+    });
+    Object.entries(obj(r.worklog)).forEach(([id, e]) => {
+      if (!isObj(e)) return;
+      s.worklog[id] = {
+        date: DATE_RE.test(e.date) ? e.date : todayStr(),
+        title: String(e.title || ''), tech: String(e.tech || ''), week: String(e.week || ''),
+        problem: String(e.problem || ''), cause: String(e.cause || ''), solution: String(e.solution || ''), lesson: String(e.lesson || '')
+      };
+    });
+    Object.entries(obj(r.reviews)).forEach(([k, ans]) => {
+      const out = {};
+      Object.entries(obj(ans)).forEach(([qk, v]) => { if (typeof v === 'string' && v) out[qk] = v; });
+      if (Object.keys(out).length) s.reviews[k] = out;
+    });
+    const sch = valToArr(r.schedule).filter(isObj);
+    if (sch.length === 7) {
+      s.schedule = sch.map((x) => ({ day: String(x.day || ''), label: String(x.label || ''), min: Math.max(0, parseInt(x.min, 10) || 0), time: String(x.time || '') }));
+    }
+    s.pinnedWeek = parseWeekKey(r.pinnedWeek) ? r.pinnedWeek : null;
+    s.building = typeof r.building === 'string' ? r.building : '';
+    s.updatedAt = Number(r.updatedAt) || 0;
+    return s;
+  }
+  let state = emptyState();
+
+  const ui = {
+    view: 'overview', month: null, week: 0, reviewMonth: null,
+    wlEditing: null, wlFilter: '', confirm: null,
+    importPreview: null, importError: null, searchDismissed: false, qOpen: false
+  };
+
+  /* ================= Számítások ================= */
+  function mandatoryItems(mi, wi) {
+    const w = MONTHS[mi].weeks[wi], k = wk(mi, wi);
+    return [{ key: k + '-t', text: META.theoryTask }].concat(w.practice.map((t, i) => ({ key: k + '-p' + i, text: t })));
+  }
+  function optionalItems(mi, wi) {
+    const w = MONTHS[mi].weeks[wi], k = wk(mi, wi);
+    const items = [];
+    if (w.work) items.push({ key: k + '-w', text: 'Munkahelyi kapcsolódás: ' + w.work });
+    (w.extra || []).forEach((t, i) => items.push({ key: k + '-x' + i, text: t }));
+    items.push({ key: k + '-q', text: META.selfCheckTask });
+    items.push({ key: k + '-e', text: META.englishTask });
+    return items;
+  }
+  const isChecked = (key) => !!state.tasks[key];
+  function weekCounts(mi, wi) {
+    const items = mandatoryItems(mi, wi);
+    return { done: items.filter((it) => isChecked(it.key)).length, total: items.length };
+  }
+  function weekDone(mi, wi) { const c = weekCounts(mi, wi); return c.done === c.total; }
+  function monthPct(mi) {
+    let done = 0, total = 0;
+    MONTHS[mi].weeks.forEach((_, wi) => { const c = weekCounts(mi, wi); done += c.done; total += c.total; });
+    return total ? Math.round((done / total) * 100) : 0;
+  }
+  function monthStatus(mi) {
+    const p = monthPct(mi);
+    return p === 0 ? ['Nem kezdett', ''] : p === 100 ? ['Kész', 'g'] : ['Folyamatban', 'b'];
+  }
+  const completedWeeks = () => WEEKS.filter((x) => weekDone(x.mi, x.wi)).length;
+  const totalMandatory = () => WEEKS.reduce((s, x) => s + weekCounts(x.mi, x.wi).total, 0);
+  const doneMandatory = () => WEEKS.reduce((s, x) => s + weekCounts(x.mi, x.wi).done, 0);
+  const englishWeeks = () => WEEKS.filter((x) => isChecked(wk(x.mi, x.wi) + '-e')).length;
+  const totalMinutes = () => Object.values(state.time).reduce((s, t) => s + t.min, 0);
+
+  // Aktuális hét: a kitűzött hét (vagy az utána következő első be nem fejezett), különben az első be nem fejezett.
+  function currentWeek() {
+    const p = parseWeekKey(state.pinnedWeek);
+    if (p) {
+      const idx = WEEKS.findIndex((x) => x.mi === p.mi && x.wi === p.wi);
+      for (let i = idx; i < WEEKS.length; i++) {
+        const x = WEEKS[i];
+        if (!weekDone(x.mi, x.wi)) return { mi: x.mi, wi: x.wi, pinned: i === idx };
+      }
+    }
+    const f = WEEKS.find((x) => !weekDone(x.mi, x.wi));
+    return f ? { mi: f.mi, wi: f.wi, pinned: false } : { mi: 11, wi: 3, pinned: false, allDone: true };
+  }
+  function nextTask(mi, wi) {
+    const m = mandatoryItems(mi, wi).find((it) => !isChecked(it.key));
+    if (m) return m.text;
+    const o = optionalItems(mi, wi).find((it) => !isChecked(it.key));
+    return o ? 'Opcionális – ' + o.text : 'Ez a hét kész ✓';
+  }
+  function targetFor(mi, wi) {
+    return MONTHS[mi].weeks[wi].light ? { lo: 120, hi: 180, label: '2–3 ó' } : { lo: 300, hi: 420, label: '5–7 ó' };
+  }
+  function defaultWeekFor(mi) {
+    const cw = currentWeek();
+    if (cw.mi === mi) return cw.wi;
+    const f = MONTHS[mi].weeks.findIndex((_, wi) => !weekDone(mi, wi));
+    return f === -1 ? 0 : f;
+  }
+  function minutesByWeek() {
+    const map = {};
+    Object.values(state.time).forEach((t) => { const ws = weekStartStr(t.date); map[ws] = (map[ws] || 0) + t.min; });
+    return map;
+  }
+  function worklogWeeks() {
+    const set = new Set();
+    Object.values(state.worklog).forEach((e) => { if (DATE_RE.test(e.date)) set.add(weekStartStr(e.date)); });
+    return set;
+  }
+  const isKept = (ws, mins, wlw) => (mins[ws] || 0) >= 60 || wlw.has(ws);
+  // Sorozat: egymást követő „megtartott” naptári hetek. A folyamatban lévő hét nem szakítja meg.
+  function streak(mins, wlw) {
+    let ws = weekStartStr(todayStr());
+    let n = isKept(ws, mins, wlw) ? 1 : 0;
+    ws = addDays(ws, -7);
+    let guard = 0;
+    while (isKept(ws, mins, wlw) && guard++ < 600) { n++; ws = addDays(ws, -7); }
+    return n;
+  }
+
+  /* ================= Mentés (localStorage + Firebase) ================= */
+  let isOwner = false;
+  let localNewer = false;
+  let cloudError = false;
+  let cloudReadError = false;
+  let remoteTimer = null;
+  let dbRef = null, auth = null;
+
+  function saveLocal() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { /* nem elérhető */ } }
+  function loadLocal() {
+    try { const s = localStorage.getItem(LS_KEY); return s ? normalize(JSON.parse(s)) : null; } catch (e) { return null; }
+  }
+  function showSaveInd() {
+    const ind = $('#saveInd');
+    ind.classList.add('show');
+    clearTimeout(showSaveInd.t);
+    showSaveInd.t = setTimeout(() => ind.classList.remove('show'), 1500);
+  }
+  function withAuth(fn) {
+    if (!auth) return;
+    if (auth.currentUser) { fn(); return; }
+    const unsub = auth.onAuthStateChanged((u) => { unsub(); if (u && u.email === OWNER_EMAIL) fn(); });
+  }
+  function pushRemote() {
+    if (!dbRef || !isOwner) return;
+    const payload = JSON.parse(JSON.stringify(state));
+    withAuth(() => {
+      dbRef.set(payload).then(() => {
+        if (cloudError) { cloudError = false; renderCloudWarn(); }
+        showSaveInd();
+      }).catch((err) => {
+        console.error('Firebase save error:', err && err.code, err && err.message);
+        cloudError = true;
+        renderCloudWarn();
+      });
+    });
+  }
+  function commit(immediate) {
+    if (!isOwner) return false;
+    state.updatedAt = Date.now();
+    saveLocal();
+    if (!dbRef) { showSaveInd(); return true; }
+    clearTimeout(remoteTimer);
+    remoteTimer = setTimeout(pushRemote, immediate ? 0 : 800);
+    return true;
+  }
+  function load() {
+    const local = loadLocal();
+    if (local) state = local;
+    render();
+    if (!dbRef) return;
+    dbRef.get().then((snap) => {
+      cloudReadError = false;
+      if (snap.exists()) {
+        const remote = normalize(snap.val());
+        if (remote.updatedAt >= state.updatedAt) { state = remote; saveLocal(); localNewer = false; }
+        else localNewer = true;
+      } else {
+        localNewer = !!(local && local.updatedAt > 0);
+      }
+      if (localNewer && isOwner) { localNewer = false; pushRemote(); }
+      render();
+    }).catch((err) => {
+      console.warn('Firebase read error:', err && err.message);
+      cloudReadError = true;
+      renderCloudWarn();
+    });
+  }
+  function setOwner(v) {
+    v = !!v;
+    if (v === isOwner) return;
+    isOwner = v;
+    document.body.classList.toggle('ro', !isOwner);
+    if (isOwner && localNewer) { localNewer = false; pushRemote(); }
+    render();
+  }
+  function requireOwner() {
+    if (isOwner) return true;
+    toast('Szerkesztéshez jelentkezz be (főoldal → Bejelentkezés).');
+    return false;
+  }
+  function toast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  /* ================= Megjelenítés ================= */
+  function renderTopbar() {
+    $('#tbGoal').textContent = '🎯 12 hónapos cél: ' + META.goal12;
+    let b = '';
+    if (!dbRef) b = '<span class="badge o">Helyi mód</span>';
+    else if (!isOwner) b = '<span class="badge">👁 Csak olvasás</span>';
+    $('#tbBadges').innerHTML = b;
+  }
+  function renderCloudWarn() {
+    const el = $('#cloudWarn');
+    let msg = '';
+    if (!dbRef) msg = 'Helyi mód: a Firebase nem töltődött be, ezért a változások csak ebben a böngészőben mentődnek. Ha legközelebb elérhető, és be vagy jelentkezve, a helyi adatok feltöltődnek.';
+    else if (cloudError) msg = '<b>A felhőbe mentés nem sikerült.</b> Az adataid ebben a böngészőben megvannak. Valószínű ok: a Firebase-szabályok nem engedik írni a <code>' + DB_PATH + '</code> ágat (Firebase-konzol → Realtime Database → Rules).';
+    else if (cloudReadError) msg = 'A felhőből olvasás nem sikerült – a helyben tárolt adatokat látod.';
+    el.innerHTML = msg;
+    el.hidden = !msg;
+  }
+  function renderSearchBanner(searching) {
+    const el = $('#searchBanner');
+    if (!currentQuery) { el.hidden = true; return; }
+    el.hidden = false;
+    el.innerHTML = searching
+      ? '<span>🔍 Keresés: „' + esc(currentQuery) + '”</span><button class="btn sm" data-action="search-dismiss">Vissza a nézethez</button>'
+      : '<span>🔍 „' + esc(currentQuery) + '” kiemelve</span><button class="btn sm" data-action="search-show">Találatok</button>';
+  }
+
+  const VIEWS = ['overview', 'program', 'schedule', 'worklog', 'review', 'data', 'search'];
+  function render() {
+    renderTopbar();
+    renderCloudWarn();
+    const searching = !!currentQuery && !ui.searchDismissed;
+    document.querySelectorAll('.tab').forEach((b) => b.classList.toggle('active', !searching && b.dataset.view === ui.view));
+    VIEWS.forEach((v) => { $('#view-' + v).hidden = searching ? v !== 'search' : v !== ui.view; });
+    renderSearchBanner(searching);
+    if (searching) { renderSearch(); return; }
+    RENDERERS[ui.view]();
+  }
+
+  function chartHtml(mins) {
+    const ws0 = weekStartStr(todayStr());
+    const weeks = [];
+    for (let i = 7; i >= 0; i--) weeks.push(addDays(ws0, -7 * i));
+    const max = Math.max(420, ...weeks.map((x) => mins[x] || 0));
+    const cols = weeks.map((x) => {
+      const v = mins[x] || 0;
+      return '<div class="chart-col' + (x === ws0 ? ' cur' : '') + '" title="' + x + ': ' + fmtMin(v) + '"><span style="height:' + Math.round((v / max) * 100) + '%"></span></div>';
+    }).join('');
+    const labels = weeks.map((x) => '<div>' + x.slice(5).replace('-', '.') + '</div>').join('');
+    return '<div class="chart-area">' + cols + '<div class="target-line" style="bottom:' + Math.round((300 / max) * 100) + '%"></div></div><div class="chart-labels">' + labels + '</div>';
+  }
+
+  function renderOverview() {
+    const done = completedWeeks();
+    const pct = Math.round((done / WEEKS.length) * 100);
+    const cw = currentWeek();
+    const m = MONTHS[cw.mi], w = m.weeks[cw.wi];
+    const mins = minutesByWeek();
+    const wlw = worklogWeeks();
+    const ws = weekStartStr(todayStr());
+    const thisWeek = mins[ws] || 0;
+    const tgt = targetFor(cw.mi, cw.wi);
+    const kept = isKept(ws, mins, wlw);
+    const tPct = Math.min(100, Math.round((thisWeek / tgt.lo) * 100));
+    const building = state.building.trim();
+    const bShort = building.length > 280 ? building.slice(0, 280) + '…' : building;
+    $('#view-overview').innerHTML = `
+      <div class="card hero">
+        <div class="card-hd"><span>12 hónap teljesítése</span><span class="badge a">${done} / ${WEEKS.length} hét</span></div>
+        <div class="row"><div class="big">${pct}%</div>
+          <div class="small muted">Teljesített hetek: <b>${done}</b> · Hátralévő: <b>${WEEKS.length - done}</b> · Kötelező feladatok: <b>${doneMandatory()} / ${totalMandatory()}</b></div></div>
+        <div class="bar lg mt8"><span style="width:${pct}%"></span></div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <div class="card-hd"><span>Aktuális hét</span>${cw.pinned ? '<span class="badge o">📌 Kitűzve</span>' : ''}${w.light ? '<span class="badge g">Könnyített</span>' : ''}</div>
+          <div class="small muted">${cw.mi + 1}. hónap · ${cw.wi + 1}. hét · ${esc(m.short)}</div>
+          <div style="font-weight:700;font-size:15px;margin-top:2px">${esc(w.title)}</div>
+          <div class="small mt8">${esc(w.goal)}</div>
+          <div class="callout mt12"><b>Következő feladat:</b> ${esc(nextTask(cw.mi, cw.wi))}</div>
+          <div class="row mt12"><button class="btn primary" data-action="open-week" data-mi="${cw.mi}" data-wi="${cw.wi}">Megnyitás →</button></div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span>Ezen a héten</span><span class="badge">cél: ${tgt.label}</span></div>
+          <div class="big">${fmtMin(thisWeek)}</div>
+          <div class="bar mt8${thisWeek < tgt.lo ? ' warn' : ''}"><span style="width:${tPct}%"></span></div>
+          <div class="small muted mt8">Gyors rögzítés az aktuális hétre:</div>
+          <div class="row mt8">
+            <button class="btn sm" data-action="log-time" data-min="15">+15 p</button>
+            <button class="btn sm" data-action="log-time" data-min="30">+30 p</button>
+            <button class="btn sm" data-action="log-time" data-min="60">+1 ó</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span>Sorozat</span>${kept ? '<span class="badge g">Ez a hét megtartva ✓</span>' : '<span class="badge">Ez a hét még nincs meg</span>'}</div>
+          <div class="big">🔥 ${streak(mins, wlw)} hét</div>
+          <div class="small muted mt8">${esc(META.minimumRule)}</div>
+        </div>
+      </div>
+      <div class="grid mt12">
+        <div class="card">
+          <div class="card-hd"><span>Statisztika</span></div>
+          <div class="stat-rows">
+            <div><span>Összes tanulási idő</span><b>${fmtMin(totalMinutes())}</b></div>
+            <div><span>Munkahelyi napló</span><b>${Object.keys(state.worklog).length} bejegyzés</b></div>
+            <div><span>Angol hetek</span><b>${englishWeeks()}</b></div>
+            <div><span>Kész hónapok</span><b>${MONTHS.filter((_, i) => monthPct(i) === 100).length} / ${MONTHS.length}</b></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span>Tanulási idő – utolsó 8 hét</span><span class="small muted" style="text-transform:none;letter-spacing:0">szaggatott vonal: 5 ó</span></div>
+          ${chartHtml(mins)}
+        </div>
+        <div class="card">
+          <div class="card-hd"><span>Irány</span></div>
+          <div><b>🎯 ${esc(META.goal12)}</b></div>
+          <div class="small muted mt8">${esc(META.longTerm)}</div>
+          <div class="sec-title mt12">Referencia-épület</div>
+          <div class="small">${bShort ? esc(bShort).replace(/\n/g, '<br>') : '<span class="muted">Még nincs megadva – az Adatok fülön írhatod le.</span>'}</div>
+        </div>
+      </div>`;
+  }
+
+  function taskRow(item) {
+    const c = isChecked(item.key);
+    return '<label class="task-row' + (c ? ' done' : '') + '"><input type="checkbox" data-task="' + esc(item.key) + '"' + (c ? ' checked' : '') + '><span class="task-txt">' + hl(item.text) + '</span></label>';
+  }
+
+  function renderProgram() {
+    const cw = currentWeek();
+    if (ui.month == null) { ui.month = cw.mi; ui.week = cw.wi; }
+    const mi = ui.month, m = MONTHS[mi];
+    if (!(ui.week >= 0 && ui.week < m.weeks.length)) ui.week = 0;
+    const wi = ui.week;
+    const cards = MONTHS.map((mm, i) => {
+      const pct = monthPct(i);
+      const st = monthStatus(i);
+      const cls = 'mcard' + (pct === 100 ? ' done' : pct > 0 ? ' prog' : '') + (i === mi ? ' active' : '');
+      return `<button class="${cls}" data-action="sel-month" data-mi="${i}">
+          <div class="mc-top"><span class="mc-num">${i + 1}. hónap</span><span class="badge ${st[1]}">${st[0]}</span></div>
+          <div class="mc-title">${hl(mm.short)}</div>
+          <div class="bar sm"><span style="width:${pct}%"></span></div>
+          <div class="mc-foot">${pct}% · ${mm.weeks.length} hét${cw.mi === i ? ' · <b>aktuális</b>' : ''}</div>
+        </button>`;
+    }).join('');
+    const wtabs = m.weeks.map((_, j) => {
+      const isCur = cw.mi === mi && cw.wi === j;
+      return `<button class="wtab${j === wi ? ' active' : ''}" data-action="sel-week" data-wi="${j}">${j + 1}. hét${weekDone(mi, j) ? ' ✓' : ''}${isCur ? ' •' : ''}</button>`;
+    }).join('');
+    const res = (m.resources || []).map((r) => (r.u
+      ? '<li><a href="' + esc(r.u) + '" target="_blank" rel="noopener">' + hl(r.t) + '</a></li>'
+      : '<li>' + hl(r.t) + '</li>')).join('');
+    $('#view-program').innerHTML = `
+      <div class="mcards">${cards}</div>
+      <div class="card" id="monthDetail">
+        <div class="md-title">${mi + 1}. hónap – ${hl(m.title)}</div>
+        <div class="md-goal">${hl(m.goal)}</div>
+        <div class="callout g mt12"><b>Havi eredmény:</b> ${hl(m.output)}</div>
+        ${m.checkpoint ? '<div class="callout o mt8"><b>🧭 ' + hl(m.checkpoint) + '</b></div>' : ''}
+        <div class="sec-title mt12">Források</div>
+        <ul class="res-list">${res}</ul>
+        <div class="wtabs">${wtabs}</div>
+        ${renderWeekPanel(mi, wi)}
+      </div>`;
+  }
+
+  function renderWeekPanel(mi, wi) {
+    const m = MONTHS[mi], w = m.weeks[wi], k = wk(mi, wi);
+    const c = weekCounts(mi, wi);
+    const cw = currentWeek();
+    const isCur = cw.mi === mi && cw.wi === wi;
+    const pinned = state.pinnedWeek === k;
+    const ro = isOwner ? '' : ' readonly';
+    const cust = Object.entries(state.custom[k] || {}).sort((a, b) => (a[0] < b[0] ? -1 : 1)).map(([id, ct]) => `
+        <div class="task-line">
+          <label class="task-row${ct.done ? ' done' : ''}"><input type="checkbox" data-custom="${k}|${esc(id)}"${ct.done ? ' checked' : ''}><span class="task-txt">${hl(ct.text)}</span></label>
+          <button class="icon-btn" data-action="del-custom" data-week="${k}" data-id="${esc(id)}" title="Törlés" aria-label="Saját feladat törlése">×</button>
+        </div>`).join('');
+    const times = Object.entries(state.time).filter(([, t]) => t.week === k).sort((a, b) => (a[1].date < b[1].date ? 1 : -1));
+    const timeTotal = times.reduce((s, e) => s + e[1].min, 0);
+    const tgt = targetFor(mi, wi);
+    const timeList = times.map(([id, t]) => `<li><span>${esc(t.date)} · ${fmtMin(t.min)}</span><button class="icon-btn" data-action="del-time" data-id="${esc(id)}" title="Törlés" aria-label="Időbejegyzés törlése">×</button></li>`).join('');
+    return `
+      <div class="wp-head">
+        <div>
+          <div class="wp-title">${wi + 1}. hét – ${hl(w.title)}</div>
+          <div class="small muted">${hl(w.goal)}</div>
+        </div>
+        <div class="row">
+          ${w.light ? '<span class="badge g">Könnyített hét · 2–3 ó</span>' : ''}
+          ${isCur ? '<span class="badge a">Aktuális</span>' : ''}
+          <span class="badge${c.done === c.total ? ' g' : ''}">${c.done} / ${c.total} kötelező</span>
+        </div>
+      </div>
+      <div class="wp-grid mt12">
+        <div class="card inner">
+          <div class="sec-title">Elméleti témák</div>
+          <ul class="topics">${w.topics.map((t) => '<li>' + hl(t) + '</li>').join('')}</ul>
+          <div class="sec-title mt12">Kötelező</div>
+          ${mandatoryItems(mi, wi).map(taskRow).join('')}
+          <div class="sec-title mt12">Opcionális</div>
+          ${optionalItems(mi, wi).map(taskRow).join('')}
+          <div class="sec-title mt12">Saját feladatok</div>
+          ${cust || '<div class="small muted">Még nincs saját feladat.</div>'}
+          <div class="row mt8"><input type="text" id="customTask" placeholder="Új saját feladat…" maxlength="300" style="flex:1;width:auto;min-width:160px"${ro}><button class="btn sm" data-action="add-custom" data-week="${k}">Hozzáadás</button></div>
+        </div>
+        <div class="card inner">
+          <div class="sec-title">Heti eredmény</div>
+          <div class="small">${hl(w.result)}</div>
+          <details class="mt12" data-qdetails${ui.qOpen || currentQuery ? ' open' : ''}><summary>Önellenőrző kérdések (${w.questions.length})</summary><ol class="qs mt8">${w.questions.map((q) => '<li>' + hl(q) + '</li>').join('')}</ol></details>
+          <div class="sec-title mt12">Jegyzet</div>
+          <textarea data-note="${k}" rows="7" placeholder="${esc(NOTE_PH)}" aria-label="Heti jegyzet"${ro}>${esc(state.notes[k] || '')}</textarea>
+          <div class="sec-title mt12">Idő ezen a programhéten: ${fmtMin(timeTotal)} <span style="text-transform:none;letter-spacing:0">(cél: ${tgt.label})</span></div>
+          <div class="row">
+            <button class="btn sm" data-action="log-time" data-min="15" data-week="${k}">+15 p</button>
+            <button class="btn sm" data-action="log-time" data-min="30" data-week="${k}">+30 p</button>
+            <button class="btn sm" data-action="log-time" data-min="60" data-week="${k}">+1 ó</button>
+            <input type="number" id="customMin" min="1" max="600" placeholder="perc" aria-label="Egyéni perc" style="width:84px"${ro}>
+            <button class="btn sm" data-action="log-custom" data-week="${k}">Rögzít</button>
+          </div>
+          <ul class="time-list">${timeList}</ul>
+        </div>
+      </div>
+      <div class="row mt12">
+        <button class="btn sm" data-action="prev-week"${mi === 0 && wi === 0 ? ' disabled' : ''}>← Előző hét</button>
+        <button class="btn sm" data-action="${pinned ? 'unpin' : 'pin'}" data-week="${k}">${pinned ? '📌 Kitűzés törlése' : '📌 Legyen ez az aktuális hét'}</button>
+        <span class="spacer"></span>
+        <button class="btn sm" data-action="next-week"${mi === MONTHS.length - 1 && wi === m.weeks.length - 1 ? ' disabled' : ''}>Következő hét →</button>
+      </div>`;
+  }
+
+  function scheduleRows() { return state.schedule || META.defaultSchedule; }
+  function schedBadge(total) { return total >= 300 && total <= 420 ? 'g' : total > 420 ? 'r' : 'o'; }
+  function updateSchedSum() {
+    const el = $('#schedSum');
+    if (!el) return;
+    const total = scheduleRows().reduce((s, r) => s + (Number(r.min) || 0), 0);
+    el.textContent = 'Terv: ' + fmtMin(total);
+    el.className = 'badge ' + schedBadge(total);
+  }
+  function renderSchedule() {
+    const rows = scheduleRows();
+    const total = rows.reduce((s, r) => s + (Number(r.min) || 0), 0);
+    const thisWeek = minutesByWeek()[weekStartStr(todayStr())] || 0;
+    const ro = isOwner ? '' : ' readonly';
+    $('#view-schedule').innerHTML = `
+      <div class="card">
+        <div class="card-hd"><span>Heti időbeosztás</span><span class="badge ${schedBadge(total)}" id="schedSum">Terv: ${fmtMin(total)}</span></div>
+        <div class="small muted">Az alapértelmezés egy 5–7 órás hét. Szabadon átírhatod; a könnyített heteken (1. hónap 1–2. hét) 2–3 óra is elég. Rossz héten a „minimum hét” is számít.</div>
+        <div class="table-wrap mt12"><table class="sched">
+          <thead><tr><th>Nap</th><th>Tevékenység</th><th>Perc</th><th>Időpont</th></tr></thead>
+          <tbody>${rows.map((r, i) => `<tr>
+              <td class="day">${esc(r.day)}</td>
+              <td><input type="text" data-sched="${i}:label" value="${esc(r.label)}" maxlength="60" aria-label="${esc(r.day)} tevékenység"${ro}></td>
+              <td><input type="number" data-sched="${i}:min" value="${Number(r.min) || 0}" min="0" max="600" step="15" style="width:90px" aria-label="${esc(r.day)} perc"${ro}></td>
+              <td><input type="time" data-sched="${i}:time" value="${esc(r.time)}" style="width:120px" aria-label="${esc(r.day)} időpont"${ro}></td>
+            </tr>`).join('')}</tbody>
+        </table></div>
+        <div class="row mt12">
+          <span class="small muted">Tény ezen a héten: <b>${fmtMin(thisWeek)}</b></span>
+          <span class="spacer"></span>
+          <button class="btn sm" data-action="sched-reset">Alapértelmezés visszaállítása</button>
+        </div>
+      </div>`;
+  }
+
+  function weekOptions(sel) {
+    return '<option value="">— nincs —</option>' + WEEKS.map(({ mi, wi }) => {
+      const k = wk(mi, wi);
+      return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + (mi + 1) + '/' + (wi + 1) + ' – ' + esc(MONTHS[mi].weeks[wi].title) + '</option>';
+    }).join('');
+  }
+  function wlSec(label, text) { return text ? '<div class="wl-sec"><b>' + label + '</b><p>' + hl(text) + '</p></div>' : ''; }
+  function renderWorklog() {
+    const entries = Object.entries(state.worklog).sort((a, b) => {
+      if (a[1].date !== b[1].date) return a[1].date < b[1].date ? 1 : -1;
+      return a[0] < b[0] ? 1 : -1;
+    });
+    const filtered = ui.wlFilter ? entries.filter(([, e]) => e.tech === ui.wlFilter) : entries;
+    let form = '';
+    if (ui.wlEditing) {
+      const cw = currentWeek();
+      const e = ui.wlEditing === 'new'
+        ? { date: todayStr(), title: '', tech: '', week: wk(cw.mi, cw.wi), problem: '', cause: '', solution: '', lesson: '' }
+        : (state.worklog[ui.wlEditing] || {});
+      form = `<div class="card mb12">
+          <div class="card-hd"><span>${ui.wlEditing === 'new' ? 'Új bejegyzés' : 'Bejegyzés szerkesztése'}</span></div>
+          <div class="wl-form">
+            <label>Dátum<input type="date" id="wlDate" value="${esc(e.date)}"></label>
+            <label>Érintett technológia<select id="wlTech"><option value="">— válassz —</option>${TECHS.map((t) => '<option' + (t === e.tech ? ' selected' : '') + '>' + esc(t) + '</option>').join('')}</select></label>
+            <label class="full">Cím<input type="text" id="wlTitle" value="${esc(e.title)}" maxlength="140" placeholder="pl. BACnet Explorer látja az eszközt, a Python nem"></label>
+            <label class="full">Kapcsolódó programhét<select id="wlWeek">${weekOptions(e.week)}</select></label>
+            <label class="full">Probléma leírása<textarea id="wlProblem" rows="3">${esc(e.problem)}</textarea></label>
+            <label class="full">Hiba oka<textarea id="wlCause" rows="3">${esc(e.cause)}</textarea></label>
+            <label class="full">Megoldás<textarea id="wlSolution" rows="3">${esc(e.solution)}</textarea></label>
+            <label class="full">Tanulság<textarea id="wlLesson" rows="2">${esc(e.lesson)}</textarea></label>
+          </div>
+          <div class="row mt12"><button class="btn primary" data-action="wl-save">Mentés</button><button class="btn" data-action="wl-cancel">Mégse</button></div>
+        </div>`;
+    }
+    const list = filtered.map(([id, e]) => {
+      const pw = parseWeekKey(e.week);
+      const confirming = ui.confirm === 'wl:' + id;
+      return `<div class="card wl-card" id="wl-${esc(id)}">
+          <div class="row"><h4>${hl(e.title || '(cím nélkül)')}</h4><span class="spacer"></span><span class="small muted">${esc(e.date)}</span></div>
+          <div class="row mt8">${e.tech ? '<span class="badge b">' + hl(e.tech) + '</span>' : ''}${pw ? '<button class="badge a" data-action="open-week" data-mi="' + pw.mi + '" data-wi="' + pw.wi + '">' + (pw.mi + 1) + '/' + (pw.wi + 1) + '. hét</button>' : ''}</div>
+          ${wlSec('Probléma', e.problem)}${wlSec('Hiba oka', e.cause)}${wlSec('Megoldás', e.solution)}${wlSec('Tanulság', e.lesson)}
+          <div class="row mt12"><button class="btn sm" data-action="wl-edit" data-id="${esc(id)}">Szerkesztés</button><button class="btn sm danger" data-action="wl-del" data-id="${esc(id)}">${confirming ? 'Biztos? Kattints újra' : 'Törlés'}</button></div>
+        </div>`;
+    }).join('');
+    $('#view-worklog').innerHTML = `
+      <div class="row mb12">
+        <button class="btn primary" data-action="wl-new">＋ Új bejegyzés</button>
+        <span class="spacer"></span>
+        <select data-wl-filter style="width:auto" aria-label="Szűrés technológiára"><option value="">Minden technológia</option>${TECHS.map((t) => '<option' + (t === ui.wlFilter ? ' selected' : '') + '>' + esc(t) + '</option>').join('')}</select>
+        <span class="small muted">${filtered.length} bejegyzés</span>
+      </div>
+      ${form}
+      ${list || '<div class="card small muted">Még nincs bejegyzés. Minden valós munkahelyi probléma ide kerül – ez a legjobb tananyagod, és egy bejegyzéssel a „minimum hét” is teljesül.</div>'}`;
+  }
+
+  function renderReview() {
+    if (ui.reviewMonth == null) ui.reviewMonth = currentWeek().mi;
+    const mi = ui.reviewMonth, m = MONTHS[mi];
+    const ans = state.reviews['m' + mi] || {};
+    const ro = isOwner ? '' : ' readonly';
+    $('#view-review').innerHTML = `
+      <div class="chips mb12">${MONTHS.map((_, i) => '<button class="chip' + (i === mi ? ' active' : '') + '" data-action="review-month" data-mi="' + i + '">' + (i + 1) + '. hó' + (state.reviews['m' + i] ? ' ✓' : '') + '</button>').join('')}</div>
+      <div class="card">
+        <div class="md-title">${mi + 1}. hónap értékelése – ${esc(m.title)}</div>
+        <div class="small muted">Teljesítés: ${monthPct(mi)}%. A továbblépés nincs feltételhez kötve – a cél az őszinte visszatekintés.</div>
+        ${m.checkpoint ? '<div class="callout o mt12"><b>🧭 ' + esc(m.checkpoint) + '</b></div>' : ''}
+        ${META.reviewQuestions.map((q, i) => `<div class="mt12"><label class="q-label" for="rq${i}">${i + 1}. ${esc(q)}</label><textarea id="rq${i}" data-review="${mi}:${i}" rows="3"${ro}>${esc(ans['q' + i] || '')}</textarea></div>`).join('')}
+        <div class="row mt12"><span class="spacer"></span>${mi < MONTHS.length - 1 ? '<button class="btn primary" data-action="review-next">Tovább a ' + (mi + 2) + '. hónapra →</button>' : ''}</div>
+      </div>`;
+  }
+
+  function counts(s) {
+    return Object.keys(s.tasks).length + ' pipa, ' + Object.keys(s.notes).length + ' jegyzet, ' + Object.keys(s.time).length + ' időbejegyzés, ' +
+      Object.keys(s.worklog).length + ' napló-bejegyzés, ' + Object.keys(s.reviews).length + ' havi értékelés';
+  }
+  function renderData() {
+    const ro = isOwner ? '' : ' readonly';
+    const p = ui.importPreview;
+    $('#view-data').innerHTML = `
+      <div class="grid">
+        <div class="card">
+          <div class="card-hd"><span>Referencia-épület</span></div>
+          <div class="small muted">Ezen az épületen dolgozol egész évben; minden havi eredmény ennek egy fejezete.</div>
+          <textarea class="mt8" data-building rows="8" placeholder="${esc(META.buildingDefault)}" aria-label="Referencia-épület leírása"${ro}>${esc(state.building)}</textarea>
+        </div>
+        <div class="card">
+          <div class="card-hd"><span>Mentés és visszatöltés</span></div>
+          <div class="small">Jelenlegi adatok: ${counts(state)}.</div>
+          <div class="small muted mt8">Utolsó módosítás: ${state.updatedAt ? new Date(state.updatedAt).toLocaleString('hu-HU') : '—'}</div>
+          <div class="row mt12">
+            <button class="btn" data-action="export">⬇ Exportálás (JSON)</button>
+            <label class="btn" for="importFile">⬆ Importálás (JSON)</label>
+            <input type="file" id="importFile" accept="application/json,.json" hidden>
+          </div>
+          ${ui.importError ? '<div class="callout r mt12">Az importálás nem sikerült: ' + esc(ui.importError) + '</div>' : ''}
+          ${p ? '<div class="callout o mt12"><b>Felülírod a jelenlegi adatokat?</b><br>Az importált fájlban: ' + counts(p) + '.<div class="row mt8"><button class="btn primary sm" data-action="import-confirm">Igen, importálom</button><button class="btn sm" data-action="import-cancel">Mégse</button></div></div>' : ''}
+          <div class="small muted mt12">Tárolás: Firebase (<code>${DB_PATH}</code>) + helyi másolat ebben a böngészőben. A régi 24 hónapos checklist adatait ez az oldal nem érinti.</div>
+        </div>
+      </div>
+      <div class="card mt12">
+        <div class="card-hd"><span>Veszélyzóna</span></div>
+        <div class="row"><span class="small muted">Minden pipa, jegyzet, idő, napló és értékelés törlése. Előtte érdemes exportálni.</span><span class="spacer"></span>
+          <button class="btn danger sm" data-action="reset-all">${ui.confirm === 'reset' ? 'Biztos? Kattints újra' : 'Minden adat törlése'}</button></div>
+      </div>`;
+  }
+
+  function snippet(text, q) {
+    const i = text.toLowerCase().indexOf(q);
+    if (i < 0) return text.slice(0, 120);
+    const a = Math.max(0, i - 50), b = Math.min(text.length, i + q.length + 70);
+    return (a > 0 ? '…' : '') + text.slice(a, b) + (b < text.length ? '…' : '');
+  }
+  function searchResults() {
+    const q = currentQuery.toLowerCase();
+    const has = (t) => String(t || '').toLowerCase().includes(q);
+    const res = { months: [], weeks: [], wl: [] };
+    MONTHS.forEach((m, mi) => {
+      if ([m.title, m.short, m.goal, m.output, m.checkpoint].concat((m.resources || []).map((r) => r.t)).some(has)) res.months.push(mi);
+    });
+    WEEKS.forEach(({ mi, wi }) => {
+      const w = MONTHS[mi].weeks[wi], k = wk(mi, wi);
+      const fields = [w.title, w.goal, w.work, w.result].concat(w.topics, w.practice, w.questions, w.extra || [],
+        Object.values(state.custom[k] || {}).map((c) => c.text));
+      const hit = fields.find(has);
+      const note = state.notes[k] || '';
+      if (hit || has(note)) res.weeks.push({ mi, wi, snippet: hit || snippet(note, q), inNote: !hit });
+    });
+    Object.entries(state.worklog).forEach(([id, e]) => {
+      if ([e.title, e.tech, e.problem, e.cause, e.solution, e.lesson].some(has)) res.wl.push([id, e]);
+    });
+    return res;
+  }
+  function postSearchCount(n) {
+    try { if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'searchResult', count: n, total: 0 }, '*'); } catch (e) { /* nincs szülő */ }
+  }
+  function renderSearch() {
+    const r = searchResults();
+    const count = r.months.length + r.weeks.length + r.wl.length;
+    postSearchCount(count);
+    const months = r.months.map((mi) => '<button class="s-item" data-action="sel-month-open" data-mi="' + mi + '"><b>' + (mi + 1) + '. hónap – ' + hl(MONTHS[mi].title) + '</b><div class="small muted">' + hl(MONTHS[mi].goal) + '</div></button>').join('');
+    const weeks = r.weeks.map((x) => '<button class="s-item" data-action="open-week" data-mi="' + x.mi + '" data-wi="' + x.wi + '"><b>' + (x.mi + 1) + '/' + (x.wi + 1) + ' – ' + hl(MONTHS[x.mi].weeks[x.wi].title) + '</b><div class="small muted">' + (x.inNote ? '📝 Jegyzet: ' : '') + hl(x.snippet) + '</div></button>').join('');
+    const wl = r.wl.map(([id, e]) => '<button class="s-item" data-action="open-wl" data-id="' + esc(id) + '"><b>🛠 ' + hl(e.title || '(cím nélkül)') + '</b><div class="small muted">' + esc(e.date) + (e.tech ? ' · ' + hl(e.tech) : '') + '</div></button>').join('');
+    $('#view-search').innerHTML = count
+      ? (months ? '<div class="sec-title">Hónapok</div>' + months : '') +
+        (weeks ? '<div class="sec-title mt12">Hetek</div>' + weeks : '') +
+        (wl ? '<div class="sec-title mt12">Munkahelyi napló</div>' + wl : '')
+      : '<div class="card small muted">Nincs találat.</div>';
+  }
+  function applySearch(q) {
+    currentQuery = String(q || '').trim();
+    ui.searchDismissed = false;
+    if (!currentQuery) postSearchCount(0);
+    render();
+  }
+
+  const RENDERERS = { overview: renderOverview, program: renderProgram, schedule: renderSchedule, worklog: renderWorklog, review: renderReview, data: renderData };
+
+  /* ================= Műveletek ================= */
+  function scrollTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  function scrollToId(id) { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  function stepWeek(d) {
+    const idx = WEEKS.findIndex((x) => x.mi === ui.month && x.wi === ui.week);
+    const n = WEEKS[Math.max(0, Math.min(WEEKS.length - 1, idx + d))];
+    ui.month = n.mi; ui.week = n.wi;
+    render();
+  }
+  function logTime(min, weekKey) {
+    if (!requireOwner()) return;
+    const cw = currentWeek();
+    const key = parseWeekKey(weekKey) ? weekKey : wk(cw.mi, cw.wi);
+    state.time[uid('t')] = { date: todayStr(), min: min, week: key };
+    commit(true);
+    toast('+' + fmtMin(min) + ' rögzítve');
+    render();
+  }
+  function addCustom(k) {
+    if (!requireOwner()) return;
+    const inp = $('#customTask');
+    const text = inp ? inp.value.trim() : '';
+    if (!text) { toast('Írd be a feladat szövegét.'); return; }
+    if (!state.custom[k]) state.custom[k] = {};
+    state.custom[k][uid('c')] = { text: text, done: false };
+    commit(true);
+    render();
+    const again = $('#customTask');
+    if (again) again.focus();
+  }
+  function saveWorklog() {
+    if (!requireOwner()) return;
+    const val = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    const entry = {
+      date: DATE_RE.test(val('wlDate')) ? val('wlDate') : todayStr(),
+      title: val('wlTitle'), tech: val('wlTech'), week: val('wlWeek'),
+      problem: val('wlProblem'), cause: val('wlCause'), solution: val('wlSolution'), lesson: val('wlLesson')
+    };
+    if (!entry.title && !entry.problem) { toast('Adj meg legalább egy címet vagy a probléma leírását.'); return; }
+    const id = ui.wlEditing === 'new' ? uid('w') : ui.wlEditing;
+    state.worklog[id] = entry;
+    commit(true);
+    ui.wlEditing = null;
+    ui.wlFilter = '';
+    toast('Napló-bejegyzés mentve.');
+    render();
+  }
+  function exportData() {
+    const payload = { app: DB_PATH, exportedAt: new Date().toISOString(), state: state };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bms_itot_mentes_' + todayStr() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    toast('Export kész.');
+  }
+  function handleImportFile(file) {
+    if (!file) return;
+    if (!requireOwner()) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result));
+        const raw = parsed && isObj(parsed.state) ? parsed.state : parsed;
+        if (!isObj(raw) || !('tasks' in raw || 'worklog' in raw || 'notes' in raw)) throw new Error('nem ismerem fel a fájl formátumát');
+        ui.importPreview = normalize(raw);
+        ui.importError = null;
+      } catch (err) {
+        ui.importPreview = null;
+        ui.importError = err.message;
+      }
+      render();
+    };
+    reader.onerror = () => { ui.importError = 'a fájl nem olvasható'; render(); };
+    reader.readAsText(file);
+  }
+
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-action]');
+    if (!el || el.disabled) return;
+    const a = el.dataset.action;
+    const prevConfirm = ui.confirm;
+    ui.confirm = null;
+    const mi = el.dataset.mi != null ? +el.dataset.mi : null;
+    const wi = el.dataset.wi != null ? +el.dataset.wi : null;
+    switch (a) {
+      case 'tab':
+        ui.view = el.dataset.view; ui.searchDismissed = true; ui.importError = null;
+        render(); scrollTop(); break;
+      case 'open-week':
+        ui.view = 'program'; ui.month = mi; ui.week = wi; ui.searchDismissed = true;
+        render(); scrollToId('monthDetail'); break;
+      case 'sel-month':
+        ui.month = mi; ui.week = defaultWeekFor(mi);
+        render(); scrollToId('monthDetail'); break;
+      case 'sel-month-open':
+        ui.view = 'program'; ui.month = mi; ui.week = defaultWeekFor(mi); ui.searchDismissed = true;
+        render(); scrollToId('monthDetail'); break;
+      case 'sel-week': ui.week = wi; render(); break;
+      case 'prev-week': stepWeek(-1); break;
+      case 'next-week': stepWeek(1); break;
+      case 'pin':
+        if (requireOwner()) { state.pinnedWeek = el.dataset.week; commit(true); toast('Ez lett az aktuális hét.'); render(); }
+        break;
+      case 'unpin':
+        if (requireOwner()) { state.pinnedWeek = null; commit(true); render(); }
+        break;
+      case 'log-time': logTime(+el.dataset.min, el.dataset.week); break;
+      case 'log-custom': {
+        const inp = $('#customMin');
+        const v = parseInt(inp && inp.value, 10);
+        if (!(v > 0 && v <= 600)) { toast('Adj meg 1 és 600 közötti percet.'); break; }
+        logTime(v, el.dataset.week);
+        break;
+      }
+      case 'del-time':
+        if (requireOwner()) { delete state.time[el.dataset.id]; commit(true); render(); }
+        break;
+      case 'add-custom': addCustom(el.dataset.week); break;
+      case 'del-custom':
+        if (requireOwner()) {
+          const list = state.custom[el.dataset.week];
+          if (list) { delete list[el.dataset.id]; if (!Object.keys(list).length) delete state.custom[el.dataset.week]; }
+          commit(true); render();
+        }
+        break;
+      case 'wl-new': if (requireOwner()) { ui.wlEditing = 'new'; render(); scrollTop(); } break;
+      case 'wl-edit': if (requireOwner()) { ui.wlEditing = el.dataset.id; render(); scrollTop(); } break;
+      case 'wl-cancel': ui.wlEditing = null; render(); break;
+      case 'wl-save': saveWorklog(); break;
+      case 'wl-del':
+        if (!requireOwner()) break;
+        if (prevConfirm === 'wl:' + el.dataset.id) { delete state.worklog[el.dataset.id]; commit(true); toast('Bejegyzés törölve.'); }
+        else ui.confirm = 'wl:' + el.dataset.id;
+        render(); break;
+      case 'open-wl':
+        ui.view = 'worklog'; ui.wlFilter = ''; ui.searchDismissed = true;
+        render(); scrollToId('wl-' + el.dataset.id); break;
+      case 'review-month': ui.reviewMonth = mi; render(); break;
+      case 'review-next': {
+        const n = ui.reviewMonth + 1;
+        if (isOwner) { state.pinnedWeek = wk(n, 0); commit(true); toast('Továbbléptél a ' + (n + 1) + '. hónapra.'); }
+        ui.view = 'program'; ui.month = n; ui.week = 0;
+        render(); scrollTop(); break;
+      }
+      case 'sched-reset':
+        if (requireOwner()) { state.schedule = null; commit(true); render(); }
+        break;
+      case 'export': exportData(); break;
+      case 'import-confirm':
+        if (requireOwner() && ui.importPreview) { state = ui.importPreview; ui.importPreview = null; commit(true); toast('Importálás kész.'); render(); }
+        break;
+      case 'import-cancel': ui.importPreview = null; ui.importError = null; render(); break;
+      case 'reset-all':
+        if (!requireOwner()) break;
+        if (prevConfirm === 'reset') { state = emptyState(); commit(true); toast('Minden adat törölve.'); }
+        else ui.confirm = 'reset';
+        render(); break;
+      case 'search-dismiss': ui.searchDismissed = true; render(); break;
+      case 'search-show': ui.searchDismissed = false; render(); break;
+      default: break;
+    }
+  });
+
+  document.addEventListener('change', (e) => {
+    const t = e.target;
+    if (t.matches('input[data-task]')) {
+      if (!requireOwner()) { t.checked = !t.checked; return; }
+      if (t.checked) state.tasks[t.dataset.task] = true; else delete state.tasks[t.dataset.task];
+      commit(true); render(); return;
+    }
+    if (t.matches('input[data-custom]')) {
+      if (!requireOwner()) { t.checked = !t.checked; return; }
+      const parts = t.dataset.custom.split('|');
+      const c = state.custom[parts[0]] && state.custom[parts[0]][parts[1]];
+      if (c) { c.done = t.checked; commit(true); render(); }
+      return;
+    }
+    if (t.id === 'importFile') { handleImportFile(t.files && t.files[0]); t.value = ''; return; }
+    if (t.matches('select[data-wl-filter]')) { ui.wlFilter = t.value; render(); }
+  });
+
+  document.addEventListener('input', (e) => {
+    const t = e.target;
+    if (!isOwner) return;
+    if (t.matches('textarea[data-note]')) {
+      const k = t.dataset.note;
+      if (t.value) state.notes[k] = t.value; else delete state.notes[k];
+      commit(); return;
+    }
+    if (t.matches('textarea[data-review]')) {
+      const parts = t.dataset.review.split(':');
+      const key = 'm' + parts[0];
+      const ans = state.reviews[key] || (state.reviews[key] = {});
+      if (t.value) ans['q' + parts[1]] = t.value; else delete ans['q' + parts[1]];
+      if (!Object.keys(ans).length) delete state.reviews[key];
+      commit(); return;
+    }
+    if (t.matches('textarea[data-building]')) { state.building = t.value; commit(); return; }
+    if (t.matches('input[data-sched]')) {
+      if (!state.schedule) state.schedule = META.defaultSchedule.map((x) => Object.assign({}, x));
+      const parts = t.dataset.sched.split(':');
+      const row = state.schedule[+parts[0]];
+      if (!row) return;
+      row[parts[1]] = parts[1] === 'min' ? Math.max(0, Math.min(600, parseInt(t.value, 10) || 0)) : t.value;
+      commit();
+      updateSchedSum();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const map = { customTask: 'add-custom', customMin: 'log-custom' };
+    const action = map[e.target.id];
+    if (!action) return;
+    e.preventDefault();
+    const b = document.querySelector('[data-action="' + action + '"]');
+    if (b) b.click();
+  });
+
+  document.addEventListener('toggle', (e) => {
+    if (e.target.matches && e.target.matches('details[data-qdetails]')) ui.qOpen = e.target.open;
+  }, true);
+
+  /* ================= Kapcsolat a főoldallal (index.html) ================= */
+  window.addEventListener('message', (e) => {
+    if (e.source !== window.parent) return;
+    const d = e.data;
+    if (!isObj(d)) return;
+    if (d.type === 'theme') document.documentElement.setAttribute('data-theme', d.value === 'dark' ? 'dark' : 'light');
+    else if (d.type === 'search') applySearch(d.query);
+    else if (d.type === 'authState' && dbRef) setOwner(!!d.isOwner);
+  });
+  try { const t = localStorage.getItem('csr_theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) { /* nem elérhető */ }
+
+  /* ================= Firebase ================= */
+  if (typeof window.firebase !== 'undefined') {
+    try {
+      firebase.initializeApp({
+        apiKey: "AIzaSyDbQUbxQUCli_ZaU5sGlKIueAcaRL4NmVU",
+        authDomain: "csr-app-9f41c.firebaseapp.com",
+        databaseURL: "https://csr-app-9f41c-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "csr-app-9f41c",
+        storageBucket: "csr-app-9f41c.firebasestorage.app",
+        messagingSenderId: "452006201935",
+        appId: "1:452006201935:web:8bfca2af227fca4911b83a"
+      });
+      dbRef = firebase.database().ref(DB_PATH);
+      auth = firebase.auth();
+      auth.onAuthStateChanged((u) => setOwner(!!(u && u.email === OWNER_EMAIL)));
+    } catch (err) {
+      console.error('Firebase init error:', err);
+      dbRef = null; auth = null;
+    }
+  }
+  if (!dbRef) { isOwner = true; document.body.classList.remove('ro'); }
+
+  load();
+})();
+</script>
+</body>
+</html>
